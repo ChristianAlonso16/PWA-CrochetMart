@@ -1,7 +1,6 @@
 import axios from "axios";
 import router from "@/router";
-import Alerts from '../services/Alerts';
-import store from "../store/index";
+import store from "@/store/store";
 const SERVER_URL = "http://127.0.0.1:8080/api"
 const client = axios.create({
     baseURL: SERVER_URL,
@@ -15,9 +14,7 @@ client.interceptors.request.use(
                 config.headers.Authorization = `Bearer ${auth_token}`
             }
         }
-        if (config.data) {
-            config.data = config.data;
-        }
+      
         return config
     },
     function (error) {
@@ -29,9 +26,6 @@ client.interceptors.request.use(
 client.interceptors.response.use(
     (response) => {
         if (response.status === 200 || response.status === 201) {
-            if (response.data && response.data.data) {
-                response.data.data = response.data.data;
-            }
             return Promise.resolve(response)
         } else {
             return Promise.reject(response)
