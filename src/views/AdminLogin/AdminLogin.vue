@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import Divider from 'primevue/divider';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
@@ -62,6 +63,7 @@ export default {
         Button,
         Card,
         Password,
+        Divider
     },
     data() {
         return {
