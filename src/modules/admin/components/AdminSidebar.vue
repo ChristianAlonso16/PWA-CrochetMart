@@ -1,0 +1,64 @@
+<template>
+  <div :class="[{ collapsed: !sidebarVisible }]">
+    <h1 v-if="sidebarVisible" class="font-bold text-4xl mb-6 m-3">
+      CrochetMart
+    </h1>
+    <h1 v-else class="font-bold text-4xl mb-6 m-3">CM</h1>
+    <nav>
+      <div
+        v-for="(item, index) in menuItems"
+        :key="index"
+        @click="handleMenuClick(item)"
+      >
+        <a
+          :href="item.href"
+          class="flex items-center no-underline text-lg p-4"
+          :style="{ color: selectedItem === item.label ? 'black' : '#7D7D7D' }"
+        >
+          <i :class="[item.icon, 'text-3xl', { 'pr-3': sidebarVisible }]"></i>
+          <span v-if="sidebarVisible">{{ item.label }}</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    sidebarVisible: Boolean,
+  },
+  data() {
+    return {
+      selectedItem: "Inicio",
+      menuItems: [
+        { icon: "pi pi-home", label: "Inicio", href: "#" },
+        { icon: "pi pi-box", label: "Productos", href: "#" },
+        { icon: "pi pi-th-large", label: "Categorías", href: "#" },
+        { icon: "pi pi-user", label: "Usuarios", href: "#" },
+        { icon: "pi pi-shopping-cart", label: "Ventas", href: "#" },
+        { icon: "pi pi-key", label: "Key", href: "#" },
+        {
+          icon: "pi pi-info-circle",
+          label: "Ayuda e información",
+          href: "#",
+        },
+        { icon: "pi pi-sign-out", label: "Cerrar sesión", href: "#" },
+      ],
+    };
+  },
+  methods: {
+    handleMenuClick(item) {
+      this.selectedItem = item.label;
+      if (item.label === "Cerrar sesión") {
+        this.logout();
+      }
+    },
+    logout() {
+      localStorage.removeItem("token");
+
+      this.$router.push("/");
+    },
+  },
+};
+</script>
