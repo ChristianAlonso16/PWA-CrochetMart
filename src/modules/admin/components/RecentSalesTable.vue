@@ -1,7 +1,7 @@
 <template>
   <div>
     <DataTable
-      :value="customers"
+      :value="orders"
       :paginator="true"
       :rows="5"
       responsiveLayout="scroll"
@@ -10,8 +10,9 @@
       currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
     >
       <Column field="name" header="Nombre" sortable></Column>
-      <Column field="products" header="Productos" sortable></Column>
+      <Column field="productQuantity" header="Productos" sortable></Column>
       <Column field="total" header="Total" sortable></Column>
+      <Column field="dateOrder" header="Fecha" sortable></Column>
       <Column field="status" header="Estado" sortable>
         <template #body="slotProps">
           <span
@@ -29,7 +30,8 @@
 <script>
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
-
+import AdminServices from "@/modules/admin/services/AdminServices";
+import Utils from "@/core/utils/FunctionGlobals";
 export default {
   components: {
     DataTable,
@@ -37,73 +39,7 @@ export default {
   },
   data() {
     return {
-      customers: [
-        {
-          name: "Karel Mendoza Salgado",
-          products: 64,
-          total: 1999.0,
-          status: "accepted",
-        },
-        {
-          name: "Ana López",
-          products: 12,
-          total: 299.99,
-          status: "in_progress",
-        },
-        { name: "Carlos Sánchez", products: 8, total: 150.0, status: "sent" },
-        {
-          name: "María García",
-          products: 45,
-          total: 1200.5,
-          status: "delivered",
-        },
-        {
-          name: "Jorge Pérez",
-          products: 20,
-          total: 450.75,
-          status: "pending_payment",
-        },
-        { name: "Víctor Noé", products: 64, total: 1999.0, status: "accepted" },
-        {
-          name: "Ana López",
-          products: 12,
-          total: 299.99,
-          status: "in_progress",
-        },
-        { name: "Carlos Sánchez", products: 8, total: 150.0, status: "sent" },
-        {
-          name: "María García",
-          products: 45,
-          total: 1200.5,
-          status: "delivered",
-        },
-        {
-          name: "Jorge Pérez",
-          products: 20,
-          total: 450.75,
-          status: "pending_payment",
-        },
-        { name: "Víctor Noé", products: 64, total: 1999.0, status: "accepted" },
-        {
-          name: "Ana López",
-          products: 12,
-          total: 299.99,
-          status: "in_progress",
-        },
-        { name: "Carlos Sánchez", products: 8, total: 150.0, status: "sent" },
-        {
-          name: "María García",
-          products: 45,
-          total: 1200.5,
-          status: "delivered",
-        },
-        {
-          name: "Jorge Pérez",
-          products: 20,
-          total: 450.75,
-          status: "pending_payment",
-        },
-      ],
+      orders: [],
       statusTexts: {
         accepted: "Aceptado",
         in_progress: "En Proceso",
@@ -120,7 +56,26 @@ export default {
       },
     };
   },
-  methods: {},
+  methods: {
+    async getOrders() {
+      try {
+        const response = await AdminServices.getReportOrders();
+        const { data, statusCode } = response;
+
+        if (statusCode === 200) {
+          this.orders = data.map((order) => ({
+            ...order,
+            dateOrder: Utils.formatDate(order.dateOrder),
+          }));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  mounted() {
+    this.getOrders();
+  },
 };
 </script>
 

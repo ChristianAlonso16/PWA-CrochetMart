@@ -3,13 +3,17 @@
     <!-- Contenedor de tarjetas -->
     <div class="grid grid-nogutter">
       <div class="col-12 md:col-4 px-6 py-2">
-        <DashboardCard title="Usuarios" count="490" icon="pi pi-users" />
+        <DashboardCard title="Usuarios" :count="120" icon="pi pi-user" />
       </div>
       <div class="col-12 md:col-4 px-6 py-2">
-        <DashboardCard title="Productos" count="680" icon="pi pi-box" />
+        <DashboardCard title="Productos" :count="680" icon="pi pi-box" />
       </div>
       <div class="col-12 md:col-4 px-6 py-2">
-        <DashboardCard title="Pedidos" count="130" icon="pi pi-shopping-cart" />
+        <DashboardCard
+          title="Pedidos"
+          :count="130"
+          icon="pi pi-shopping-cart"
+        />
       </div>
     </div>
 

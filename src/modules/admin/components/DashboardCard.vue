@@ -1,15 +1,22 @@
 <template>
-  <Card class="p-card p-4 grid align-items-center justify-content-between">
-    <div class="text-center md:text-left">
-      <span class="text-lg font-bold">{{ title }}</span>
-      <div class="font-bold text-3xl md:text-4xl">{{ count }}</div>
-    </div>
-    <i :class="icon" class="text-4xl md:text-6xl mt-3 md:mt-0"></i>
+  <Card>
+    <template #content>
+      <div class="p-4 grid align-items-center justify-content-between">
+        <div class="text-center md:text-left">
+          <span class="text-lg font-bold">{{ title }}</span>
+          <div class="font-bold text-3xl md:text-4xl">{{ count }}</div>
+        </div>
+        <i :class="icon" class="text-4xl md:text-6xl mt-3 md:mt-0"></i>
+      </div>
+    </template>
   </Card>
 </template>
-
 <script>
+import Card from "primevue/card";
 export default {
+  components: {
+    Card,
+  },
   props: {
     title: {
       type: String,
