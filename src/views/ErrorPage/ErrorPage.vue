@@ -1,77 +1,90 @@
 <template>
-    <div class="error-page">
-        <img src="../../assets/images/logo.jpg" alt="Crochet Mart Logo" class="logo" />
-        <h1>¡Oops!</h1>
-        <p>Parece que hemos perdido el hilo. La página que buscas se ha deshilachado o no existe en nuestro tejido de
-            crochet.</p>
-        <button @click="goHome">Volver al inicio</button>
-        <div class="wave"></div>
-    </div>
+  <div class="error-page">
+    <img
+      src="../../assets/images/logo.jpg"
+      alt="Crochet Mart Logo"
+      class="logo"
+    />
+    <h1>¡Oops!</h1>
+    <p class="inline-paragraph">
+      Parece que hemos perdido el hilo. La página que
+    </p>
+    <p class="inline-paragraph">
+      buscas se ha deshilachado o no existe en nuestro
+    </p>
+    <p class="inline-paragraph">tejido de crochet.</p>
+    <button @click="goHome">Volver al inicio</button>
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'ErrorPage',
-    methods: {
-        goHome() {
-            this.$router.push('/');
-        }
-    }
-}
+  name: "ErrorPage",
+  methods: {
+    goHome() {
+      this.$router.push("/");
+    },
+  },
+};
 </script>
 
 <style scoped>
 .error-page {
-    text-align: center;
-    padding: 50px;
-    font-family: Arial, sans-serif;
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #fff;
-    overflow: hidden;
+  text-align: center;
+  padding: 90px;
+  font-family: Arial, sans-serif;
+  position: relative;
+  min-height: 97vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .logo {
-    width: 150px;
-    margin-bottom: 20px;
+  width: 350px;
 }
 
 h1 {
-    color: #333;
+  color: #0c0c0c;
+}
+
+.inline-paragraph {
+  display: flex;
+  color: #45414a;
+  margin: 0;
 }
 
 p {
-    color: #666;
-    margin: 20px 0;
-    max-width: 400px;
+  color: #45414a;
+  margin: 20px;
 }
 
 button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: small;
+  margin: 20px;
 }
 
 button:hover {
-    background-color: #218838;
+  background-color: #82e0aa;
 }
 
-.wave {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 200px;
-    /*background: url('@/assets/wave.svg') repeat-x;*/
-    background-size: contain;
-    z-index: -1;
+.error-page::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background: #82e0aa;
+  z-index: -1;
+  border-top-left-radius: 100% 50px;
+  border-top-right-radius: 100% 50px;
 }
 </style>
