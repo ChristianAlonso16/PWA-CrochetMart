@@ -1,15 +1,23 @@
 <template>
-  <div id="app">
+  <div class="main">
     <router-view />
   </div>
 </template>
 
 <script>
-
 export default {
   data() {
-    return {
-    }
-  }
-}
+    return {};
+  },
+};
 </script>
+<style scoped>
+.main {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+}
+</style>
