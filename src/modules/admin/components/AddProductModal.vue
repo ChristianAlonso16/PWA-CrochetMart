@@ -1,54 +1,80 @@
 <template>
-  <Dialog
-    header="Agregar Producto"
-    class="font-bold"
-    :visible="visible"
-    :containerStyle="{ width: '50vw' }"
-    modal
-    @hide="closeModal"
-  >
-    <div class="p-fluid mt-3">
-      <div class="field">
-        <label for="productName">Nombre</label>
-        <InputText id="productName" v-model="product.name" />
+  <div>
+    <Button class="p-button-primary" @click="openModal"> Agregar </Button>
+    <Dialog
+      class="font-bold"
+      :containerStyle="{ width: '50vw' }"
+      modal
+      closable
+      @hide="closeModal"
+      header="Agregar producto"
+      :visible.sync="visible"
+    >
+      <div class="p-fluid mt-3">
+        <div class="field">
+          <label>Nombre</label>
+          <InputText
+            v-model="product.name"
+            :class="{ 'p-invalid': !isNameValid && attemptedSubmit }"
+          />
+          <small v-if="!isNameValid && attemptedSubmit" class="p-error"
+            >El nombre es obligatorio y debe tener menos de 100
+            caracteres</small
+          >
+        </div>
+        <div class="field">
+          <label>Descripción</label>
+          <Textarea
+            v-model="product.description"
+            :class="{ 'p-invalid': !isDescriptionValid && attemptedSubmit }"
+            rows="5"
+            cols="30"
+          />
+          <small v-if="!isDescriptionValid && attemptedSubmit" class="p-error"
+            >La descripción es obligatoria</small
+          >
+        </div>
+        <div class="field">
+          <label>Categorías</label>
+          <MultiSelect
+            v-model="selectedCategories"
+            :options="categories"
+            optionLabel="categoryName"
+            placeholder="Seleccione una categoría"
+            display="chip"
+            class="multi-select-overflow"
+            :class="{ 'p-invalid': !isCategoryValid && attemptedSubmit }"
+            appendTo="body"
+          />
+          <small v-if="!isCategoryValid && attemptedSubmit" class="p-error"
+            >Seleccione al menos una categoría</small
+          >
+        </div>
       </div>
-      <div class="field">
-        <label for="productCategory">Descripción</label>
-        <Textarea v-model="product.description" rows="5" cols="30" />
-      </div>
-      <div class="field">
-        <label for="productReviews">Categorías</label>
-        <MultiSelect
-          v-model="selectedCategories"
-          :options="cities"
-          optionLabel="name"
-          placeholder="Seleccione una categoría"
-          display="chip"
-          class="multi-select-overflow"
+      <template #footer>
+        <Button
+          label="Cancelar"
+          @click="closeModal"
+          class="p-button-text p-button-secondary"
         />
-      </div>
-    </div>
-    <template #footer>
-      <Button
-        label="Cancelar"
-        @click="closeModal"
-        class="p-button-text p-button-secondary"
-      />
-      <Button
-        class="p-button"
-        label="Registrar"
-        @click="saveProduct"
-        autofocus
-      />
-    </template>
-  </Dialog>
+        <Button
+          class="p-button"
+          label="Registrar"
+          @click="saveProduct"
+          autofocus
+        />
+      </template>
+    </Dialog>
+  </div>
 </template>
+
 <script>
 import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
 import Button from "primevue/button";
 import MultiSelect from "primevue/multiselect";
+import AdminServices from "@/modules/admin/services/AdminServices";
 
 export default {
   components: {
@@ -58,32 +84,42 @@ export default {
     Textarea,
     MultiSelect,
   },
-  props: {
-    visible: Boolean,
-  },
   data() {
     return {
+      visible: false,
       product: {
         name: "",
         description: "",
       },
       selectedCategories: null,
-      cities: [
-        { name: "New York", code: "NY" },
-        { name: "Rome", code: "RM" },
-        { name: "London", code: "LDN" },
-        { name: "Istanbul", code: "IST" },
-        { name: "Paris", code: "PRS" },
-      ],
+      categories: [],
+      attemptedSubmit: false,
     };
+  },
+  computed: {
+    isNameValid() {
+      return this.product.name && this.product.name.length <= 100;
+    },
+    isDescriptionValid() {
+      return this.product.description && this.product.description.trim() !== "";
+    },
+    isCategoryValid() {
+      return this.selectedCategories && this.selectedCategories.length > 0;
+    },
   },
   methods: {
     closeModal() {
-      this.$emit("close");
+      this.visible = false;
       this.resetForm();
     },
+    openModal() {
+      this.visible = true;
+    },
     saveProduct() {
-      console.log("para guardar");
+      this.attemptedSubmit = true;
+      if (this.isNameValid && this.isDescriptionValid && this.isCategoryValid) {
+        console.log("pa guardar");
+      }
     },
     resetForm() {
       this.product = {
@@ -91,7 +127,23 @@ export default {
         description: "",
       };
       this.selectedCategories = null;
+      this.attemptedSubmit = false;
     },
+    async getCategories() {
+      try {
+        const response = await AdminServices.getCategories();
+        const { data, statusCode } = response;
+
+        if (statusCode === 200) {
+          this.categories = data;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  mounted() {
+    this.getCategories();
   },
 };
 </script>

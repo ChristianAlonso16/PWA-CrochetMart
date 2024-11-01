@@ -2,29 +2,22 @@
   <div class="grid grid-nogutter px-6">
     <div class="col-12 flex align-items-center py-2">
       <p class="text-lg font-bold col-10">Administrar productos</p>
-      <Button
-        class="col-2 p-button-primary"
-        @click="showAddProductModal = true"
-      >
-        Agregar
-      </Button>
+      <div class="col-2">
+        <AddProductModal />
+      </div>
     </div>
 
-    <AddProductModal
-      :visible="showAddProductModal"
-      @close="showAddProductModal = false"
-    />
     <div class="col-12">
       <div>
         <DataTable
           :value="products"
           :paginator="true"
           :rows="5"
-          dataKey="code"
+          dataKey="numProduct"
           :filters.sync="filters"
           filterDisplay="menu"
           responsiveLayout="scroll"
-          :globalFilterFields="['code', 'name', 'categories']"
+          :globalFilterFields="['numProduct', 'name', 'categories']"
         >
           <template #header>
             <div class="flex justify-content-end">
@@ -38,7 +31,7 @@
             </div>
           </template>
 
-          <Column field="code" header="Código" :sortable="true" />
+          <Column field="numProduct" header="Código" :sortable="true" />
           <Column field="name" header="Nombre" :sortable="true">
             <template>
               <InputText placeholder="Search by name" class="p-column-filter" />
@@ -63,7 +56,7 @@
               <Button
                 icon="pi pi-pencil"
                 class="p-button-rounded p-button-success mr-2"
-                @click="editProduct(data)"
+                @click="openEditModal(data)"
               />
               <Button
                 icon="pi pi-trash"
@@ -75,11 +68,19 @@
         </DataTable>
       </div>
     </div>
+    <EditProductModalVue
+      :numProduct="selectedProduct?.numProduct"
+      v-if="selectedProduct"
+      :visible.sync="isEditModalVisible"
+      @close="selectedProduct = null"
+    />
   </div>
 </template>
 
 <script>
 import AddProductModal from "../components/AddProductModal.vue";
+import EditProductModalVue from "../components/EditProductModal.vue";
+import AdminServices from "@/modules/admin/services/AdminServices";
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import DataTable from "primevue/datatable";
@@ -92,39 +93,48 @@ export default {
     DataTable,
     Column,
     InputText,
+    EditProductModalVue,
   },
   data() {
     return {
-      products: [
-        {
-          code: "001",
-          name: "Producto A",
-          categories: "Categoría 1",
-          reviews: 10,
-        },
-        {
-          code: "002",
-          name: "Producto B",
-          categories: "Categoría 2",
-          reviews: 5,
-        },
-      ],
+      products: [],
       filters: {
         global: { value: null },
         name: { value: null, matchMode: "contains" },
         categories: { value: null, matchMode: "contains" },
       },
-
-      showAddProductModal: false,
+      selectedProduct: null,
+      isEditModalVisible: false,
     };
   },
   methods: {
-    editProduct(product) {
-      console.log("editar:", product);
+    openEditModal(product) {
+      this.selectedProduct = product;
+      this.isEditModalVisible = true;
     },
     deleteProduct(product) {
       console.log("eliminar:", product);
     },
+    async getProduct() {
+      try {
+        const response = await AdminServices.getProducts();
+        const { data, statusCode } = response;
+
+        if (statusCode === 200) {
+          this.products = data.map((product) => ({
+            ...product,
+            categories: product.categories
+              .map((category) => category.categoryName)
+              .join(", "),
+          }));
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  mounted() {
+    this.getProduct();
   },
 };
 </script>
