@@ -1,4 +1,39 @@
-body{
-    padding: 0px;
-    margin: 0px;
+body {
+  padding: 0px;
+  margin: 0px;
+}
+.p-button {
+  background-color: #252525 !important;
+  border-color: #252525 !important;
+  color: #ffffff !important;
+  width: 100%;
+  display: flex;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold !important;
+}
+
+.p-button:hover {
+  background-color: #353535 !important;
+  border-color: #353535 !important;
+  color: #ffffff !important;
+}
+
+.p-button-secondary {
+  background-color: #ffffff !important;
+  border-color: #252525 !important;
+  color: #252525 !important;
+  width: 100%;
+  display: flex;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold !important;
+}
+
+.p-button-secondary:hover {
+  background-color: #585858 !important;
+  border-color: #585858 !important;
+  color: #ffffff !important;
 }

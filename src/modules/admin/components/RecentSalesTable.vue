@@ -6,7 +6,6 @@
       :rows="5"
       responsiveLayout="scroll"
       paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-      :rowsPerPageOptions="[5, 10]"
       currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
     >
       <Column field="name" header="Nombre" sortable></Column>
