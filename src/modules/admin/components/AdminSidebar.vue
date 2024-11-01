@@ -10,14 +10,17 @@
         :key="index"
         @click="handleMenuClick(item)"
       >
-        <a
-          :href="item.href"
+        <router-link
+          :to="item.href"
           class="flex items-center no-underline text-lg p-4"
-          :style="{ color: selectedItem === item.label ? 'black' : '#7D7D7D' }"
+          :class="{
+            'text-black': selectedItem === item.label,
+            'text-gray-500': selectedItem !== item.label,
+          }"
         >
           <i :class="[item.icon, 'text-3xl', { 'pr-3': sidebarVisible }]"></i>
           <span v-if="sidebarVisible">{{ item.label }}</span>
-        </a>
+        </router-link>
       </div>
     </nav>
   </div>
@@ -32,18 +35,14 @@ export default {
     return {
       selectedItem: "Inicio",
       menuItems: [
-        { icon: "pi pi-home", label: "Inicio", href: "#" },
-        { icon: "pi pi-box", label: "Productos", href: "#" },
+        { icon: "pi pi-home", label: "Inicio", href: "/admin/dashboard" },
+        { icon: "pi pi-box", label: "Productos", href: "/admin/products" },
         { icon: "pi pi-th-large", label: "Categorías", href: "#" },
         { icon: "pi pi-user", label: "Usuarios", href: "#" },
         { icon: "pi pi-shopping-cart", label: "Ventas", href: "#" },
         { icon: "pi pi-key", label: "Key", href: "#" },
-        {
-          icon: "pi pi-info-circle",
-          label: "Ayuda e información",
-          href: "#",
-        },
-        { icon: "pi pi-sign-out", label: "Cerrar sesión", href: "#" },
+        { icon: "pi pi-info-circle", label: "Ayuda e información", href: "#" },
+        { icon: "pi pi-sign-out", label: "Cerrar sesión", href: "/logout" },
       ],
     };
   },
@@ -56,9 +55,17 @@ export default {
     },
     logout() {
       localStorage.removeItem("token");
-
       this.$router.push("/");
     },
   },
 };
 </script>
+
+<style>
+.text-black {
+  color: black;
+}
+.text-gray-500 {
+  color: #7d7d7d;
+}
+</style>
