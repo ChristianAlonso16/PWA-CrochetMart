@@ -1,7 +1,7 @@
 <template>
   <Dialog
     class="font-bold"
-    :containerStyle="{ width: '60vw' }"
+    :containerStyle="{ width: '70vw' }"
     modal
     closable
     @hide="closeModal"
@@ -57,12 +57,7 @@
         @click="closeModal"
         class="p-button-text p-button-secondary"
       />
-      <Button
-        class="p-button"
-        label="Actualizar"
-        @click="updateProduct"
-        autofocus
-      />
+      <Button class="p-button" label="Actualizar" @click="updateProduct" />
     </template>
   </Dialog>
 </template>

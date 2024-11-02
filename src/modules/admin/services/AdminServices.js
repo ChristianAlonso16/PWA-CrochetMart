@@ -56,10 +56,20 @@ const getProductDetails = async (numberProduct) => {
   }
 };
 
+const getAttributesByName = async (name) => {
+  try {
+    const response = await axiosPrivate.get(`/attribute/getByName/${name}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   loginAdmin,
   getReportOrders,
   getCategories,
   getProducts,
   getProductDetails,
+  getAttributesByName,
 };

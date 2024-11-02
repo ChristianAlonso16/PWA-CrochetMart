@@ -1,12 +1,12 @@
 <template>
-  <div class="grid grid-nogutter px-4 sm:px-6 lg:px-8">
+  <div class="grid grid-nogutter px-4 sm:px-6 lg:px-6">
     <div class="col-12 md:col-6 flex align-items-center py-2">
       <p class="text-lg font-bold">Administrar productos</p>
     </div>
     <div class="col-12 md:col-6 flex justify-content-end py-2">
       <AddProductModal />
     </div>
-
+    <AddVariantModal />
     <div class="col-12">
       <div>
         <DataTable
@@ -18,6 +18,7 @@
           filterDisplay="menu"
           responsiveLayout="scroll"
           :globalFilterFields="['numProduct', 'name', 'categories']"
+          @row-click="handleRowClick"
         >
           <template #header>
             <div class="flex justify-content-end">
@@ -81,6 +82,7 @@
 import AddProductModal from "../components/AddProductModal.vue";
 import EditProductModalVue from "../components/EditProductModal.vue";
 import AdminServices from "@/modules/admin/services/AdminServices";
+import AddVariantModal from "../components/AddVariantModal.vue";
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import DataTable from "primevue/datatable";
@@ -94,6 +96,7 @@ export default {
     Column,
     InputText,
     EditProductModalVue,
+    AddVariantModal,
   },
   data() {
     return {
@@ -131,6 +134,13 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    handleRowClick(event) {
+      const product = event.data;
+      this.$router.push({
+        name: "productvariants",
+        params: { numProduct: product.numProduct },
+      });
     },
   },
   mounted() {
