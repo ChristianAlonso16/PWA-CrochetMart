@@ -65,6 +65,36 @@ const getAttributesByName = async (name) => {
   }
 };
 
+const getCountProducts = async () => {
+  try {
+    const response = await axiosPrivate.get("/product/countProducts");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getCountUsers = async () => {
+  try {
+    const response = await axiosPrivate.get("/user/countUsers/enable");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getCountOrders = async () => {
+  try {
+    const response = await axiosPrivate.get("/order/countOrders");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   loginAdmin,
   getReportOrders,
@@ -72,4 +102,7 @@ export default {
   getProducts,
   getProductDetails,
   getAttributesByName,
+  getCountProducts,
+  getCountUsers,
+  getCountOrders,
 };
