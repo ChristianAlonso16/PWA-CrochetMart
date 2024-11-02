@@ -1,12 +1,12 @@
 <template>
   <Dialog
     class="font-bold"
-    :containerStyle="{ width: '50vw' }"
+    :containerStyle="{ width: '60vw' }"
     modal
     closable
-    header="Actualizar producto"
-    :visible="localVisible"
     @hide="closeModal"
+    header="Actualizar producto"
+    :visible.sync="localVisible"
   >
     <div class="p-fluid mt-3">
       <div class="field">
@@ -115,7 +115,10 @@ export default {
       return this.product.name && this.product.name.length <= 100;
     },
     isDescriptionValid() {
-      return this.product.productDescription && this.product.productDescription.trim() !== "";
+      return (
+        this.product.productDescription &&
+        this.product.productDescription.trim() !== ""
+      );
     },
     isCategoryValid() {
       return this.selectedCategories && this.selectedCategories.length > 0;
