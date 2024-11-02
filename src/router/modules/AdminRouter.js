@@ -1,4 +1,5 @@
 import Dasboard from "../../modules/admin/views/AdminDashBoard.vue"
+import Products from "../../modules/admin/views/AdminProducts.vue"
 export default [
     {
         path: '/admin',
@@ -16,7 +17,17 @@ export default [
                 name: 'dashboard',
                 component: Dasboard,
                 meta: {
-                    title: 'Dashboard',
+                    title: 'Inicio',
+                    role: "admin"
+                }
+
+            },
+            {
+                path: '/admin/products',
+                name: 'products',
+                component: Products,
+                meta: {
+                    title: 'Productos',
                     role: "admin"
                 }
 

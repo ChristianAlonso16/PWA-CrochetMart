@@ -2,13 +2,13 @@
   <div class="h-auto">
     <!-- Contenedor de tarjetas -->
     <div class="grid grid-nogutter">
-      <div class="col-12 md:col-4 px-6 py-2">
+      <div class="col-12 md:col-4 px-6 py-3">
         <DashboardCard title="Usuarios" :count="120" icon="pi pi-user" />
       </div>
-      <div class="col-12 md:col-4 px-6 py-2">
+      <div class="col-12 md:col-4 px-6 py-3">
         <DashboardCard title="Productos" :count="680" icon="pi pi-box" />
       </div>
-      <div class="col-12 md:col-4 px-6 py-2">
+      <div class="col-12 md:col-4 px-6 py-3">
         <DashboardCard
           title="Pedidos"
           :count="130"
