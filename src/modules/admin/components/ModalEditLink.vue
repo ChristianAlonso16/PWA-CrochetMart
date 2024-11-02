@@ -96,21 +96,23 @@
     border-radius: 4px;
   }
   .modal-actions {
-    display: flex;
-    justify-content: space-between;
-  }
-  .save-btn {
-    background: black;
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    cursor: pointer;
-  }
-  .cancel-btn {
-    background: #ddd;
-    padding: 8px 15px;
-    border: none;
-    cursor: pointer;
-  }
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.save-btn {
+  background: white;
+  color: black;
+  padding: 8px 15px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+.cancel-btn {
+  background: black;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  cursor: pointer;
+}
   </style>
   
