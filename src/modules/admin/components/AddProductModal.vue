@@ -3,7 +3,7 @@
     <Button class="p-button-primary" @click="openModal"> Agregar </Button>
     <Dialog
       class="font-bold"
-      :containerStyle="{ width: '50vw' }"
+      :containerStyle="{ width: '60vw' }"
       modal
       closable
       @hide="closeModal"
@@ -12,8 +12,9 @@
     >
       <div class="p-fluid mt-3">
         <div class="field">
-          <label>Nombre</label>
+          <label for="product-name">Nombre</label>
           <InputText
+            id="product-name"
             v-model="product.name"
             :class="{ 'p-invalid': !isNameValid && attemptedSubmit }"
           />
@@ -23,8 +24,9 @@
           >
         </div>
         <div class="field">
-          <label>Descripción</label>
+          <label for="product-description">Descripción</label>
           <Textarea
+            id="product-description"
             v-model="product.description"
             :class="{ 'p-invalid': !isDescriptionValid && attemptedSubmit }"
             rows="5"
@@ -35,8 +37,9 @@
           >
         </div>
         <div class="field">
-          <label>Categorías</label>
+          <label for="product-categories">Categorías</label>
           <MultiSelect
+            id="product-categories"
             v-model="selectedCategories"
             :options="categories"
             optionLabel="categoryName"
@@ -52,17 +55,19 @@
         </div>
       </div>
       <template #footer>
-        <Button
-          label="Cancelar"
-          @click="closeModal"
-          class="p-button-text p-button-secondary"
-        />
-        <Button
-          class="p-button"
-          label="Registrar"
-          @click="saveProduct"
-          autofocus
-        />
+        <div class="flex justify-content-end gap-2 p-2">
+          <Button
+            label="Cancelar"
+            @click="closeModal"
+            class="p-button-text p-button-secondary"
+          />
+          <Button
+            class="p-button"
+            label="Registrar"
+            @click="saveProduct"
+            autofocus
+          />
+        </div>
       </template>
     </Dialog>
   </div>

@@ -1,10 +1,10 @@
 <template>
-  <div class="grid grid-nogutter px-6">
-    <div class="col-12 flex align-items-center py-2">
-      <p class="text-lg font-bold col-10">Administrar productos</p>
-      <div class="col-2">
-        <AddProductModal />
-      </div>
+  <div class="grid grid-nogutter px-4 sm:px-6 lg:px-8">
+    <div class="col-12 md:col-6 flex align-items-center py-2">
+      <p class="text-lg font-bold">Administrar productos</p>
+    </div>
+    <div class="col-12 md:col-6 flex justify-content-end py-2">
+      <AddProductModal />
     </div>
 
     <div class="col-12">

@@ -3,7 +3,7 @@
     <div class="header-container">
       <div class="header-left">
         <i class="pi pi-bars menu-icon" @click="toggleSidebar"></i>
-        <p class="ml-3 text-lg">Inicio</p>
+        <p class="ml-3 text-lg">{{ title }}</p>
       </div>
       <i class="pi pi-user user-icon"></i>
     </div>
@@ -14,6 +14,10 @@
 export default {
   props: {
     sidebarVisible: Boolean,
+    title: {
+      type: String,
+      default: "Inicio",
+    },
   },
   methods: {
     toggleSidebar() {

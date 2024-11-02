@@ -11,6 +11,7 @@
       <div>
         <AdminNavbar
           :sidebarVisible="sidebarVisible"
+          :title="pageTitle"
           @toggle-sidebar="toggleSidebar"
         />
       </div>
@@ -32,11 +33,17 @@ export default {
   data() {
     return {
       sidebarVisible: true,
+      pageTitle: "Inicio",
     };
   },
   methods: {
     toggleSidebar() {
       this.sidebarVisible = !this.sidebarVisible;
+    },
+  },
+  watch: {
+    $route() {
+      this.pageTitle = this.$route.meta.title;
     },
   },
 };

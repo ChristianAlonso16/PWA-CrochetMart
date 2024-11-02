@@ -10,8 +10,9 @@
   >
     <div class="p-fluid mt-3">
       <div class="field">
-        <label>Nombre</label>
+        <label for="productName">Nombre</label>
         <InputText
+          id="productName"
           v-model="product.name"
           :class="{ 'p-invalid': !isNameValid && attemptedSubmit }"
         />
@@ -20,8 +21,9 @@
         </small>
       </div>
       <div class="field">
-        <label>Descripción</label>
+        <label for="productDescription">Descripción</label>
         <Textarea
+          id="productDescription"
           v-model="product.productDescription"
           :class="{ 'p-invalid': !isDescriptionValid && attemptedSubmit }"
           rows="5"
@@ -32,8 +34,9 @@
         </small>
       </div>
       <div class="field">
-        <label>Categorías</label>
+        <label for="productCategories">Categorías</label>
         <MultiSelect
+          id="productCategories"
           v-model="selectedCategories"
           :options="categories"
           optionLabel="categoryName"

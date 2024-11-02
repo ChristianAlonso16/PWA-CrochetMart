@@ -17,7 +17,7 @@ export default [
                 name: 'dashboard',
                 component: Dasboard,
                 meta: {
-                    title: 'Dashboard',
+                    title: 'Inicio',
                     role: "admin"
                 }
 
@@ -27,7 +27,7 @@ export default [
                 name: 'products',
                 component: Products,
                 meta: {
-                    title: 'Products',
+                    title: 'Productos',
                     role: "admin"
                 }
 
