@@ -1,12 +1,11 @@
 <template>
-  <div class="grid grid-nogutter px-4 sm:px-6 lg:px-8">
+  <div class="grid grid-nogutter px-4 sm:px-6 lg:px-6">
     <div class="col-12 md:col-6 flex align-items-center py-2">
       <p class="text-lg font-bold">Administrar productos</p>
     </div>
     <div class="col-12 md:col-6 flex justify-content-end py-2">
       <AddProductModal />
     </div>
-
     <div class="col-12">
       <div>
         <DataTable
@@ -18,6 +17,7 @@
           filterDisplay="menu"
           responsiveLayout="scroll"
           :globalFilterFields="['numProduct', 'name', 'categories']"
+          @row-click="handleRowClick"
         >
           <template #header>
             <div class="flex justify-content-end">
@@ -89,11 +89,11 @@ import Column from "primevue/column";
 export default {
   components: {
     AddProductModal,
+    EditProductModalVue,
     Button,
     DataTable,
     Column,
     InputText,
-    EditProductModalVue,
   },
   data() {
     return {
@@ -131,6 +131,14 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    handleRowClick(event) {
+      const product = event.data;
+      sessionStorage.setItem("selectedProduct", JSON.stringify(product));
+      this.$router.push({
+        name: "productvariants",
+        params: { numProduct: product.numProduct },
+      });
     },
   },
   mounted() {

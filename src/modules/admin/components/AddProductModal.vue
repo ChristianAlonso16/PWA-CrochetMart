@@ -3,7 +3,7 @@
     <Button class="p-button-primary" @click="openModal"> Agregar </Button>
     <Dialog
       class="font-bold"
-      :containerStyle="{ width: '60vw' }"
+      :containerStyle="{ width: '70vw' }"
       modal
       closable
       @hide="closeModal"
@@ -65,7 +65,6 @@
             class="p-button"
             label="Registrar"
             @click="saveProduct"
-            autofocus
           />
         </div>
       </template>

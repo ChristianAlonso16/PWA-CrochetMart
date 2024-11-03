@@ -56,10 +56,76 @@ const getProductDetails = async (numberProduct) => {
   }
 };
 
+const getAttributesByName = async (name) => {
+  try {
+    const response = await axiosPrivate.get(`/attribute/getByName/${name}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getCountProducts = async () => {
+  try {
+    const response = await axiosPrivate.get("/product/countProducts");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getCountUsers = async () => {
+  try {
+    const response = await axiosPrivate.get("/user/countUsers/enable");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getCountOrders = async () => {
+  try {
+    const response = await axiosPrivate.get("/order/countOrders");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const getVariants = async (numProduct) => {
+  try {
+    const response = await axiosPrivate.get(
+      `/product/getVariants/${numProduct}`
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getVariantDetails = async (numVariant) => {
+  try {
+    const response = await axiosPrivate.get(
+      `/product/getVariantDetails/${numVariant}`
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   loginAdmin,
   getReportOrders,
   getCategories,
   getProducts,
   getProductDetails,
+  getAttributesByName,
+  getCountProducts,
+  getCountUsers,
+  getCountOrders,
+  getVariants,
+  getVariantDetails,
 };
