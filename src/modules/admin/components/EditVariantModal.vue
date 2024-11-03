@@ -1,7 +1,7 @@
 <template>
   <div>
     <Dialog
-      header="Agregar variante"
+      header="Editar variante"
       :visible.sync="localVisible"
       :containerStyle="{ width: '80vw' }"
       class="font-bold"
@@ -98,7 +98,7 @@
           @click="closeModal"
           class="p-button-text p-button-secondary"
         />
-        <Button Button class="p-button" label="Registrar" @click="submitForm" />
+        <Button label="Guardar cambios" @click="submitForm" class="p-button" />
       </template>
     </Dialog>
   </div>
@@ -125,6 +125,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    variant: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -143,6 +147,7 @@ export default {
   methods: {
     openModal() {
       this.localVisible = true;
+      this.loadVariantData();
       this.$emit("update:visible", true);
     },
     closeModal() {
@@ -151,14 +156,33 @@ export default {
       this.resetForm();
     },
     resetForm() {
-      this.price = null;
-      this.selectedColor = null;
-      this.stock = null;
-      this.uploadedFiles = [];
       this.isPriceInvalid = false;
       this.isColorInvalid = false;
       this.isStockInvalid = false;
       this.isImageInvalid = false;
+    },
+    async loadVariantData() {
+      try {
+        const response = await AdminServices.getVariantDetails(this.variant);
+        const { data, statusCode } = response;
+        if (statusCode === 200) {
+          this.price = data.price;
+          this.stock = data.stock;
+          const colorAttribute = data.attributes.find(
+            (attr) => attr.name === "Color"
+          );
+          if (colorAttribute) {
+            this.selectedColor =
+              this.colors.find(
+                (color) => color.name === colorAttribute.value
+              ) || null;
+          } else {
+            this.selectedColor = null;
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
     onUpload(event) {
       this.uploadedFiles = event.files;
@@ -189,7 +213,7 @@ export default {
       this.isStockInvalid = !this.stock || this.stock.toString().length > 10;
     },
     validateImage() {
-      //pendiente
+      this.isImageInvalid = this.uploadedFiles.length === 0;
     },
     submitForm() {
       this.validatePrice();
@@ -200,14 +224,16 @@ export default {
       if (
         !this.isPriceInvalid &&
         !this.isColorInvalid &&
-        !this.isStockInvalid
+        !this.isStockInvalid &&
+        !this.isImageInvalid
       ) {
-        console.log("guardar");
+        console.log("actualizar");
       }
     },
   },
   mounted() {
     this.getAttributes();
+    this.loadVariantData();
   },
   watch: {
     selectedColor() {
@@ -215,6 +241,11 @@ export default {
     },
     visible(newVal) {
       this.localVisible = newVal;
+    },
+    variant() {
+      if (this.localVisible) {
+        this.loadVariantData();
+      }
     },
   },
 };

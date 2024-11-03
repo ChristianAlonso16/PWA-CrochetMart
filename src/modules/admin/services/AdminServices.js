@@ -94,6 +94,27 @@ const getCountOrders = async () => {
     return error;
   }
 };
+const getVariants = async (numProduct) => {
+  try {
+    const response = await axiosPrivate.get(
+      `/product/getVariants/${numProduct}`
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getVariantDetails = async (numVariant) => {
+  try {
+    const response = await axiosPrivate.get(
+      `/product/getVariantDetails/${numVariant}`
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
 
 export default {
   loginAdmin,
@@ -105,4 +126,6 @@ export default {
   getCountProducts,
   getCountUsers,
   getCountOrders,
+  getVariants,
+  getVariantDetails,
 };

@@ -35,7 +35,7 @@ export default [
         name: "productvariants",
         component: ProductVariants,
         meta: {
-          title: "Variantes de productos",
+          title: "Productos /",
           role: "admin",
         },
         props: true,

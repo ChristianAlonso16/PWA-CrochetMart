@@ -6,7 +6,6 @@
     <div class="col-12 md:col-6 flex justify-content-end py-2">
       <AddProductModal />
     </div>
-    <AddVariantModal />
     <div class="col-12">
       <div>
         <DataTable
@@ -82,7 +81,6 @@
 import AddProductModal from "../components/AddProductModal.vue";
 import EditProductModalVue from "../components/EditProductModal.vue";
 import AdminServices from "@/modules/admin/services/AdminServices";
-import AddVariantModal from "../components/AddVariantModal.vue";
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import DataTable from "primevue/datatable";
@@ -91,12 +89,11 @@ import Column from "primevue/column";
 export default {
   components: {
     AddProductModal,
+    EditProductModalVue,
     Button,
     DataTable,
     Column,
     InputText,
-    EditProductModalVue,
-    AddVariantModal,
   },
   data() {
     return {
@@ -137,6 +134,7 @@ export default {
     },
     handleRowClick(event) {
       const product = event.data;
+      sessionStorage.setItem("selectedProduct", JSON.stringify(product));
       this.$router.push({
         name: "productvariants",
         params: { numProduct: product.numProduct },
