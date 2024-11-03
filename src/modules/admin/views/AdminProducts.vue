@@ -47,7 +47,7 @@
           </Column>
           <Column field="reviews" header="Reseñas" :sortable="true">
             <template #body="{ data }">
-              {{ data.reviews }}
+              <Rating :value="data.reviews" :readOnly="true" :cancel="false" />
             </template>
           </Column>
 
@@ -85,6 +85,7 @@ import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
+import Rating from "primevue/rating";
 
 export default {
   components: {
@@ -94,6 +95,7 @@ export default {
     DataTable,
     Column,
     InputText,
+    Rating,
   },
   data() {
     return {
@@ -119,13 +121,11 @@ export default {
       try {
         const response = await AdminServices.getProducts();
         const { data, statusCode } = response;
-
         if (statusCode === 200) {
           this.products = data.map((product) => ({
             ...product,
-            categories: product.categories
-              .map((category) => category.categoryName)
-              .join(", "),
+            categories: product.categories.join(", "),
+            reviews: product.avgRating,
           }));
         }
       } catch (error) {

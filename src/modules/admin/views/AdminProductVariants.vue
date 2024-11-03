@@ -147,7 +147,6 @@ export default {
 
         if (statusCode === 200) {
           this.variants = data;
-          console.log(this.variants);
         }
       } catch (error) {
         console.log(error);
