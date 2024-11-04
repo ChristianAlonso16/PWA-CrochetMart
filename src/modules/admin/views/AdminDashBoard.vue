@@ -2,16 +2,20 @@
   <div class="h-auto">
     <!-- Contenedor de tarjetas -->
     <div class="grid grid-nogutter">
-      <div class="col-12 md:col-4 px-6 py-2">
-        <DashboardCard title="Usuarios" :count="120" icon="pi pi-user" />
+      <div class="col-12 md:col-4 px-6 py-3">
+        <DashboardCard title="Usuarios" :count="countUsers" icon="pi pi-user" />
       </div>
-      <div class="col-12 md:col-4 px-6 py-2">
-        <DashboardCard title="Productos" :count="680" icon="pi pi-box" />
+      <div class="col-12 md:col-4 px-6 py-3">
+        <DashboardCard
+          title="Productos"
+          :count="countProducts"
+          icon="pi pi-box"
+        />
       </div>
-      <div class="col-12 md:col-4 px-6 py-2">
+      <div class="col-12 md:col-4 px-6 py-3">
         <DashboardCard
           title="Pedidos"
-          :count="130"
+          :count="countOrders"
           icon="pi pi-shopping-cart"
         />
       </div>
@@ -30,10 +34,59 @@
 <script>
 import DashboardCard from "../components/DashboardCard.vue";
 import RecentSalesTable from "../components/RecentSalesTable.vue";
+import AdminServices from "@/modules/admin/services/AdminServices";
+
 export default {
   components: {
     DashboardCard,
     RecentSalesTable,
+  },
+  data() {
+    return {
+      countProducts: 0,
+      countOrders: 0,
+      countUsers: 0,
+    };
+  },
+  methods: {
+    async getCountProducts() {
+      try {
+        const response = await AdminServices.getCountProducts();
+        const { data, statusCode } = response;
+        if (statusCode === 200) {
+          this.countProducts = data;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getCountOrders() {
+      try {
+        const response = await AdminServices.getCountOrders();
+        const { data, statusCode } = response;
+        if (statusCode === 200) {
+          this.countOrders = data;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getCountUsers() {
+      try {
+        const response = await AdminServices.getCountUsers();
+        const { data, statusCode } = response;
+        if (statusCode === 200) {
+          this.countUsers = data;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+  mounted() {
+    this.getCountProducts();
+    this.getCountOrders();
+    this.getCountUsers();
   },
 };
 </script>

@@ -3,7 +3,8 @@
     <div class="header-container">
       <div class="header-left">
         <i class="pi pi-bars menu-icon" @click="toggleSidebar"></i>
-        <p class="ml-3 text-lg">Inicio</p>
+        <p class="ml-3 text-lg" @click="goBack">{{ title }}</p>
+        <p class="ml-3 text-lg">{{ subTitle }}</p>
       </div>
       <i class="pi pi-user user-icon"></i>
     </div>
@@ -14,10 +15,23 @@
 export default {
   props: {
     sidebarVisible: Boolean,
+    title: {
+      type: String,
+      default: "Inicio",
+    },
+    subTitle: {
+      type: String,
+      default: "",
+    },
   },
   methods: {
     toggleSidebar() {
       this.$emit("toggle-sidebar");
+    },
+    goBack() {
+      if (this.subTitle) {
+        this.$router.go(-1);
+      }
     },
   },
 };
