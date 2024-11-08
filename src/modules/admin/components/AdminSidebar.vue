@@ -37,7 +37,7 @@ export default {
       menuItems: [
         { icon: "pi pi-home", label: "Inicio", href: "/admin/dashboard" },
         { icon: "pi pi-box", label: "Productos", href: "/admin/products" },
-        { icon: "pi pi-th-large", label: "Categorías", href: "#" },
+        { icon: "pi pi-th-large", label: "Categorías", href: "/admin/categories" },
         { icon: "pi pi-user", label: "Usuarios", href: "#" },
         { icon: "pi pi-shopping-cart", label: "Ventas", href: "#" },
         { icon: "pi pi-key", label: "Key", href: "#" },

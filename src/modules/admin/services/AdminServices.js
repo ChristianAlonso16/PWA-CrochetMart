@@ -24,7 +24,7 @@ const getReportOrders = async () => {
   }
 };
 
-const getCategories = async () => {
+const getCategoriesByStatus = async () => {
   try {
     const response = await axiosPrivate.get("/category/getByStatus/enable");
 
@@ -33,6 +33,7 @@ const getCategories = async () => {
     return error;
   }
 };
+
 
 const getProducts = async () => {
   try {
@@ -48,6 +49,37 @@ const getProductDetails = async (numberProduct) => {
   try {
     const response = await axiosPrivate.get(
       `/product/getDetails/${numberProduct}`
+    );
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const getAllCategories = async () => {
+  try {
+    const response = await axiosPrivate.get("/category/getAll");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const deleteCategory = async (numberProduct) => {
+  try {
+    const response = await axiosPrivate.get(
+      `/category/deleteCategory/${numberProduct}`
+    );
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const updateCategory = async (numberProduct) => {
+  try {
+    const response = await axiosPrivate.get(
+      `/category/update/${numberProduct}`
     );
 
     return response.data;
@@ -119,7 +151,8 @@ const getVariantDetails = async (numVariant) => {
 export default {
   loginAdmin,
   getReportOrders,
-  getCategories,
+  getCategoriesByStatus,
+  getAllCategories,
   getProducts,
   getProductDetails,
   getAttributesByName,
@@ -128,4 +161,6 @@ export default {
   getCountOrders,
   getVariants,
   getVariantDetails,
+  deleteCategory,
+  updateCategory,
 };
