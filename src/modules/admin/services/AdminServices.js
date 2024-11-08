@@ -116,6 +116,23 @@ const getVariantDetails = async (numVariant) => {
   }
 };
 
+const addProduct = async (data) => {
+  try {
+    const response = await axiosPrivate.post("/product/addProduct", data);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const updateProduct = async (data) => {
+  try {
+    const response = await axiosPrivate.post("/product/updateProduct", data);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
 export default {
   loginAdmin,
   getReportOrders,
@@ -128,4 +145,6 @@ export default {
   getCountOrders,
   getVariants,
   getVariantDetails,
+  addProduct,
+  updateProduct,
 };

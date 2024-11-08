@@ -63,9 +63,6 @@ export default {
 
 <style>
 .text-black {
-  color: black;
-}
-.text-gray-500 {
-  color: #7d7d7d;
+  color: #252525;
 }
 </style>

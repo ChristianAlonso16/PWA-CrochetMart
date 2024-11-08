@@ -64,6 +64,8 @@
           <Button
             class="p-button"
             label="Registrar"
+            :loading="isLoading"
+            :disabled="isLoading"
             @click="saveProduct"
           />
         </div>
@@ -98,6 +100,7 @@ export default {
       selectedCategories: null,
       categories: [],
       attemptedSubmit: false,
+      isLoading: false,
     };
   },
   computed: {
@@ -122,7 +125,7 @@ export default {
     saveProduct() {
       this.attemptedSubmit = true;
       if (this.isNameValid && this.isDescriptionValid && this.isCategoryValid) {
-        console.log("pa guardar");
+        this.addProduct();
       }
     },
     resetForm() {
@@ -143,6 +146,29 @@ export default {
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+    async addProduct() {
+      this.isLoading = true;
+      try {
+        const data = {
+          nameProduct: this.product.name,
+          productDescription: this.product.description,
+          categoryName: this.selectedCategories.map(
+            (category) => category.categoryName
+          ),
+        };
+        const response = await AdminServices.addProduct(data);
+
+        const { statusCode } = response;
+        if (statusCode === 201) {
+          this.$emit("product-added");
+          this.closeModal();
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isLoading = false;
       }
     },
   },

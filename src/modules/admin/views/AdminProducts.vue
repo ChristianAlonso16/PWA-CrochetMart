@@ -4,7 +4,7 @@
       <p class="text-lg font-bold">Administrar productos</p>
     </div>
     <div class="col-12 md:col-6 flex justify-content-end py-2">
-      <AddProductModal />
+      <AddProductModal @product-added="refreshTable" />
     </div>
     <div class="col-12">
       <div>
@@ -17,7 +17,6 @@
           filterDisplay="menu"
           responsiveLayout="scroll"
           :globalFilterFields="['numProduct', 'name', 'categories']"
-          @row-click="handleRowClick"
         >
           <template #header>
             <div class="flex justify-content-end">
@@ -60,8 +59,13 @@
               />
               <Button
                 icon="pi pi-trash"
-                class="p-button-rounded p-button-danger"
+                class="p-button-rounded p-button-danger mr-2"
                 @click="deleteProduct(data)"
+              />
+              <Button
+                icon="pi pi-eye"
+                class="p-button-rounded p-button-info"
+                @click="handleRowClick(data)"
               />
             </template>
           </Column>
@@ -73,6 +77,7 @@
       v-if="selectedProduct"
       :visible.sync="isEditModalVisible"
       @close="selectedProduct = null"
+      @product-updated="handleProductUpdated"
     />
   </div>
 </template>
@@ -132,13 +137,20 @@ export default {
         console.log(error);
       }
     },
-    handleRowClick(event) {
-      const product = event.data;
+    handleRowClick(product) {
       sessionStorage.setItem("selectedProduct", JSON.stringify(product));
       this.$router.push({
         name: "productvariants",
         params: { numProduct: product.numProduct },
       });
+    },
+    handleProductUpdated() {
+      this.refreshTable();
+      this.isEditModalVisible = false;
+      this.selectedProduct = null;
+    },
+    refreshTable() {
+      this.getProduct();
     },
   },
   mounted() {
