@@ -1,5 +1,5 @@
 <template>
-    <Card class="flex flex-column justify-content-between w-20rem p-3 border-round-xl">
+    <Card class="flex flex-column justify-content-between p-3 border-round-xl w-full max-w-20rem">
         <template #header>
             <img class="w-full h-10rem border-round-lg card-image" :src="product.image || defaultProduct.image" :alt="product.productName || defaultProduct.title" />
         </template>

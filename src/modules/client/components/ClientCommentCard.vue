@@ -1,5 +1,5 @@
 <template>
-    <Card class="flex flex-column justify-content-between w-30rem p-3 border-round-xl">
+    <Card class="flex flex-column justify-content-between p-3 border-round-xl w-full max-w-30rem">
         <template #content>
             <div class="flex justify-content-between align-items-center mb-2">
                 <Rating :value="commentData.rating" :readonly="true" :stars="5" :cancel="false" />
