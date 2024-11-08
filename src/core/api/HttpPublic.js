@@ -1,7 +1,6 @@
 import axios from "axios";
 import router from "@/router";
-import Alerts from '../services/Alerts';
-import store from "../store/index";
+import store from "@/store/store";
 const SERVER_URL = "http://127.0.0.1:8080/api"
 const client = axios.create({
     baseURL: SERVER_URL,
@@ -9,9 +8,6 @@ const client = axios.create({
 })
 client.interceptors.request.use(
     function (config) {
-        if (config.data) {
-            config.data = config.data;
-        }
         return config
     },
     function (error) {
