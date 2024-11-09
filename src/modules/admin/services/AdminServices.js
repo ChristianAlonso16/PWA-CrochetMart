@@ -148,6 +148,22 @@ const getVariantDetails = async (numVariant) => {
   }
 };
 
+const addCategory = async (name, description, icon) => {
+  try {
+    const category = {
+      categoryName: name,
+      categoryDescription: description,
+      icono: icon,
+    };
+
+    const response = await axiosPrivate.post("/category/register", category);
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   loginAdmin,
   getReportOrders,
@@ -163,4 +179,5 @@ export default {
   getVariantDetails,
   deleteCategory,
   updateCategory,
+  addCategory,
 };

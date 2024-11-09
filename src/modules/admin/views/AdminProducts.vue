@@ -18,6 +18,7 @@
           responsiveLayout="scroll"
           :globalFilterFields="['numProduct', 'name', 'categories']"
           @row-click="handleRowClick"
+          ariaLabel="Tabla de productos"
         >
           <template #header>
             <div class="flex justify-content-end">
