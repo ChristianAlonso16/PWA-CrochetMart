@@ -3,10 +3,10 @@
     <div class="col-12 md:col-6 flex align-items-center py-2">
       <p class="text-lg font-bold">Administrar Categorías</p>
     </div>
-    <div class="col-12 md:col-6 flex justify-content-end py-2">
+    <div class="col-12 md:col-6 flex justify-content-end py-4">
       <Button class="p-button-primary" @click="openModal"> Agregar </Button>
     </div>
-    <AddCategoryModal :visible.sync="modalVisible" />
+    <AddCategoryModal :visible.sync="modalVisible" @refresh="getCategories" />
 
     <div class="col-12">
       <div>
@@ -19,7 +19,6 @@
           filterDisplay="menu"
           responsiveLayout="scroll"
           :globalFilterFields="['categoryName', 'categoryDescription']"
-          @row-click="handleRowClick"
         >
           <template #header>
             <div class="flex justify-content-end">
@@ -32,6 +31,20 @@
               </span>
             </div>
           </template>
+          <Column field="icono" header="Ícono">
+            <template #body="{ data }">
+              <div v-if="data.icono">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path :d="findIconPath(data.icono)" />
+                </svg>
+              </div>
+            </template>
+          </Column>
 
           <Column field="categoryName" header="Nombre" :sortable="true" />
           <Column
@@ -46,13 +59,6 @@
               />
             </template>
           </Column>
-          <Column field="status.statusName" header="Estado" :sortable="true">
-            <template #body="{ data }">
-              <span>{{
-                data.status.statusName === "enable" ? "Activo" : "Inactiva"
-              }}</span>
-            </template>
-          </Column>
 
           <Column header="Acciones">
             <template #body="{ data }">
@@ -62,9 +68,18 @@
                 @click="openEditModal(data)"
               />
               <Button
-                icon="pi pi-trash"
-                class="p-button-rounded p-button-danger"
-                @click="deleteCategory(data)"
+                :icon="
+                  data.status.statusName === 'enable'
+                    ? 'pi pi-check'
+                    : 'pi pi-times'
+                "
+                class="p-button-rounded"
+                :class="
+                  data.status.statusName === 'enable'
+                    ? 'p-button-success'
+                    : 'p-button-danger'
+                "
+                @click="toggleStatus(data)"
               />
             </template>
           </Column>
@@ -75,8 +90,8 @@
       :category="selectedCategory"
       v-if="selectedCategory"
       :visible.sync="isEditModalVisible"
+      @update-category="updateCategory"
       @close="selectedCategory = null"
-      @refresh="getCategories"
     />
   </div>
 </template>
@@ -89,6 +104,7 @@ import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
+import * as mdiIcons from "@mdi/js";
 
 export default {
   components: {
@@ -115,7 +131,6 @@ export default {
       try {
         const response = await AdminServices.getAllCategories();
         const { data, statusCode } = response;
-
         if (statusCode === 200) {
           this.categories = data;
         }
@@ -123,20 +138,49 @@ export default {
         console.log(error);
       }
     },
+    findIconPath(iconName) {
+      const formattedName = iconName
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/^./, (str) => str.toUpperCase());
+      const icon = Object.entries(mdiIcons).find(
+        ([key]) =>
+          key
+            .replace("mdi", "")
+            .replace(/([A-Z])/g, " $1")
+            .trim() === formattedName
+      );
+      return icon ? icon[1] : "";
+    },
     openEditModal(category) {
-      this.selectedCategory = category;
+      this.selectedCategory = { ...category };
       this.isEditModalVisible = true;
     },
-    async deleteCategory(category) {
+    async updateCategory() {
       try {
-        await AdminServices.deleteCategory(category.categoryName);
+        await this.getCategories();
+        this.isEditModalVisible = false;
+        this.selectedCategory = null;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async toggleStatus(category) {
+      try {
+        const newStatus =
+          category.status.statusName === "enable" ? "disabled" : "enable";
+        await AdminServices.deleteCategory(category.categoryName, newStatus);
+        this.getCategories();
+      } catch (error) {
+        console.error("Error al cambiar el estado:", error);
+      }
+    },
+    async deleteCategory(name, status) {
+      try {
+        await AdminServices.deleteCategory(name, status);
         this.getCategories();
       } catch (error) {
         console.log(error);
       }
-    },
-    handleRowClick(rowData) {
-      this.openEditModal(rowData);
     },
     openModal() {
       this.modalVisible = true;

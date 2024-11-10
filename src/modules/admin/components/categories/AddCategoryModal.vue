@@ -9,67 +9,63 @@
       modal
       closable
     >
-      <div class="flex flex-wrap md:flex-nowrap">
-        <div class="col-12">
-          <div class="p-fluid">
-            <div class="field">
-              <label for="categoryName">Nombre de la Categoría</label>
-              <InputText
-                id="categoryName"
-                v-model="categoryName"
-                placeholder="Ingrese el nombre de la categoría"
-                :class="{ 'p-invalid': isCategoryNameInvalid }"
-                @blur="validateCategoryName"
-              />
-              <small v-if="isCategoryNameInvalid" class="p-error">
-                El nombre de la categoría es obligatorio y debe tener menos de
-                100 caracteres.
-              </small>
-            </div>
-            <div class="field">
-              <label for="categoryDescription">Descripción</label>
-              <Textarea
-                id="categoryDescription"
-                v-model="categoryDescription"
-                placeholder="Ingrese una descripción"
-                rows="4"
-              />
-            </div>
-            <div class="field">
-              <label for="icono">Ícono</label>
-              <AutoComplete
-                id="icono"
-                v-model="icono"
-                :suggestions="filteredIcons"
-                @complete="searchIcon"
-                :dropdown="true"
-                field="name"
-                appendTo="body"
-              >
-                <template #item="slotProps">
-                  <div class="icon-item">
-                    <svg
-                      :width="24"
-                      :height="24"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path :d="slotProps.item.path" />
-                    </svg>
-                    <span>{{ slotProps.item.name }}</span>
-                  </div>
-                </template>
-              </AutoComplete>
-              <small v-if="isIconInvalid" class="p-error">
-                El ícono es obligatorio.
-              </small>
-              <div v-if="icono" class="mt-2">
-                <span style="icon-item">Seleccionado: </span>
-                <svg width="96" height="96" viewBox="0 0 32 32">
-                  <path :d="icono.path" />
+      <div class="p-fluid">
+        <div class="field">
+          <label for="categoryName">Nombre de la Categoría</label>
+          <InputText
+            id="categoryName"
+            v-model="categoryName"
+            placeholder="Ingrese el nombre de la categoría"
+            :class="{ 'p-invalid': isCategoryNameInvalid }"
+            @blur="validateCategoryName"
+          />
+          <small v-if="isCategoryNameInvalid" class="p-error">
+            El nombre de la categoría es obligatorio y debe tener menos de 100
+            caracteres.
+          </small>
+        </div>
+        <div class="field">
+          <label for="categoryDescription">Descripción</label>
+          <Textarea
+            id="categoryDescription"
+            v-model="categoryDescription"
+            placeholder="Ingrese una descripción"
+            rows="4"
+          />
+        </div>
+        <div class="field">
+          <label for="icono">Ícono</label>
+          <AutoComplete
+            id="icono"
+            v-model="icono"
+            :suggestions="filteredIcons"
+            @complete="searchIcon"
+            :dropdown="true"
+            field="name"
+            appendTo="body"
+          >
+            <template #item="slotProps">
+              <div>
+                <svg
+                  :width="24"
+                  :height="24"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path :d="slotProps.item.path" />
                 </svg>
+                <span>{{ slotProps.item.name }}</span>
               </div>
-            </div>
+            </template>
+          </AutoComplete>
+          <small v-if="isIconInvalid" class="p-error">
+            El ícono es obligatorio.
+          </small>
+          <div v-if="icono" class="mt-2">
+            <span style="icon-item">Seleccionado: </span>
+            <svg width="96" height="96" viewBox="0 0 32 32">
+              <path :d="icono.path" />
+            </svg>
           </div>
         </div>
       </div>
@@ -179,6 +175,7 @@ export default {
         const { statusCode } = response;
         if (statusCode === 201) {
           this.$emit("category-added");
+          this.$emit("refresh");
           this.closeModal();
         }
       } catch (error) {
@@ -197,10 +194,5 @@ export default {
 <style scoped>
 .p-error {
   color: red;
-}
-
-.icon-item {
-  display: flex;
-  align-items: center;
 }
 </style>
