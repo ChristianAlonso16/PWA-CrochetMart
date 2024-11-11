@@ -1,105 +1,205 @@
 <template>
-    <Dialog
-      class="font-bold"
-      :containerStyle="{ width: '70vw' }"
-      modal
-      closable
-      @hide="closeModal"
-      header="Editar Categoría"
-      :visible.sync="localVisible"
-    >
-      <div class="p-fluid mt-3">
-        <div class="field">
-          <label for="categoryName">Nombre de la Categoría</label>
-          <InputText
-            id="categoryName"
-            v-model="categoryData.categoryName"
-            :class="{ 'p-invalid': !isNameValid && attemptedSubmit }"
-          />
-          <small v-if="!isNameValid && attemptedSubmit" class="p-error">
-            El nombre es obligatorio y debe tener menos de 100 caracteres
-          </small>
-        </div>
-        <div class="field">
-          <label for="categoryDescription">Descripción</label>
-          <Textarea
-            id="categoryDescription"
-            v-model="categoryData.categoryDescription"
-            rows="5"
-            :class="{ 'p-invalid': !isDescriptionValid && attemptedSubmit }"
-          />
-          <small v-if="!isDescriptionValid && attemptedSubmit" class="p-error">
-            La descripción es obligatoria
-          </small>
+  <Dialog
+    header="Editar Categoría"
+    :visible.sync="localVisible"
+    :containerStyle="{ width: '50vw' }"
+    class="font-bold"
+    @hide="closeModal"
+    modal
+    closable
+  >
+    <div class="p-fluid">
+      <div class="field">
+        <label for="editCategoryName">Nombre de la Categoría</label>
+        <InputText
+          id="editCategoryName"
+          v-model="localCategoryName"
+          placeholder="Ingrese el nombre de la categoría"
+          :class="{ 'p-invalid': isCategoryNameInvalid }"
+          @blur="validateCategoryName"
+        />
+        <small v-if="isCategoryNameInvalid" class="p-error">
+          El nombre de la categoría es obligatorio y debe tener menos de 100
+          caracteres.
+        </small>
+      </div>
+      <div class="field">
+        <label for="editCategoryDescription">Descripción</label>
+        <Textarea
+          id="editCategoryDescription"
+          v-model="localCategoryDescription"
+          placeholder="Ingrese una descripción"
+          rows="4"
+        />
+      </div>
+      <div class="field">
+        <label for="editIcon">Ícono</label>
+        <AutoComplete
+          id="editIcon"
+          v-model="localIcon"
+          :suggestions="filteredIcons"
+          @complete="searchIcon"
+          :dropdown="true"
+          field="name"
+          appendTo="body"
+        >
+          <template #item="slotProps">
+            <div>
+              <svg
+                :width="24"
+                :height="24"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path :d="slotProps.item.path" />
+              </svg>
+              <span>{{ slotProps.item.name }}</span>
+            </div>
+          </template>
+        </AutoComplete>
+        <small v-if="isIconInvalid" class="p-error">
+          El ícono es obligatorio.
+        </small>
+        <div v-if="localIcon" class="mt-2">
+          <span>Seleccionado: </span>
+          <svg width="96" height="96" viewBox="0 0 32 32">
+            <path :d="localIcon.path" />
+          </svg>
         </div>
       </div>
-      <template #footer>
-        <Button
-          label="Cancelar"
-          class="p-button-text p-button-secondary"
-          @click="closeModal"
-        />
-        <Button class="p-button" label="Guardar" @click="updateCategory" />
-      </template>
-    </Dialog>
-  </template>
-  
-  <script>
-  import Dialog from "primevue/dialog";
-  import InputText from "primevue/inputtext";
-  import Textarea from "primevue/textarea";
-  import Button from "primevue/button";
-  
-  export default {
-    components: {
-      Dialog,
-      InputText,
-      Textarea,
-      Button,
+    </div>
+    <template #footer>
+      <Button
+        label="Cancelar"
+        @click="closeModal"
+        class="p-button-text p-button-secondary"
+      />
+      <Button label="Guardar" class="p-button" @click="submitEdit" />
+    </template>
+  </Dialog>
+</template>
+<script>
+import Dialog from "primevue/dialog";
+import InputText from "primevue/inputtext";
+import Textarea from "primevue/textarea";
+import AutoComplete from "primevue/autocomplete";
+import Button from "primevue/button";
+import * as mdiIcons from "@mdi/js";
+import AdminServices from "@/modules/admin/services/AdminServices";
+
+export default {
+  components: {
+    Dialog,
+    InputText,
+    Textarea,
+    AutoComplete,
+    Button,
+  },
+  props: {
+    visible: {
+      type: Boolean,
+      default: false,
     },
-    props: {
-      category: Object,
-      visible: Boolean,
+    category: {
+      type: Object,
+      required: true,
     },
-    data() {
-      return {
-        localVisible: this.visible,
-        categoryData: { ...this.category },
-        attemptedSubmit: false,
-      };
+  },
+  data() {
+    return {
+      localVisible: this.visible,
+      localCategoryName: "",
+      localCategoryDescription: "",
+      localIcon: null,
+      isCategoryNameInvalid: false,
+      isIconInvalid: false,
+      icons: Object.entries(mdiIcons).map(([key, path]) => ({
+        name: key
+          .replace("mdi", "")
+          .replace(/([A-Z])/g, " $1")
+          .trim(),
+        path,
+      })),
+      filteredIcons: [],
+    };
+  },
+  methods: {
+    closeModal() {
+      this.localVisible = false;
+      this.$emit("update:visible", false);
     },
-    watch: {
-      visible(newVal) {
-        this.localVisible = newVal;
-        if (newVal) {
-          this.categoryData = { ...this.category };
-        }
-      },
-      localVisible(newVal) {
-        this.$emit("update:visible", newVal);
-      },
+    validateCategoryName() {
+      this.isCategoryNameInvalid =
+        !this.localCategoryName || this.localCategoryName.length > 100;
     },
-    computed: {
-      isNameValid() {
-        return this.categoryData.categoryName && this.categoryData.categoryName.length <= 100;
-      },
-      isDescriptionValid() {
-        return this.categoryData.categoryDescription && this.categoryData.categoryDescription.trim() !== "";
-      },
+    validateIcon() {
+      this.isIconInvalid = !this.localIcon;
     },
-    methods: {
-      closeModal() {
-        this.localVisible = false;
-        this.$emit("close");
-      },
-      updateCategory() {
-        this.attemptedSubmit = true;
-        if (this.isNameValid && this.isDescriptionValid) {
-          this.$emit("update-category", this.categoryData);
+    searchIcon(event) {
+      const query = event.query.toLowerCase();
+      this.filteredIcons = this.icons.filter((icon) =>
+        icon.name.toLowerCase().includes(query)
+      );
+    },
+    async update(name, description, icon) {
+      try {
+        const response = await AdminServices.updateCategory(
+          name,
+          description,
+          icon
+        );
+        const { statusCode } = response;
+        if (statusCode === 200) {
           this.closeModal();
         }
-      },
+      } catch (error) {
+        console.error(error);
+      }
     },
-  };
-  </script>
-  
+    findIconByName(iconName) {
+      const formattedName = iconName
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/^./, (str) => str.toUpperCase());
+      return this.icons.find((icon) => icon.name === formattedName);
+    },
+    async submitEdit() {
+      this.validateCategoryName();
+      this.validateIcon();
+      if (this.isCategoryNameInvalid || this.isIconInvalid) {
+        return;
+      }
+
+      await this.update(
+        this.localCategoryName,
+        this.localCategoryDescription,
+        this.localIcon.name
+      );
+      this.$emit("update-category");
+    },
+    syncCategoryData() {
+      if (this.category) {
+        this.localCategoryName = this.category.categoryName || "";
+        this.localCategoryDescription = this.category.categoryDescription || "";
+        this.localIcon = this.findIconByName(this.category.icono || "");
+      }
+    },
+  },
+  watch: {
+    visible(newVal) {
+      this.localVisible = newVal;
+      if (newVal) {
+        this.syncCategoryData();
+      }
+    },
+    category: {
+      handler() {
+        this.syncCategoryData();
+      },
+      deep: true,
+    },
+  },
+  mounted() {
+    this.syncCategoryData();
+  },
+};
+</script>
