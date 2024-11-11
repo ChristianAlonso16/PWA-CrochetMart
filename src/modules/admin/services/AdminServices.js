@@ -151,6 +151,75 @@ const getVariantDetails = async (numVariant) => {
   }
 };
 
+const addProduct = async (data) => {
+  try {
+    const response = await axiosPrivate.post("/product/addProduct", data);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const updateProduct = async (data) => {
+  try {
+    const response = await axiosPrivate.post("/product/updateProduct", data);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const addVariant = async (price, color, stock, files, numProduct) => {
+  try {
+    const formData = new FormData();
+    formData.append("price", price);
+    formData.append("color", color);
+    formData.append("stock", stock);
+    formData.append("numProduct", numProduct);
+    files.forEach((file) => {
+      formData.append("imagesDtoList", file);
+    });
+
+    const response = await axiosPrivate.post(
+      "/product/addProductVariantWithImages",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const updateVariant = async (data) => {
+  try {
+    const formData = new FormData();
+    formData.append("price", data.price);
+    formData.append("color", data.color);
+    formData.append("stock", data.stock);
+    formData.append("numProduct", data.numVariant);
+    data.images.forEach((file) => {
+      formData.append("imagesDtoList", file);
+    });
+
+    const response = await axiosPrivate.post(
+      "/product/updateProductVariantWithImages",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
 const addCategory = async (name, description, icon) => {
   try {
     const category = {
@@ -180,6 +249,10 @@ export default {
   getCountOrders,
   getVariants,
   getVariantDetails,
+  addProduct,
+  updateProduct,
+  addVariant,
+  updateVariant,
   deleteCategory,
   updateCategory,
   addCategory,

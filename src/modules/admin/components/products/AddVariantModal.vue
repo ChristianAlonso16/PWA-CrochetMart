@@ -12,24 +12,30 @@
       <div class="flex flex-wrap md:flex-nowrap">
         <div class="col-12 md:col-8 mb-3 md:mb-0">
           <FileUpload
-            name="demo[]"
-            url="./upload.php"
-            @upload="onUpload"
+            :key="fileUploadKey"
+            name="images"
             :multiple="true"
             accept="image/*"
             :maxFileSize="1000000"
             chooseLabel="Seleccionar"
-            uploadLabel="Subir"
             cancelLabel="Cancelar"
             :class="{ 'p-invalid': isImageInvalid }"
+            @select="onSelect"
+            @clear="onClear"
+            @remove="onRemove"
+            :showUploadButton="false"
+            invalidFileSizeMessage="Tamaño de archivo excedido"
+            invalidFileMessage="Tipo de archivo no permitido"
+            invalidFileLimitMessage="Máximo número de archivos excedido"
+            :fileLimit="5"
           >
             <template #empty>
               <p>Arrastra y suelta archivos aquí para subir.</p>
             </template>
           </FileUpload>
-          <small v-if="isImageInvalid" class="p-error"
-            >Debe cargar al menos una imagen.</small
-          >
+          <small v-if="isImageInvalid" class="p-error">
+            Debe cargar al menos una imagen.
+          </small>
         </div>
         <div class="col-12 md:col-4">
           <div class="p-fluid">
@@ -45,8 +51,7 @@
                 @blur="validatePrice"
               />
               <small v-if="isPriceInvalid" class="p-error"
-                >El precio es obligatorio y no debe exceder los 10
-                caracteres.</small
+                >El precio es obligatorio.</small
               >
             </div>
             <div class="field">
@@ -82,27 +87,33 @@
                 v-model="stock"
                 :class="{ 'p-invalid': isStockInvalid }"
                 @blur="validateStock"
+                :min="0"
               />
               <small v-if="isStockInvalid" class="p-error"
-                >Las existencias son obligatorias y no deben exceder los 10
-                caracteres.</small
+                >Las existencias son obligatorias.</small
               >
             </div>
           </div>
         </div>
       </div>
-
       <template #footer>
         <Button
           label="Cancelar"
           @click="closeModal"
           class="p-button-text p-button-secondary"
         />
-        <Button Button class="p-button" label="Registrar" @click="submitForm" />
+        <Button
+          label="Registrar"
+          @click="submitForm"
+          class="p-button"
+          :loading="isSubmitting"
+          :disabled="isSubmitting"
+        />
       </template>
     </Dialog>
   </div>
 </template>
+
 
 <script>
 import FileUpload from "primevue/fileupload";
@@ -114,9 +125,9 @@ import AdminServices from "@/modules/admin/services/AdminServices";
 
 export default {
   components: {
+    FileUpload,
     Button,
     Dialog,
-    FileUpload,
     InputNumber,
     Dropdown,
   },
@@ -124,6 +135,10 @@ export default {
     visible: {
       type: Boolean,
       default: false,
+    },
+    numProduct: {
+      type: String,
+      required: true,
     },
   },
   data() {
@@ -138,9 +153,23 @@ export default {
       isColorInvalid: false,
       isStockInvalid: false,
       isImageInvalid: false,
+      fileUploadKey: 0,
+      isSubmitting: false,
     };
   },
   methods: {
+    async getAttributes() {
+      try {
+        const response = await AdminServices.getAttributesByName("Color");
+        this.colors = response.data.map((attr) => ({
+          name: attr.name,
+          value: "#" + attr.value,
+        }));
+      } catch (error) {
+        console.error("Error fetching colors:", error);
+        this.colors = [];
+      }
+    },
     openModal() {
       this.localVisible = true;
       this.$emit("update:visible", true);
@@ -155,29 +184,40 @@ export default {
       this.selectedColor = null;
       this.stock = null;
       this.uploadedFiles = [];
+      this.fileUploadKey++;
       this.isPriceInvalid = false;
       this.isColorInvalid = false;
       this.isStockInvalid = false;
       this.isImageInvalid = false;
     },
-    onUpload(event) {
-      this.uploadedFiles = event.files;
+    onSelect(event) {
+      this.uploadedFiles = [...event.files];
+
+      event.files.forEach((file) => {
+        if (
+          !this.uploadedFiles.find(
+            (uploadedFile) => uploadedFile.name === file.name
+          )
+        ) {
+          this.uploadedFiles.push(file);
+        }
+      });
+
+      console.log("Uploaded files:", this.uploadedFiles);
       this.validateImage();
     },
-    async getAttributes() {
-      try {
-        const attribute = "Color";
-        const response = await AdminServices.getAttributesByName(attribute);
-        const { data, statusCode } = response;
-        if (statusCode === 200) {
-          this.colors = data.map((item) => ({
-            name: item.name,
-            value: "#" + item.value,
-          }));
-        }
-      } catch (error) {
-        console.error(error);
+    onClear() {
+      this.uploadedFiles = [];
+      this.validateImage();
+    },
+    onRemove(event) {
+      const fileIndex = this.uploadedFiles.findIndex(
+        (file) => file.name === event.file.name
+      );
+      if (fileIndex !== -1) {
+        this.uploadedFiles.splice(fileIndex, 1);
       }
+      this.validateImage();
     },
     validatePrice() {
       this.isPriceInvalid = !this.price || this.price.toString().length > 10;
@@ -189,7 +229,7 @@ export default {
       this.isStockInvalid = !this.stock || this.stock.toString().length > 10;
     },
     validateImage() {
-      //pendiente
+      this.isImageInvalid = this.uploadedFiles.length === 0;
     },
     submitForm() {
       this.validatePrice();
@@ -200,21 +240,46 @@ export default {
       if (
         !this.isPriceInvalid &&
         !this.isColorInvalid &&
-        !this.isStockInvalid
+        !this.isStockInvalid &&
+        !this.isImageInvalid
       ) {
-        console.log("guardar");
+        try {
+          this.isSubmitting = true;
+          this.addVariant().then(() => {
+            this.$emit("variantAdded");
+            this.closeModal();
+          });
+        } catch (error) {
+          console.log("Error adding variant:", error);
+        } finally {
+          this.isSubmitting = false;
+        }
+      } else {
+        console.log("algo ta mal");
+      }
+    },
+    async addVariant() {
+      try {
+        const response = await AdminServices.addVariant(
+          this.price,
+          this.selectedColor.name,
+          this.stock,
+          this.uploadedFiles,
+          this.numProduct
+        );
+        console.log("Response:", response);
+      } catch (error) {
+        console.error("Error adding variant:", error);
       }
     },
   },
   mounted() {
+    
     this.getAttributes();
   },
   watch: {
-    selectedColor() {
-      this.isColorInvalid = false;
-    },
-    visible(newVal) {
-      this.localVisible = newVal;
+    visible(newValue) {
+      this.localVisible = newValue;
     },
   },
 };

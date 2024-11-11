@@ -10,6 +10,15 @@
   >
     <div class="p-fluid mt-3">
       <div class="field">
+        <label for="numProduct">Código</label>
+        <InputText
+          id="numProduct"
+          v-model="product.numProduct"
+          disabled
+          class="font-bold"
+        />
+      </div>
+      <div class="field">
         <label for="productName">Nombre</label>
         <InputText
           id="productName"
@@ -57,7 +66,13 @@
         @click="closeModal"
         class="p-button-text p-button-secondary"
       />
-      <Button class="p-button" label="Actualizar" @click="updateProduct" />
+      <Button
+        class="p-button"
+        label="Actualizar"
+        @click="updateProduct"
+        :loading="isLoading"
+        :disabled="isLoading"
+      />
     </template>
   </Dialog>
 </template>
@@ -94,10 +109,12 @@ export default {
       product: {
         name: "",
         productDescription: "",
+        numProduct: "",
       },
       selectedCategories: null,
       categories: [],
       attemptedSubmit: false,
+      isLoading: false,
     };
   },
   watch: {
@@ -140,7 +157,7 @@ export default {
     updateProduct() {
       this.attemptedSubmit = true;
       if (this.isNameValid && this.isDescriptionValid && this.isCategoryValid) {
-        console.log(" atualizar");
+        this.saveProduct();
       }
     },
     resetForm() {
@@ -156,6 +173,28 @@ export default {
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+    async saveProduct() {
+      this.isLoading = true;
+      try {
+        const data = {
+          numProduct: this.product.numProduct,
+          nameProduct: this.product.name,
+          productDescription: this.product.productDescription,
+          categoryName: this.selectedCategories.map(
+            (category) => category.categoryName
+          ),
+        };
+        const response = await AdminServices.updateProduct(data);
+
+        if (response.statusCode === 200) {
+          this.$emit("product-updated");
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isLoading = false;
       }
     },
   },

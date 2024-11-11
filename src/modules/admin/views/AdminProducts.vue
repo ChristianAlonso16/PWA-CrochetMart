@@ -4,7 +4,7 @@
       <p class="text-lg font-bold">Administrar productos</p>
     </div>
     <div class="col-12 md:col-6 flex justify-content-end py-2">
-      <AddProductModal />
+      <AddProductModal @product-added="refreshTable" />
     </div>
     <div class="col-12">
       <div>
@@ -17,7 +17,6 @@
           filterDisplay="menu"
           responsiveLayout="scroll"
           :globalFilterFields="['numProduct', 'name', 'categories']"
-          @row-click="handleRowClick"
           ariaLabel="Tabla de productos"
         >
           <template #header>
@@ -60,9 +59,19 @@
                 @click="openEditModal(data)"
               />
               <Button
-                icon="pi pi-trash"
-                class="p-button-rounded p-button-danger"
-                @click="deleteProduct(data)"
+                :icon="data.status === 'enable' ? 'pi pi-check' : 'pi pi-times'"
+                class="p-button-rounded mr-2"
+                :class="
+                  data.status === 'enable'
+                    ? 'p-button-success'
+                    : 'p-button-danger'
+                "
+                @click="toggleStatus(data)"
+              />
+              <Button
+                icon="pi pi-eye"
+                class="p-button-rounded p-button-info"
+                @click="handleRowClick(data)"
               />
             </template>
           </Column>
@@ -74,13 +83,14 @@
       v-if="selectedProduct"
       :visible.sync="isEditModalVisible"
       @close="selectedProduct = null"
+      @product-updated="handleProductUpdated"
     />
   </div>
 </template>
 
 <script>
-import AddProductModal from "../components/AddProductModal.vue";
-import EditProductModalVue from "../components/EditProductModal.vue";
+import AddProductModal from "../components/products/AddProductModal.vue";
+import EditProductModalVue from "../components/products/EditProductModal.vue";
 import AdminServices from "@/modules/admin/services/AdminServices";
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
@@ -133,13 +143,31 @@ export default {
         console.log(error);
       }
     },
-    handleRowClick(event) {
-      const product = event.data;
+    handleRowClick(product) {
       sessionStorage.setItem("selectedProduct", JSON.stringify(product));
       this.$router.push({
         name: "productvariants",
         params: { numProduct: product.numProduct },
       });
+    },
+    handleProductUpdated() {
+      this.refreshTable();
+      this.isEditModalVisible = false;
+      this.selectedProduct = null;
+    },
+    refreshTable() {
+      this.getProduct();
+    },
+    async toggleStatus(product) {
+      try {
+        const newStatus = product.status === "enable" ? "disabled" : "enable";
+        console.log("cambiar estado:", product.numProduct, newStatus);
+
+        //await AdminServices.updateProductStatus(product.numProduct, newStatus);
+        this.refreshTable();
+      } catch (error) {
+        console.error("Error al cambiar el estado:", error);
+      }
     },
   },
   mounted() {

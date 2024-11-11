@@ -6,7 +6,13 @@
     <div class="col-12 md:col-6 flex justify-content-end py-3">
       <Button class="p-button-primary" @click="openModal"> Agregar</Button>
     </div>
-    <AddVariantModal :visible.sync="isAddModalVisible" />
+    <AddVariantModal
+      v-if="product?.numProduct"
+      :visible.sync="isAddModalVisible"
+      :numProduct="product.numProduct"
+      @variantAdded="refreshTable"
+    />
+
     <div class="col-12">
       <div>
         <DataTable
@@ -81,14 +87,15 @@
         :visible.sync="isEditModalVisible"
         :variant="selectedVariant?.id"
         @close="selectedVariant = null"
+        @variantUpdated="refreshTable"
       />
     </div>
   </div>
 </template>
 
 <script>
-import AddVariantModal from "@/modules/admin/components/AddVariantModal.vue";
-import EditVariantModal from "@/modules/admin/components/EditVariantModal.vue";
+import AddVariantModal from "@/modules/admin/components/products/AddVariantModal.vue";
+import EditVariantModal from "@/modules/admin/components/products/EditVariantModal.vue";
 import Button from "primevue/button";
 import AdminServices from "../services/AdminServices";
 import DataTable from "primevue/datatable";
@@ -151,6 +158,9 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    refreshTable() {
+      this.getVariants(this.product.numProduct);
     },
   },
   computed: {
