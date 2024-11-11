@@ -1,180 +1,187 @@
 <template>
-    <div id="app" class="landing-page">
-        <!-- Header Section -->
-        <header class="header">
-            <h1>Este es un ejemplo para poder iniciar la aplicacion en el landpage</h1>
-            <p>Por favor cambia esto</p>
-            <Button label="Inicia pronto" class="p-button-raised p-button-secondary get-started-btn" />
-        </header>
-
-        <!-- Features Section -->
-        <section class="features">
-            <h2>Our Key Features</h2>
-            <div class="feature-cards">
-                <Card v-for="(feature, index) in features" :key="index" class="feature-card">
-                    <template #header>
-                        <img :src="feature.icon" alt="feature-icon" class="feature-icon" />
+    <div class="p-0 m-0 landing-page">
+        <Toast/>
+        <main>
+            <div class="grid flex flex-column justify-content-center align-items-start w-full row-carousel">
+                <Carousel :value="carouselItems" :numVisible="1" :numScroll="1" :responsiveOptions="responsiveOptions">
+                    <template #item="slotProps">
+                        <div class="flex justify-content-center relative w-full">
+                            <img class="w-full" :src="slotProps.data.image" :alt="slotProps.data.alt" />
+                            <div class="absolute top-50 left-50 text-center text-white carousel-caption">
+                                <h2 class="text-2xl lg:text-4xl">{{ slotProps.data.title }}</h2>
+                                <h4 class="text-lg lg:text-2xl">{{ slotProps.data.text }}</h4>
+                                <ButtonProductLink to="/productos">Ver Productos</ButtonProductLink>
+                            </div>
+                        </div>
                     </template>
-                    <template #title>
-                        {{ feature.title }}
-                    </template>
-                    <template #content>
-                        <p>{{ feature.description }}</p>
-                    </template>
-                    <template #footer>
-                        <Button icon="pi pi-info-circle" label="Learn More"
-                            class="p-button-rounded p-button-secondary" />
-                    </template>
-                </Card>
+                </Carousel>
             </div>
-        </section>
-
-        <!-- Footer Section -->
-        <footer class="footer">
-            <p>© 2024 Your Company - All Rights Reserved</p>
-        </footer>
+            <div v-if="products.length" class="p-3 gap-1">
+                <div class="flex flex-column w-full p-3">
+                    <div class="flex flex-row justify-content-between align-items-stretch mb-3 p-3">
+                        <h1 class="text-4xl">Más Recientes</h1>
+                        <ButtonProductLink class="m-4" to="/productos">Más productos</ButtonProductLink>
+                    </div>
+                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div class="flex justify-content-center align-items-center" v-for="(product, index) in products" :key="index">
+                            <ClientCard :product="product" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="flex justify-content-center mt-4">
+                <h4>No hay productos disponibles en este momento.</h4>
+            </div>
+            <div v-if="products.length" class="p-3 gap-1">
+                <div class="flex flex-column w-full p-3">
+                    <div class="flex flex-row justify-content-between align-items-stretch mb-3 p-3">
+                        <h1 class="text-4xl">Por Categorías</h1>
+                        <ButtonProductLink class="m-4" to="/productos">Más productos</ButtonProductLink>
+                    </div>
+                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div class="flex justify-content-center align-items-center" v-for="(product, index) in products" :key="index">
+                            <ClientCard :product="product" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="flex justify-content-center mt-4">
+                <h4>No hay productos disponibles en este momento.</h4>
+            </div>
+            <div v-if="products.length" class="p-3 gap-1">
+                <div class="flex flex-column w-full p-3">
+                    <div class="flex flex-row justify-content-between align-items-stretch mb-3 p-3">
+                        <h1 class="text-4xl">Mejor Valorados</h1>
+                        <ButtonProductLink class="m-4" to="/productos">Más productos</ButtonProductLink>
+                    </div>
+                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div class="flex justify-content-center align-items-center" v-for="(product, index) in products" :key="index">
+                            <ClientRatingCard :product="product" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="flex justify-content-center mt-4">
+                <h4>No hay productos disponibles en este momento.</h4>
+            </div>
+            <div v-if="comments.length" class="p-3 gap-1">
+                <div class="flex flex-column w-full p-3">
+                    <div class="flex flex-row justify-content-between align-items-center mb-3 p-3">
+                        <h1 class="text-4xl">Comentarios Destacados</h1>
+                    </div>
+                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div class="flex justify-content-center align-items-center" v-for="(comment, index) in comments" :key="index">
+                            <ClientCommentCard :comment="comment" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="flex justify-content-center mt-4">
+                <h4>No hay comentarios disponibles en este momento.</h4>
+            </div>
+        </main>
     </div>
 </template>
 
 <script>
-import Button from 'primevue/button';
-import Card from 'primevue/card';
+import Carousel from 'primevue/carousel';
+import Toast from 'primevue/toast';
+import ButtonProductLink from '../components/ButtonProductLink.vue';
+import ClientCard from '../components/ClientCard.vue';
+import ClientRatingCard from '../components/ClientRatingCard.vue';
+import ClientCommentCard from '../components/ClientCommentCard.vue';
+import ClientServices from '@/modules/client/services/ClientServices';
 
 export default {
-    name: 'App',
+    name: 'LandingPage',
     components: {
-        Button,
-        Card
+        Carousel, Toast, ButtonProductLink, ClientCard, ClientRatingCard, ClientCommentCard
     },
     data() {
         return {
-            features: [
-                {
-                    title: 'High Performance',
-                    description: 'Our product delivers unmatched speed and efficiency.',
-                    icon: 'https://via.placeholder.com/64'
-                },
-                {
-                    title: 'Easy to Use',
-                    description: 'Designed with simplicity in mind, no complex setup required.',
-                    icon: 'https://via.placeholder.com/64'
-                },
-                {
-                    title: 'Customer Support',
-                    description: 'Our team is here to help you 24/7.',
-                    icon: 'https://via.placeholder.com/64'
-                }
-            ]
+            carouselItems: [
+                { image: '/images/carrusel1.jpg', alt: 'Carrusel 1', title: 'Descubre la Magia del Crochet', text: 'Productos hechos a mano con amor y dedicación' },
+                { image: '/images/carrusel2.jpg', alt: 'Carrusel 2', title: 'Descubre la Magia del Crochet', text: 'Productos hechos a mano con amor y dedicación' }
+            ],
+            responsiveOptions: [
+				{ breakpoint: '1024px', numVisible: 1, numScroll: 1 },
+				{ breakpoint: '600px', numVisible: 1, numScroll: 1 },
+				{ breakpoint: '480px', numVisible: 1, numScroll: 1 }
+			],
+            products: [],
+            comments: []
         };
+    },
+    created() {
+        this.fetchProducts();
+        this.fetchComments();
+    },
+    methods: {
+        async fetchProducts() {
+            try {
+                const response = await ClientServices.getProductsHome();
+                const {data, statusCode} = response;
+                if (statusCode === 200 && data.length > 0) {
+                    this.products = data;
+                    this.$toast.add({severity: 'success', summary: 'Productos cargados', detail: 'Los productos se han cargado correctamente.', life: 3000});
+                } else {
+                    this.$toast.add({severity: 'warn', summary: 'Sin productos', detail: 'No hay productos disponibles en este momento.', life: 3000});
+                }
+            } catch (error) {
+                console.error(error);
+                this.$toast.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los productos.', life: 3000});
+            }
+        },
+        fetchComments() {
+            try {
+                this.comments = [
+                {
+                        id: 1,
+                        rating: 4,
+                        date: '30 - Noviembre - 2024',
+                        text: 'Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500.'
+                    },
+                    {
+                        id: 2,
+                        rating: 5,
+                        date: '30 - Noviembre - 2024',
+                        text: 'Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500.'
+                    },
+                    {
+                        id: 3,
+                        rating: 3,
+                        date: '30 - Noviembre - 2024',
+                        text: 'Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500.'
+                    }
+                ];
+                this.$toast.add({severity: 'success', summary: 'Comentarios cargados', detail: 'Los comentarios se han cargado correctamente.', life: 3000});
+            } catch (error) {
+                console.error('Error al cargar los comentarios:', error);
+                this.$toast.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los comentarios.', life: 3000});
+            }
+            console.log(this.comments);
+        }
     }
 };
 </script>
 
 <style scoped>
 .landing-page {
-    font-family: 'Poppins', sans-serif;
-    color: #333;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, 
+                Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.header {
-    background-color: #242424;
-    color: white;
-    padding: 4rem 1.5rem;
+.row-carousel {
+    padding: 10px;
+    gap: 10px;
 }
 
-.header h1 {
-    margin: 0;
-    font-size: 3rem;
-    font-weight: 700;
+.row-carousel img {
+    height: 586px;
 }
 
-.header p {
-    font-size: 1.5rem;
-    margin: 1.5rem 0;
-}
-
-.get-started-btn {
-    margin-top: 1rem;
-    font-size: 1.2rem;
-    padding: 0.75rem 2rem;
-}
-
-.features {
-    padding: 3rem 1.5rem;
-    background-color: #f4f6f9;
-}
-
-.features h2 {
-    font-size: 2.5rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-}
-
-.feature-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
-}
-
-.feature-card {
-    width: 100%;
-    max-width: 320px;
-}
-
-.feature-icon {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 1rem;
-}
-
-.footer {
-    background-color: #242424;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-    font-size: 0.9rem;
-    margin-top: 2rem;
-}
-
-@media (max-width: 768px) {
-    .header h1 {
-        font-size: 2.2rem;
-    }
-
-    .header p {
-        font-size: 1.2rem;
-    }
-
-    .feature-card {
-        max-width: 100%;
-    }
-
-    .features h2 {
-        font-size: 2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .header h1 {
-        font-size: 1.8rem;
-    }
-
-    .header p {
-        font-size: 1rem;
-    }
-
-    .get-started-btn {
-        font-size: 1rem;
-        padding: 0.5rem 1.5rem;
-    }
-
-    .features h2 {
-        font-size: 1.8rem;
-    }
+.row-carousel .carousel-caption {
+    transform: translate(-50%, -50%);
+    text-shadow: 2px 2px 4px rgba(0,0,0,1);
 }
 </style>

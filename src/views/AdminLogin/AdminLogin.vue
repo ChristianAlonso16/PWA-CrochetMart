@@ -89,6 +89,7 @@ export default {
                 try {
                     const response = await AdminServices.loginAdmin(this.email, this.password);
                     const { data, statusCode } = response;
+                    console.log(response)
                     if (statusCode === 200) {
                         this.loginUser(data);
                         const role = utils.getRole();
