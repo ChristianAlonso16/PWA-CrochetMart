@@ -1,7 +1,7 @@
 <template>
   <div class="key-card">
     <div class="card-header">
-      <h3>{{ title }}</h3>
+      <h5><strong>{{ title }}</strong></h5>
         <i class="pi pi-link"></i>
     </div>
     <div class="description-container">
@@ -27,11 +27,11 @@ export default {
 <style scoped>
 .key-card {
   background-color: #fff;
-  padding: 20px;
+  padding: 40px;
   border-radius: 10px;
   margin-bottom: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 300px; 
+  max-width: 350px; 
 }
 
 .card-header {
@@ -49,7 +49,7 @@ export default {
 .description-container {
   display: flex;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .description-container p {

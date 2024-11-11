@@ -1,118 +1,85 @@
 <template>
-    <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
-      <div class="modal-content">
-        <header class="modal-header">
-          <h3>Actualizar link</h3>
-          <button @click="closeModal" class="close-btn">✕</button>
-        </header>
-        <form @submit.prevent="saveChanges">
-          <div class="form-group">
-            <label>Nombre</label>
-            <input v-model="formData.name" placeholder="Link Play Store" />
-          </div>
-          <div class="form-group">
-            <label>Link</label>
-            <input v-model="formData.link" placeholder="Link" />
-          </div>
-          <div class="modal-actions">
-            <button type="submit" class="save-btn">Guardar</button>
-            <button type="button" class="cancel-btn" @click="closeModal">Cancelar</button>
-          </div>
-        </form>
+  <b-modal v-model="isModalVisible" title="Actualizar link" @hide="closeModal" dialog-class="no-header-gap no-footer-gap">
+    <template #modal-header>
+      <h5 class="modal-title"><strong>Actualizar link</strong> </h5>
+      <b-button variant="close" @click="closeModal" aria-label="Close"></b-button>
+    </template>
+
+    <form @submit.prevent="saveChanges">
+      <div class="form-group spacing">
+        <label class="space" for="name"><strong>Nombre</strong></label>
+        <input id="name" v-model="formData.name" class="form-control" placeholder="Link Play Store" />
       </div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "ModalEditLink",
-    props: {
-      isVisible: Boolean,
-      keyData: Object,
+      <div class="form-group spacing">
+        <label class="space" for="link"><strong>Link</strong></label>
+        <input id="link" v-model="formData.link" class="form-control" placeholder="Link" />
+      </div>
+    </form>
+
+    <template #modal-footer>
+      <b-button class="save-button" type="button" @click="saveChanges">Guardar</b-button>
+      <b-button class="cancel-button" @click="closeModal">Cancelar</b-button>
+    </template>
+  </b-modal>
+</template>
+
+<script>
+export default {
+  name: "ModalEditLink",
+  props: {
+    isVisible: Boolean,
+    keyData: Object,
+  },
+  data() {
+    return {
+      formData: { ...this.keyData },
+      isModalVisible: this.isVisible,
+    };
+  },
+  watch: {
+    isVisible(newVal) {
+      this.isModalVisible = newVal;
     },
-    data() {
-      return {
-        formData: { ...this.keyData },
-      };
+    keyData(newData) {
+      this.formData = { ...newData };
     },
-    methods: {
-      closeModal() {
-        this.$emit("close");
-      },
-      saveChanges() {
-        this.$emit("save", this.formData);
-        this.closeModal();
-      },
+  },
+  methods: {
+    closeModal() {
+      this.isModalVisible = false;
+      this.$emit("close");
     },
-    watch: {
-      keyData(newData) {
-        this.formData = { ...newData };
-      },
+    saveChanges() {
+      this.$emit("save", this.formData);
+      this.closeModal();
     },
-  };
-  </script>
-  
-  <style scoped>
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .close-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-  .form-group {
-    margin-bottom: 15px;
-  }
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  .modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  },
+};
+</script>
+
+<style scoped>
+.no-header-gap .modal-header,
+.no-footer-gap .modal-footer {
+  padding-top: 0;
+  padding-bottom: 0;
 }
-.save-btn {
-  background: white;
-  color: black;
-  padding: 8px 15px;
-  border: 1px solid black;
-  cursor: pointer;
+
+.spacing {
+  padding: 20px var(--Stroke-Border, 1px);
 }
-.cancel-btn {
-  background: black;
+
+.space{
+  padding: 10px 0px 10px 0px;
+}
+.cancel-button {
+  background-color: black;
   color: white;
-  padding: 8px 15px;
   border: none;
-  cursor: pointer;
 }
-  </style>
-  
+
+.save-button {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+}
+</style>

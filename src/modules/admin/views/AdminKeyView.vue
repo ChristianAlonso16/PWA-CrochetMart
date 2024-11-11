@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="navbar-admin">
-      <i class="pi pi-bars bars-icon"></i> 
+      <i class="pi pi-bars bars-icon"></i>
       <div class="text-wrapper-7">Keys</div>
       <div class="user-icon">
         <i class="pi pi-user"></i>
@@ -10,44 +10,22 @@
 
     <div class="keys-view">
       <h2 class="header">Administrar Stripe Keys</h2>
-      <LinksCard
-        title="Key stripe"
-        description="Clave para Stripe"
-        modifiedDate="20/10/2024"
-        @edit="openModal({ name: 'Key stripe', publicKey: '', privateKey: '' }, 'key')"
-      />
+      <LinksCard title="Key stripe" modifiedDate="20/10/2024"
+        @edit="openModal({ name: 'Key stripe', publicKey: '', privateKey: '' }, 'key')" />
 
       <h2 class="header">Administrar Links App Móvil</h2>
       <div class="link-cards">
-        <KeyCard
-          title="Link Play Store"
-          description="https://play.google.com/store/games"
-          modifiedDate="20/10/2024"
-          @edit="openModal({ name: 'Link Play Store', link: 'https://play.google.com/store/games' }, 'link')"
-        />
-        <KeyCard
-          title="Link App Store"
-          description="https://www.apple.com/mx/app-store/"
-          modifiedDate="20/10/2024"
-          @edit="openModal({ name: 'Link App Store', link: 'https://www.apple.com/mx/app-store/' }, 'link')"
-        />
+        <KeyCard title="Link Play Store" description="https://play.google.com/store/games" modifiedDate="20/10/2024"
+          @edit="openModal({ name: 'Link Play Store', link: 'https://play.google.com/store/games' }, 'link')" />
+        <KeyCard title="Link App Store" description="https://www.apple.com/mx/app-store/" modifiedDate="20/10/2024"
+          @edit="openModal({ name: 'Link App Store', link: 'https://www.apple.com/mx/app-store/' }, 'link')" />
       </div>
 
-      <ModalEditKey
-        v-if="isModalVisible && modalType === 'key'"
-        :isVisible="isModalVisible"
-        :keyData="currentKeyData"
-        @close="closeModal"
-        @save="updateKey"
-      />
+      <ModalEditKey v-if="isModalVisible && modalType === 'key'" :isVisible="isModalVisible" :keyData="currentKeyData"
+        @close="closeModal" @save="updateKey" />
 
-      <ModalEditLink
-        v-if="isModalVisible && modalType === 'link'"
-        :isVisible="isModalVisible"
-        :keyData="currentKeyData"
-        @close="closeModal"
-        @save="updateLink"
-      />
+      <ModalEditLink v-if="isModalVisible && modalType === 'link'" :isVisible="isModalVisible" :keyData="currentKeyData"
+        @close="closeModal" @save="updateLink" />
     </div>
   </div>
 </template>
@@ -115,7 +93,7 @@ export default {
 
 <style scoped>
 * {
-  font-family: "Roboto-Regular", Helvetica; 
+  font-family: "Roboto-Regular", Helvetica;
 }
 
 .keys-view {
@@ -123,18 +101,19 @@ export default {
 }
 
 .header {
-  color: #252525; 
-  font-size: 14px; 
-  margin-bottom: 10px; 
-  text-align: left; 
+  color: #252525;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-align: left;
   margin-left: 30px;
-  font-weight: normal; 
+  font-weight: normal;
   padding-top: 20px;
 }
 
 .link-cards {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .navbar-admin {
@@ -157,8 +136,8 @@ export default {
 }
 
 .user-icon {
-  background-color: #000; 
-  color: #fff; 
+  background-color: #000;
+  color: #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -168,6 +147,48 @@ export default {
 }
 
 .user-icon i {
-  font-size: 1.5rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .navbar-admin {
+    padding: 10px 20px;
+    gap: 16px;
+  }
+
+  .header {
+    font-size: 12px;
+    margin-left: 20px;
+  }
+
+  .link-cards {
+    gap: 10px;
+  }
+
+  .user-icon {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-admin {
+    padding: 8px 16px;
+    gap: 12px;
+  }
+
+  .text-wrapper-7 {
+    font-size: 1rem;
+  }
+
+  .link-cards {
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .link-cards>div {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }
 </style>
