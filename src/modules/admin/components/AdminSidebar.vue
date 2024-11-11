@@ -5,19 +5,11 @@
     </h1>
     <h1 v-else class="font-bold text-4xl mb-6 m-3">CM</h1>
     <nav>
-      <div
-        v-for="(item, index) in menuItems"
-        :key="index"
-        @click="handleMenuClick(item)"
-      >
-        <router-link
-          :to="item.href"
-          class="flex items-center no-underline text-lg p-4"
-          :class="{
-            'text-black': selectedItem === item.label,
-            'text-gray-500': selectedItem !== item.label,
-          }"
-        >
+      <div v-for="(item, index) in menuItems" :key="index" @click="handleMenuClick(item)">
+        <router-link :to="item.href" class="flex items-center no-underline text-lg p-4" :class="{
+          'text-black': selectedItem === item.label,
+          'text-gray-500': selectedItem !== item.label,
+        }">
           <i :class="[item.icon, 'text-3xl', { 'pr-3': sidebarVisible }]"></i>
           <span v-if="sidebarVisible">{{ item.label }}</span>
         </router-link>
@@ -37,9 +29,9 @@ export default {
       menuItems: [
         { icon: "pi pi-home", label: "Inicio", href: "/admin/dashboard" },
         { icon: "pi pi-box", label: "Productos", href: "/admin/products" },
-        { icon: "pi pi-th-large", label: "Categorías", href: "#" },
+        { icon: "pi pi-th-large", label: "Categorías", href: "/admin/categories" },
         { icon: "pi pi-user", label: "Usuarios", href: "#" },
-        { icon: "pi pi-shopping-cart", label: "Ventas", href: "#" },
+        { icon: "pi pi-shopping-cart", label: "Ventas", href: "/admin/sales-register" },
         { icon: "pi pi-key", label: "Key", href: "#" },
         { icon: "pi pi-info-circle", label: "Ayuda e información", href: "#" },
         { icon: "pi pi-sign-out", label: "Cerrar sesión", href: "/logout" },
@@ -63,6 +55,10 @@ export default {
 
 <style>
 .text-black {
-  color: #252525;
+  color: black;
+}
+
+.text-gray-500 {
+  color: #7d7d7d;
 }
 </style>

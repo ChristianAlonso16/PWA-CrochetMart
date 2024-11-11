@@ -138,7 +138,7 @@ export default {
     },
     async getCategories() {
       try {
-        const response = await AdminServices.getCategories();
+        const response = await AdminServices.getCategoriesByStatus();
         const { data, statusCode } = response;
 
         if (statusCode === 200) {

@@ -1,6 +1,8 @@
+import AdminSalesRegister from "@/modules/admin/views/AdminSalesRegister.vue";
 import Dasboard from "../../modules/admin/views/AdminDashBoard.vue";
 import Products from "../../modules/admin/views/AdminProducts.vue";
 import ProductVariants from "../../modules/admin/views/AdminProductVariants.vue";
+import AdminCategories from "@/modules/admin/views/AdminCategories.vue";
 export default [
   {
     path: "/admin",
@@ -39,6 +41,24 @@ export default [
           role: "admin",
         },
         props: true,
+      },
+      {
+        path: "/admin/categories",
+        name: "categories",
+        component: AdminCategories,
+        meta: {
+          title: "Categorias",
+          role: "admin",
+        },
+      },
+      {
+        path: "/admin/sales-register",
+        name: "sales-register",
+        component: AdminSalesRegister,
+        meta: {
+          title: "Pedidos",
+          role: "admin",
+        },
       },
     ],
   },

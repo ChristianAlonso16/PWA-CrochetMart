@@ -24,7 +24,7 @@ const getReportOrders = async () => {
   }
 };
 
-const getCategories = async () => {
+const getCategoriesByStatus = async () => {
   try {
     const response = await axiosPrivate.get("/category/getByStatus/enable");
 
@@ -50,6 +50,41 @@ const getProductDetails = async (numberProduct) => {
       `/product/getDetails/${numberProduct}`
     );
 
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const getAllCategories = async () => {
+  try {
+    const response = await axiosPrivate.get("/category/getAll");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const deleteCategory = async (name, status) => {
+  try {
+    const category = {
+      categoryName: name,
+      status: status,
+    };
+    const response = await axiosPrivate.put(`/category/updateStatus`, category);
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const updateCategory = async (name, description, icon) => {
+  try {
+    const category = {
+      categoryName: name,
+      categoryDescription: description,
+      icono: icon,
+    };
+    const response = await axiosPrivate.put("/category/update", category);
     return response.data;
   } catch (error) {
     return error;
@@ -180,6 +215,20 @@ const updateVariant = async (data) => {
         },
       }
     );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+const addCategory = async (name, description, icon) => {
+  try {
+    const category = {
+      categoryName: name,
+      categoryDescription: description,
+      icono: icon,
+    };
+
+    const response = await axiosPrivate.post("/category/register", category);
 
     return response.data;
   } catch (error) {
@@ -190,7 +239,8 @@ const updateVariant = async (data) => {
 export default {
   loginAdmin,
   getReportOrders,
-  getCategories,
+  getCategoriesByStatus,
+  getAllCategories,
   getProducts,
   getProductDetails,
   getAttributesByName,
@@ -203,4 +253,7 @@ export default {
   updateProduct,
   addVariant,
   updateVariant,
+  deleteCategory,
+  updateCategory,
+  addCategory,
 };

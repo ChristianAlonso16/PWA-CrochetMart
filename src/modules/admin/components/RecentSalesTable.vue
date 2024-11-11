@@ -7,6 +7,7 @@
       responsiveLayout="scroll"
       paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
       currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords}"
+      ariaLabel="Tabla de pedidos con información detallada sobre órdenes"
     >
       <Column field="name" header="Nombre" sortable></Column>
       <Column field="productQuantity" header="Productos" sortable></Column>

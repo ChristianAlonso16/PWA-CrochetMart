@@ -17,6 +17,7 @@
           filterDisplay="menu"
           responsiveLayout="scroll"
           :globalFilterFields="['numProduct', 'name', 'categories']"
+          ariaLabel="Tabla de productos"
         >
           <template #header>
             <div class="flex justify-content-end">

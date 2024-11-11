@@ -1,82 +1,82 @@
 <template>
-    <div class="landing-page">
+    <div class="p-0 m-0 landing-page">
         <Toast/>
         <main>
-            <div class="grid row-carousel">
+            <div class="grid flex flex-column justify-content-center align-items-start w-full row-carousel">
                 <Carousel :value="carouselItems" :numVisible="1" :numScroll="1" :responsiveOptions="responsiveOptions">
                     <template #item="slotProps">
-                        <div class="carousel-item">
-                            <img :src="slotProps.data.image" :alt="slotProps.data.alt" />
-                            <div class="carousel-caption">
-                                <h2>{{ slotProps.data.title }}</h2>
-                                <h4>{{ slotProps.data.text }}</h4>
-                                <router-link class="btn-products" to="/productos">Ver Productos</router-link>
+                        <div class="flex justify-content-center relative w-full">
+                            <img class="w-full" :src="slotProps.data.image" :alt="slotProps.data.alt" />
+                            <div class="absolute top-50 left-50 text-center text-white carousel-caption">
+                                <h2 class="text-2xl lg:text-4xl">{{ slotProps.data.title }}</h2>
+                                <h4 class="text-lg lg:text-2xl">{{ slotProps.data.text }}</h4>
+                                <ButtonProductLink to="/productos">Ver Productos</ButtonProductLink>
                             </div>
                         </div>
                     </template>
                 </Carousel>
             </div>
-            <div v-if="products.length" class="flex flex-row row-recientes">
-                <div class="flex flex-column cres">
-                    <div class="flex flex-row title-res">
-                        <h1>Más Recientes</h1>
-                        <router-link class="btn-products m-4" to="/productos">Más productos</router-link>
+            <div v-if="products.length" class="p-3 gap-1">
+                <div class="flex flex-column w-full p-3">
+                    <div class="flex flex-row justify-content-between align-items-stretch mb-3 p-3">
+                        <h1 class="text-4xl">Más Recientes</h1>
+                        <ButtonProductLink class="m-4" to="/productos">Más productos</ButtonProductLink>
                     </div>
-                    <div class="grid body-res">
-                        <div class="card-wrapper" v-for="(product, index) in products" :key="index">
+                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div class="flex justify-content-center align-items-center" v-for="(product, index) in products" :key="index">
                             <ClientCard :product="product" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-else class="flex justify-content-center">
+            <div v-else class="flex justify-content-center mt-4">
                 <h4>No hay productos disponibles en este momento.</h4>
             </div>
-            <div v-if="products.length" class="flex flex-row row-recientes">
-                <div class="flex flex-column cres">
-                    <div class="flex flex-row title-res">
-                        <h1>Por Categorías</h1>
-                        <router-link class="btn-products m-4" to="/productos">Más productos</router-link>
+            <div v-if="products.length" class="p-3 gap-1">
+                <div class="flex flex-column w-full p-3">
+                    <div class="flex flex-row justify-content-between align-items-stretch mb-3 p-3">
+                        <h1 class="text-4xl">Por Categorías</h1>
+                        <ButtonProductLink class="m-4" to="/productos">Más productos</ButtonProductLink>
                     </div>
-                    <div class="grid body-res">
-                        <div class="card-wrapper" v-for="(product, index) in products" :key="index">
+                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div class="flex justify-content-center align-items-center" v-for="(product, index) in products" :key="index">
                             <ClientCard :product="product" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-else class="flex justify-content-center">
+            <div v-else class="flex justify-content-center mt-4">
                 <h4>No hay productos disponibles en este momento.</h4>
             </div>
-            <div v-if="products.length" class="flex flex-row row-recientes">
-                <div class="flex flex-column cres">
-                    <div class="flex flex-row title-res">
-                        <h1>Mejor Valorados</h1>
-                        <router-link class="btn-products m-4" to="/productos">Más productos</router-link>
+            <div v-if="products.length" class="p-3 gap-1">
+                <div class="flex flex-column w-full p-3">
+                    <div class="flex flex-row justify-content-between align-items-stretch mb-3 p-3">
+                        <h1 class="text-4xl">Mejor Valorados</h1>
+                        <ButtonProductLink class="m-4" to="/productos">Más productos</ButtonProductLink>
                     </div>
-                    <div class="grid body-res">
-                        <div class="card-wrapper" v-for="(product, index) in products" :key="index">
+                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div class="flex justify-content-center align-items-center" v-for="(product, index) in products" :key="index">
                             <ClientRatingCard :product="product" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-else class="flex justify-content-center">
+            <div v-else class="flex justify-content-center mt-4">
                 <h4>No hay productos disponibles en este momento.</h4>
             </div>
-            <div v-if="comments.length" class="flex flex-row row-comments">
-                <div class="flex flex-column cres">
-                    <div class="flex flex-row title-res">
-                        <h1>Comentarios Destacados</h1>
+            <div v-if="comments.length" class="p-3 gap-1">
+                <div class="flex flex-column w-full p-3">
+                    <div class="flex flex-row justify-content-between align-items-center mb-3 p-3">
+                        <h1 class="text-4xl">Comentarios Destacados</h1>
                     </div>
-                    <div class="grid body-res">
-                        <div class="card-wrapper" v-for="(comment, index) in comments" :key="index">
+                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        <div class="flex justify-content-center align-items-center" v-for="(comment, index) in comments" :key="index">
                             <ClientCommentCard :comment="comment" />
                         </div>
                     </div>
                 </div>
             </div>
-            <div v-else class="flex justify-content-center">
+            <div v-else class="flex justify-content-center mt-4">
                 <h4>No hay comentarios disponibles en este momento.</h4>
             </div>
         </main>
@@ -86,6 +86,7 @@
 <script>
 import Carousel from 'primevue/carousel';
 import Toast from 'primevue/toast';
+import ButtonProductLink from '../components/ButtonProductLink.vue';
 import ClientCard from '../components/ClientCard.vue';
 import ClientRatingCard from '../components/ClientRatingCard.vue';
 import ClientCommentCard from '../components/ClientCommentCard.vue';
@@ -94,7 +95,7 @@ import ClientServices from '@/modules/client/services/ClientServices';
 export default {
     name: 'LandingPage',
     components: {
-        Carousel, Toast, ClientCard, ClientRatingCard, ClientCommentCard
+        Carousel, Toast, ButtonProductLink, ClientCard, ClientRatingCard, ClientCommentCard
     },
     data() {
         return {
@@ -168,134 +169,19 @@ export default {
 .landing-page {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, 
                 Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    padding: 0;
-    margin: 0;
 }
 
 .row-carousel {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100%;
     padding: 10px;
     gap: 10px;
 }
 
-.row-carousel .carousel-item {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    position: relative;
-}
-
-.row-carousel .carousel-item img {
-    width: 100%;
+.row-carousel img {
     height: 586px;
 }
 
 .row-carousel .carousel-caption {
-    position: absolute;
-    top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%);
-    text-align: center;
-    color: white;
     text-shadow: 2px 2px 4px rgba(0,0,0,1);
-}
-
-
-.btn-products {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #ffffff;
-    background-color: #252525;
-    border: none;
-    border-radius: 4px;
-    text-decoration: none;
-    cursor: pointer;
-    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
-                0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-                0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-}
-
-.btn-products:hover {
-    background-color: #5a6268;
-}
-
-.btn-products:active {
-    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
-                0px 8px 10px 1px rgba(0, 0, 0, 0.14),
-                0px 3px 14px 2px rgba(0, 0, 0, 0.12);
-}
-
-.btn-products:focus {
-    outline: 0;
-}
-
-.row-recientes {
-    width: 100%;
-    padding: 10px;
-    gap: 10px;
-}
-
-.row-recientes .cres {
-    padding: 10px 30px;
-    gap: 10px;
-    flex: 1 0 0;
-}
-
-.row-recientes .title-res {
-    padding: 10px;
-    justify-content: space-between;
-    align-self: stretch;
-}
-
-.row-recientes .body-res {
-    padding: 0px 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 70px;
-}
-
-.row-recientes .card-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.row-comments {
-    width: 100%;
-    padding: 10px;
-    gap: 10px;
-}
-
-.row-comments .cres {
-    padding: 10px 30px;
-    gap: 10px;
-    flex: 1 0 0;
-}
-
-.row-comments .title-res {
-    padding: 10px;
-    justify-content: space-between;
-    align-self: stretch;
-}
-
-.row-comments .body-res {
-    padding: 0px 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr)); /* Cambiado de 250px a 30rem */
-    gap: 70px;
-}
-
-.row-comments .card-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 </style>
