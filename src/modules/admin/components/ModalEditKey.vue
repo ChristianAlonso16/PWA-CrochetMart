@@ -8,15 +8,38 @@
     <form @submit.prevent="saveChanges">
       <div class="form-group spacing">
         <label class="space" for="name"><strong>Nombre</strong></label>
-        <input id="name" v-model="formData.name" class="form-control" placeholder="Key stripe" />
+        <input 
+          id="name" 
+          v-model="formData.name" 
+          class="form-control" 
+          placeholder="Key stripe"
+          :class="{'is-invalid': errors.name}"
+        />
+        <div v-if="errors.name" class="invalid-feedback">{{ errors.name }}</div>
       </div>
+
       <div class="form-group spacing">
         <label class="space" for="publicKey"><strong>Llave Pública</strong></label>
-        <input id="publicKey" v-model="formData.publicKey" class="form-control" placeholder="Llave Pública" />
+        <input 
+          id="publicKey" 
+          v-model="formData.publicKey" 
+          class="form-control" 
+          placeholder="Llave Pública"
+          :class="{'is-invalid': errors.publicKey}"
+        />
+        <div v-if="errors.publicKey" class="invalid-feedback">{{ errors.publicKey }}</div>
       </div>
+
       <div class="form-group spacing">
         <label class="space" for="privateKey"><strong>Llave Privada</strong></label>
-        <input id="privateKey" v-model="formData.privateKey" class="form-control" placeholder="Llave Privada" />
+        <input 
+          id="privateKey" 
+          v-model="formData.privateKey" 
+          class="form-control" 
+          placeholder="Llave Privada"
+          :class="{'is-invalid': errors.privateKey}"
+        />
+        <div v-if="errors.privateKey" class="invalid-feedback">{{ errors.privateKey }}</div>
       </div>
     </form>
 
@@ -38,6 +61,7 @@ export default {
     return {
       formData: { ...this.keyData },
       isModalVisible: this.isVisible,
+      errors: {},
     };
   },
   watch: {
@@ -53,9 +77,30 @@ export default {
       this.isModalVisible = false;
       this.$emit("close");
     },
+    validate() {
+      this.errors = {};
+
+      if (!this.formData.name) {
+        this.errors.name = "El nombre es obligatorio";
+      } else if (this.formData.name.length > 50) {
+        this.errors.name = "El nombre no puede tener más de 50 caracteres";
+      }
+
+      if (!this.formData.publicKey) {
+        this.errors.publicKey = "La llave pública es obligatoria";
+      }
+
+      if (!this.formData.privateKey) {
+        this.errors.privateKey = "La llave privada es obligatoria";
+      }
+
+      return Object.keys(this.errors).length === 0;
+    },
     saveChanges() {
-      this.$emit("save", this.formData);
-      this.closeModal();
+      if (this.validate()) {
+        this.$emit("save", this.formData);
+        this.closeModal();
+      }
     },
   },
 };
@@ -72,7 +117,7 @@ export default {
   padding: 20px var(--Stroke-Border, 1px);
 }
 
-.space{
+.space {
   padding: 10px 0px 10px 0px;
 }
 
@@ -88,4 +133,12 @@ export default {
   border: 1px solid black;
 }
 
+.is-invalid {
+  border-color: red;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 0.875em;
+}
 </style>

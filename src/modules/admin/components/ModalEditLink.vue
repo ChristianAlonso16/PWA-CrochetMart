@@ -8,11 +8,33 @@
     <form @submit.prevent="saveChanges">
       <div class="form-group spacing">
         <label class="space" for="name"><strong>Nombre</strong></label>
-        <input id="name" v-model="formData.name" class="form-control" placeholder="Link Play Store" />
+        <input
+          id="name"
+          v-model="formData.name"
+          class="form-control"
+          :class="{ 'is-invalid': !formData.name && formData.name !== undefined, 'is-valid': formData.name && formData.name.length <= 50 }"
+          placeholder="Link Play Store"
+        />
+        <div v-if="!formData.name && formData.name !== undefined" class="invalid-feedback">
+          El nombre no puede estar vacío.
+        </div>
+        <div v-if="formData.name && formData.name.length > 50" class="invalid-feedback">
+          El nombre no puede ser mayor de 50 caracteres.
+        </div>
       </div>
+
       <div class="form-group spacing">
         <label class="space" for="link"><strong>Link</strong></label>
-        <input id="link" v-model="formData.link" class="form-control" placeholder="Link" />
+        <input
+          id="link"
+          v-model="formData.link"
+          class="form-control"
+          :class="{ 'is-invalid': !formData.link && formData.link !== undefined }"
+          placeholder="Link"
+        />
+        <div v-if="!formData.link && formData.link !== undefined" class="invalid-feedback">
+          El link no puede estar vacío.
+        </div>
       </div>
     </form>
 
@@ -50,6 +72,13 @@ export default {
       this.$emit("close");
     },
     saveChanges() {
+      if (!this.formData.name || this.formData.name.length > 50) {
+        return; 
+      }
+      if (!this.formData.link) {
+        return; 
+      }
+      
       this.$emit("save", this.formData);
       this.closeModal();
     },
@@ -68,9 +97,10 @@ export default {
   padding: 20px var(--Stroke-Border, 1px);
 }
 
-.space{
+.space {
   padding: 10px 0px 10px 0px;
 }
+
 .cancel-button {
   background-color: black;
   color: white;
@@ -81,5 +111,19 @@ export default {
   background-color: white;
   color: black;
   border: 1px solid black;
+}
+
+.is-invalid {
+  border-color: red;
+}
+
+.is-valid {
+  border-color: green;
+}
+
+.invalid-feedback {
+  display: block;
+  color: red;
+  font-size: 0.875em;
 }
 </style>

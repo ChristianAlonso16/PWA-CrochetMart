@@ -4,6 +4,7 @@ import adminRouter from "./modules/AdminRouter";
 import clientRouter from "./modules/ClientRouter";
 import utils from '../core/utils/FunctionGlobals';
 import AdminLogin from "@/views/AdminLogin/AdminLogin.vue"
+import AdminKeyView from '@/modules/admin/views/AdminKeyView.vue';
 Vue.use(VueRouter)
 
 const routes = [
@@ -33,6 +34,14 @@ const routes = [
         component: AdminLogin,
         meta: {
             title: 'Iniciar sesión'
+        }
+    },
+    {
+        path: '/adminkey',
+        name: 'ak',
+        component: AdminKeyView,
+        meta: {
+            title: 'AdminKwy'
         }
     },
     {
