@@ -58,9 +58,14 @@
                 @click="openEditModal(data)"
               />
               <Button
-                icon="pi pi-trash"
-                class="p-button-rounded p-button-danger mr-2"
-                @click="deleteProduct(data)"
+                :icon="data.status === 'enable' ? 'pi pi-check' : 'pi pi-times'"
+                class="p-button-rounded mr-2"
+                :class="
+                  data.status === 'enable'
+                    ? 'p-button-success'
+                    : 'p-button-danger'
+                "
+                @click="toggleStatus(data)"
               />
               <Button
                 icon="pi pi-eye"
@@ -83,8 +88,8 @@
 </template>
 
 <script>
-import AddProductModal from "../components/AddProductModal.vue";
-import EditProductModalVue from "../components/EditProductModal.vue";
+import AddProductModal from "../components/products/AddProductModal.vue";
+import EditProductModalVue from "../components/products/EditProductModal.vue";
 import AdminServices from "@/modules/admin/services/AdminServices";
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
@@ -151,6 +156,17 @@ export default {
     },
     refreshTable() {
       this.getProduct();
+    },
+    async toggleStatus(product) {
+      try {
+        const newStatus = product.status === "enable" ? "disabled" : "enable";
+        console.log("cambiar estado:", product.numProduct, newStatus);
+
+        //await AdminServices.updateProductStatus(product.numProduct, newStatus);
+        this.refreshTable();
+      } catch (error) {
+        console.error("Error al cambiar el estado:", error);
+      }
     },
   },
   mounted() {
