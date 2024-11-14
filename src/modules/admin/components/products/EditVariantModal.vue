@@ -249,7 +249,6 @@ export default {
         console.error("Error updating variant:", error);
       }
     },
-
     async loadVariantData() {
       try {
         const response = await AdminServices.getVariantDetails(this.variant);
@@ -271,44 +270,48 @@ export default {
           } else {
             this.selectedColor = null;
           }
+
           this.uploadedFiles = [];
 
           const files = await Promise.all(
-            data.images.map((image, index) =>
-              this.base64ToFileWithObjectURL(image.image, `image_${index}.jpeg`)
+            data.images.map((base64, index) =>
+              this.base64ToFileWithObjectURL(base64, `image_${index}.jpeg`)
             )
           );
 
           this.addFilesToFileUpload(files);
         }
       } catch (error) {
-        console.error(error);
+        console.error("Error loading variant data:", error);
       }
     },
-
     base64ToFileWithObjectURL(base64, filename) {
-      return new Promise((resolve) => {
-        const [header, data] = base64.split(",");
-        const mime = header.match(/:(.*?);/)[1];
-        const binary = atob(data);
-        const array = new Uint8Array(binary.length);
+      return new Promise((resolve, reject) => {
+        try {
+          const [header, data] = base64.split(",");
+          const mime = header.match(/:(.*?);/)[1];
+          const binary = atob(data);
+          const array = new Uint8Array(binary.length);
 
-        for (let i = 0; i < binary.length; i++) {
-          array[i] = binary.charCodeAt(i);
+          for (let i = 0; i < binary.length; i++) {
+            array[i] = binary.charCodeAt(i);
+          }
+
+          const file = new File([array], filename, { type: mime });
+          const objectURL = URL.createObjectURL(file);
+
+          Object.defineProperty(file, "objectURL", {
+            value: objectURL,
+            writable: false,
+            enumerable: true,
+            configurable: true,
+          });
+
+          resolve(file);
+        } catch (error) {
+          console.error("Invalid base64 string:", base64);
+          reject(error);
         }
-
-        const file = new File([array], filename, { type: mime });
-
-        const objectURL = URL.createObjectURL(file);
-
-        Object.defineProperty(file, "objectURL", {
-          value: objectURL,
-          writable: false,
-          enumerable: true,
-          configurable: true,
-        });
-
-        resolve(file);
       });
     },
 
