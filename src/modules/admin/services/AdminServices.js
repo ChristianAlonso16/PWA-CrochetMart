@@ -99,6 +99,16 @@ const getAttributesByName = async (name) => {
     return error;
   }
 };
+const getAttributesAvailable = async (numProduct) => {
+  try {
+    const response = await axiosPrivate.get(
+      `/attribute/getAttributesAvailable/${numProduct}`
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
 
 const getCountProducts = async () => {
   try {
@@ -256,4 +266,5 @@ export default {
   deleteCategory,
   updateCategory,
   addCategory,
+  getAttributesAvailable,
 };
