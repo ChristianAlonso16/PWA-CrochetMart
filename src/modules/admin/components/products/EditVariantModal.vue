@@ -137,6 +137,10 @@ export default {
       type: String,
       required: true,
     },
+    numProduct: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -157,7 +161,7 @@ export default {
   methods: {
     async getAttributes() {
       try {
-        const response = await AdminServices.getAttributesByName("Color");
+        const response = await AdminServices.getAttributesAvailable(this.numProduct);
         this.colors = response.data.map((attr) => ({
           name: attr.name,
           value: "#" + attr.value,

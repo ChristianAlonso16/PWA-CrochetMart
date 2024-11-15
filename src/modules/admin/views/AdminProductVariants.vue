@@ -85,6 +85,7 @@
       <EditVariantModal
         v-if="selectedVariant"
         :visible.sync="isEditModalVisible"
+        :numProduct="product.numProduct"
         :variant="selectedVariant?.id"
         @close="selectedVariant = null"
         @variantUpdated="refreshTable"
