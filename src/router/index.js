@@ -60,7 +60,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const canAccess = utils.getToken();
- 
+
   if (
     canAccess &&
     to.path.toLowerCase() === "/admin225ij5a2o1uzptgeo9g" &&
@@ -70,6 +70,13 @@ router.beforeEach((to, from, next) => {
     if (role.toString().toLowerCase() === "admin") {
       return next("/admin");
     }
+  }
+  if (canAccess) {
+    const role = utils.getRole()
+    if (to.meta && to.meta.role && to.meta.role.toString().toLowerCase() !== role.toString().toLowerCase()) {
+      return next("/unautorized")
+    }
+    next();
   }
   next();
   const isTitle = to.matched
