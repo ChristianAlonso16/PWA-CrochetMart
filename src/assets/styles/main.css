@@ -11,6 +11,7 @@ body {
   justify-content: center;
   align-items: center;
   font-weight: bold !important;
+  border-radius: 6px !important;
 }
 
 .p-button:hover {
@@ -35,4 +36,24 @@ body {
   background-color: #585858 !important;
   border-color: #585858 !important;
   color: #ffffff !important;
+}
+
+.p-galleria-thumbnail-container {
+  background-color: transparent !important;
+}
+
+.p-galleria-thumbnail-prev-icon {
+  color: #585858 !important;
+}
+
+.p-galleria-thumbnail-next-icon {
+  color: #585858 !important;
+}
+
+.p-rating .p-rating-icon.pi-star-fill	{
+  color: #252525 !important;
+}
+
+.p-breadcrumb {
+  border-color: #ffffff !important;
 }
