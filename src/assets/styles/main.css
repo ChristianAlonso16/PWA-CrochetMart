@@ -50,10 +50,14 @@ body {
   color: #585858 !important;
 }
 
-.p-rating .p-rating-icon.pi-star-fill	{
+.p-rating .p-rating-icon.pi-star-fill {
   color: #252525 !important;
 }
 
 .p-breadcrumb {
   border-color: #ffffff !important;
+}
+
+.p-galleria .p-galleria-indicators .p-galleria-indicator.p-highlight button {
+  background-color: #252525 !important;
 }

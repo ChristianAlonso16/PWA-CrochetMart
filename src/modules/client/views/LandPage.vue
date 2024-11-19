@@ -1,187 +1,203 @@
 <template>
-    <div class="p-0 m-0 landing-page">
-        <Toast/>
-        <main>
-            <div class="grid flex flex-column justify-content-center align-items-start w-full row-carousel">
-                <Carousel :value="carouselItems" :numVisible="1" :numScroll="1" :responsiveOptions="responsiveOptions">
-                    <template #item="slotProps">
-                        <div class="flex justify-content-center relative w-full">
-                            <img class="w-full" :src="slotProps.data.image" :alt="slotProps.data.alt" />
-                            <div class="absolute top-50 left-50 text-center text-white carousel-caption">
-                                <h2 class="text-2xl lg:text-4xl">{{ slotProps.data.title }}</h2>
-                                <h4 class="text-lg lg:text-2xl">{{ slotProps.data.text }}</h4>
-                                <ButtonProductLink to="/productos">Ver Productos</ButtonProductLink>
-                            </div>
-                        </div>
-                    </template>
-                </Carousel>
-            </div>
-            <div v-if="products.length" class="p-3 gap-1">
-                <div class="flex flex-column w-full p-3">
-                    <div class="flex flex-row justify-content-between align-items-stretch mb-3 p-3">
-                        <h1 class="text-4xl">Más Recientes</h1>
-                        <ButtonProductLink class="m-4" to="/productos">Más productos</ButtonProductLink>
-                    </div>
-                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        <div class="flex justify-content-center align-items-center" v-for="(product, index) in products" :key="index">
-                            <ClientCard :product="product" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div v-else class="flex justify-content-center mt-4">
-                <h4>No hay productos disponibles en este momento.</h4>
-            </div>
-            <div v-if="products.length" class="p-3 gap-1">
-                <div class="flex flex-column w-full p-3">
-                    <div class="flex flex-row justify-content-between align-items-stretch mb-3 p-3">
-                        <h1 class="text-4xl">Por Categorías</h1>
-                        <ButtonProductLink class="m-4" to="/productos">Más productos</ButtonProductLink>
-                    </div>
-                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        <div class="flex justify-content-center align-items-center" v-for="(product, index) in products" :key="index">
-                            <ClientCard :product="product" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div v-else class="flex justify-content-center mt-4">
-                <h4>No hay productos disponibles en este momento.</h4>
-            </div>
-            <div v-if="products.length" class="p-3 gap-1">
-                <div class="flex flex-column w-full p-3">
-                    <div class="flex flex-row justify-content-between align-items-stretch mb-3 p-3">
-                        <h1 class="text-4xl">Mejor Valorados</h1>
-                        <ButtonProductLink class="m-4" to="/productos">Más productos</ButtonProductLink>
-                    </div>
-                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        <div class="flex justify-content-center align-items-center" v-for="(product, index) in products" :key="index">
-                            <ClientRatingCard :product="product" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div v-else class="flex justify-content-center mt-4">
-                <h4>No hay productos disponibles en este momento.</h4>
-            </div>
-            <div v-if="comments.length" class="p-3 gap-1">
-                <div class="flex flex-column w-full p-3">
-                    <div class="flex flex-row justify-content-between align-items-center mb-3 p-3">
-                        <h1 class="text-4xl">Comentarios Destacados</h1>
-                    </div>
-                    <div class="grid px-4 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        <div class="flex justify-content-center align-items-center" v-for="(comment, index) in comments" :key="index">
-                            <ClientCommentCard :comment="comment" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div v-else class="flex justify-content-center mt-4">
-                <h4>No hay comentarios disponibles en este momento.</h4>
-            </div>
-        </main>
+  <div class="pt-5">
+    <div class="col-12">
+      <h1 class="text-center">Descubre la Magia del Crochet</h1>
     </div>
+    <div class="col-12">
+      <Galleria
+        :value="images"
+        :numVisible="5"
+        :circular="true"
+        :showItemNavigators="true"
+        :showThumbnails="false"
+        :showIndicators="true"
+      >
+        <template #item="slotProps">
+          <img
+            :src="slotProps.item.itemImageSrc"
+            :alt="slotProps.item.alt"
+            style="
+              width: 100%;
+              display: block;
+              height: 600px;
+              object-fit: cover;
+              object-position: center;
+            "
+          />
+        </template>
+      </Galleria>
+    </div>
+    <div class="px-4">
+      <div class="grid pt-3">
+        <h1>Más recientes</h1>
+      </div>
+      <div class="horizontal-scroll-container mb-4">
+        <div class="flex">
+          <CardsProducts
+            v-for="(product, index) in newProducts"
+            :key="index"
+            :product="product"
+            class="related-product-card"
+          />
+        </div>
+      </div>
+      <div class="grid pt-5">
+        <h1>Nuestras Categorías</h1>
+      </div>
+      <div class="horizontal-scroll-container">
+        <div class="flex">
+          <CategoryCard
+            v-for="(category, index) in categories"
+            :key="index"
+            :category="category"
+            class="p-4"
+          />
+        </div>
+      </div>
+      <div class="grid pt-5">
+        <h1>Mejor Valorados</h1>
+      </div>
+      <div class="horizontal-scroll-container">
+        <div class="flex">
+          <CardsProducts
+            v-for="(product, index) in topRatedProducts"
+            :key="index"
+            :product="product"
+            class="related-product-card"
+          />
+        </div>
+      </div>
+      <div class="grid pt-5">
+        <h1>Comentarios Destacados</h1>
+      </div>
+      <div class="mb-4">
+        <div class="grid">
+          <div
+            v-for="(card, index) in productReviews"
+            :key="index"
+            class="col-12 lg:col-6 xl:col-6"
+          >
+            <ClientCardsReview />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import Carousel from 'primevue/carousel';
-import Toast from 'primevue/toast';
-import ButtonProductLink from '../components/ButtonProductLink.vue';
-import ClientCard from '../components/ClientCard.vue';
-import ClientRatingCard from '../components/ClientRatingCard.vue';
-import ClientCommentCard from '../components/ClientCommentCard.vue';
-import ClientServices from '@/modules/client/services/ClientServices';
+import Galleria from "primevue/galleria";
+import CardsProducts from "../components/CardsProducts.vue";
+import ClientCardsReview from "../components/ClientCardsReview.vue";
+import CategoryCard from "../components/ClientCardCategory.vue";
+import carouselImage1 from "@/assets/images/carousel-7.png";
+import carouselImage2 from "@/assets/images/carousel-2.png";
+import carouselImage3 from "@/assets/images/carousel-1.png";
+import carouselImage4 from "@/assets/images/carousel-3.png";
+import ClientService from "../services/ClientServices";
 
 export default {
-    name: 'LandingPage',
-    components: {
-        Carousel, Toast, ButtonProductLink, ClientCard, ClientRatingCard, ClientCommentCard
-    },
-    data() {
-        return {
-            carouselItems: [
-                { image: '/images/carrusel1.jpg', alt: 'Carrusel 1', title: 'Descubre la Magia del Crochet', text: 'Productos hechos a mano con amor y dedicación' },
-                { image: '/images/carrusel2.jpg', alt: 'Carrusel 2', title: 'Descubre la Magia del Crochet', text: 'Productos hechos a mano con amor y dedicación' }
-            ],
-            responsiveOptions: [
-				{ breakpoint: '1024px', numVisible: 1, numScroll: 1 },
-				{ breakpoint: '600px', numVisible: 1, numScroll: 1 },
-				{ breakpoint: '480px', numVisible: 1, numScroll: 1 }
-			],
-            products: [],
-            comments: []
-        };
-    },
-    created() {
-        this.fetchProducts();
-        this.fetchComments();
-    },
-    methods: {
-        async fetchProducts() {
-            try {
-                const response = await ClientServices.getProductsHome();
-                const {data, statusCode} = response;
-                if (statusCode === 200 && data.length > 0) {
-                    this.products = data;
-                    this.$toast.add({severity: 'success', summary: 'Productos cargados', detail: 'Los productos se han cargado correctamente.', life: 3000});
-                } else {
-                    this.$toast.add({severity: 'warn', summary: 'Sin productos', detail: 'No hay productos disponibles en este momento.', life: 3000});
-                }
-            } catch (error) {
-                console.error(error);
-                this.$toast.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los productos.', life: 3000});
-            }
+  components: {
+    Galleria,
+    CardsProducts,
+    ClientCardsReview,
+    CategoryCard,
+  },
+  data() {
+    return {
+      images: [
+        {
+          itemImageSrc: carouselImage1,
+          alt: "Image 1",
         },
-        fetchComments() {
-            try {
-                this.comments = [
-                {
-                        id: 1,
-                        rating: 4,
-                        date: '30 - Noviembre - 2024',
-                        text: 'Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500.'
-                    },
-                    {
-                        id: 2,
-                        rating: 5,
-                        date: '30 - Noviembre - 2024',
-                        text: 'Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500.'
-                    },
-                    {
-                        id: 3,
-                        rating: 3,
-                        date: '30 - Noviembre - 2024',
-                        text: 'Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500.'
-                    }
-                ];
-                this.$toast.add({severity: 'success', summary: 'Comentarios cargados', detail: 'Los comentarios se han cargado correctamente.', life: 3000});
-            } catch (error) {
-                console.error('Error al cargar los comentarios:', error);
-                this.$toast.add({severity: 'error', summary: 'Error', detail: 'No se pudieron cargar los comentarios.', life: 3000});
-            }
-            console.log(this.comments);
-        }
-    }
+        {
+          itemImageSrc: carouselImage2,
+          alt: "Image 2",
+        },
+        {
+          itemImageSrc: carouselImage3,
+          alt: "Image 3",
+        },
+        {
+          itemImageSrc: carouselImage4,
+          alt: "Image 4",
+        },
+      ],
+      topRatedProducts: [],
+      newProducts: [],
+      categories: [],
+      productReviews: [1, 2, 3, 4],
+    };
+  },
+  methods: {
+    async getNewProducts() {
+      try {
+        const response = await ClientService.getNewProducts();
+        this.newProducts = response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getTopRatedProducts() {
+      try {
+        const response = await ClientService.getTopRatedProducts();
+        this.topRatedProducts = response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getCategories() {
+      try {
+        const response = await ClientService.getCategories();
+        this.categories = response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+  mounted() {
+    this.getNewProducts();
+    this.getTopRatedProducts();
+    this.getCategories();
+  },
 };
 </script>
 
-<style scoped>
-.landing-page {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, 
-                Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+<style lang="css">
+.horizontal-scroll-container {
+  overflow-x: scroll;
+  display: flex;
+  scroll-behavior: smooth;
+  padding-bottom: 1rem;
 }
 
-.row-carousel {
-    padding: 10px;
-    gap: 10px;
+.horizontal-scroll-content {
+  display: flex;
+  gap: 1rem;
+  scroll-snap-type: x mandatory;
 }
 
-.row-carousel img {
-    height: 586px;
+.related-product-card {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  width: 220px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
 }
 
-.row-carousel .carousel-caption {
-    transform: translate(-50%, -50%);
-    text-shadow: 2px 2px 4px rgba(0,0,0,1);
+.related-product-card:hover {
+  transform: translateY(-5px);
+}
+
+.horizontal-scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.horizontal-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #252525;
+  border-radius: 10px;
 }
 </style>
