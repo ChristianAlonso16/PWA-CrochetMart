@@ -246,6 +246,16 @@ const addCategory = async (name, description, icon) => {
   }
 };
 
+const getAllOrders = async () => {
+  try {
+    const response = await axiosPrivate.get("/order/getAllOrders");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+
 export default {
   loginAdmin,
   getReportOrders,
@@ -267,4 +277,5 @@ export default {
   updateCategory,
   addCategory,
   getAttributesAvailable,
+  getAllOrders,
 };
