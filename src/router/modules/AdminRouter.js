@@ -3,6 +3,8 @@ import Dasboard from "../../modules/admin/views/AdminDashBoard.vue";
 import Products from "../../modules/admin/views/AdminProducts.vue";
 import ProductVariants from "../../modules/admin/views/AdminProductVariants.vue";
 import AdminCategories from "@/modules/admin/views/AdminCategories.vue";
+import AdminKeys from "@/modules/admin/views/AdminKeys.vue";
+
 export default [
   {
     path: "/admin",
@@ -57,6 +59,15 @@ export default [
         component: AdminSalesRegister,
         meta: {
           title: "Pedidos",
+          role: "admin",
+        },
+      },
+      {
+        path: "/admin/keys",
+        name: "keys",
+        component: AdminKeys,
+        meta: {
+          title: "Key",
           role: "admin",
         },
       },

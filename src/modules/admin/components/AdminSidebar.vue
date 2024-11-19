@@ -32,7 +32,7 @@ export default {
         { icon: "pi pi-th-large", label: "Categorías", href: "/admin/categories" },
         { icon: "pi pi-user", label: "Usuarios", href: "#" },
         { icon: "pi pi-shopping-cart", label: "Ventas", href: "/admin/sales-register" },
-        { icon: "pi pi-key", label: "Key", href: "#" },
+        { icon: "pi pi-key", label: "Key", href: "/admin/keys" },
         { icon: "pi pi-info-circle", label: "Ayuda e información", href: "#" },
         { icon: "pi pi-sign-out", label: "Cerrar sesión", href: "/logout" },
       ],
