@@ -51,7 +51,7 @@ export default {
 .footer .icon-circle {
     background-color: #f0f2f5;
     font-size: 24px;
-    color: #000000;
+    color: #252525;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -66,7 +66,7 @@ export default {
 }
 
 .footer .footer-link:hover {
-    color: black;
+    color: #252525;
     text-decoration: underline;
 }
 
