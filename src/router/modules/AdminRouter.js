@@ -23,6 +23,7 @@ export default [
         meta: {
           title: "Inicio",
           role: "admin",
+          requireAuth:true
         },
       },
       {
@@ -32,6 +33,7 @@ export default [
         meta: {
           title: "Productos",
           role: "admin",
+          requireAuth:true
         },
       },
       {
@@ -41,6 +43,7 @@ export default [
         meta: {
           title: "Productos /",
           role: "admin",
+          requireAuth:true
         },
         props: true,
       },
@@ -51,6 +54,7 @@ export default [
         meta: {
           title: "Categorias",
           role: "admin",
+          requireAuth:true
         },
       },
       {
@@ -60,6 +64,7 @@ export default [
         meta: {
           title: "Pedidos",
           role: "admin",
+          requireAuth:true
         },
       },
       {
@@ -69,6 +74,7 @@ export default [
         meta: {
           title: "Key",
           role: "admin",
+          requireAuth:true
         },
       },
     ],

@@ -59,33 +59,34 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const canAccess = utils.getToken();
+  const token = utils.getToken();
+
+  if (!token) {
+    if (to.meta && to.meta.requireAuth) {
+      return next("/unautorized");
+    }
+    return next();
+  }
+  const role = utils.getRole();
+  if (to.meta && to.meta.role && to.meta.role.toLowerCase() !== role.toLowerCase()) {
+    return next("/unautorized");
+  }
 
   if (
-    canAccess &&
+    token &&
     to.path.toLowerCase() === "/admin225ij5a2o1uzptgeo9g" &&
     from.path !== "/admin"
   ) {
-    const role = utils.getRole();
-    if (role.toString().toLowerCase() === "admin") {
+    if (role.toLowerCase() === "admin") {
       return next("/admin");
     }
   }
-  if (canAccess) {
-    const role = utils.getRole()
-    if (to.meta && to.meta.role && to.meta.role.toString().toLowerCase() !== role.toString().toLowerCase()) {
-      return next("/unautorized")
-    }
-    next();
-  }
+
   next();
-  const isTitle = to.matched
-    .slice()
-    .reverse()
-    .find((r) => r.meta && r.meta.title);
-  if (isTitle) {
-    document.title = isTitle.meta.title;
+
+  const matchedRoute = to.matched.slice().reverse().find((r) => r.meta && r.meta.title);
+  if (matchedRoute) {
+    document.title = matchedRoute.meta.title;
   }
 });
-
 export default router;

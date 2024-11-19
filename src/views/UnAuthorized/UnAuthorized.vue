@@ -29,11 +29,24 @@
 </template>
 
 <script>
+import utils from '@/core/utils/FunctionGlobals'
 export default {
     name: "ErrorPage",
     methods: {
         goBack() {
-            this.$router.go(-1);
+            const token = utils.getToken();
+
+            if (!token) {
+                this.$router.push("/");
+                return;
+            }
+
+            const role = utils.getRole();
+            if (role.toString().toLowerCase() === "admin") {
+                this.$router.push("/admin");
+            } else {
+                this.$router.push("/");
+            }
         },
     },
 };
