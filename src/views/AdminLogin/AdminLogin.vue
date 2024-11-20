@@ -33,11 +33,7 @@
                         </Password>
                         <small v-if="passwordError" class="p-error">La contraseña es requerida.</small>
                     </div>
-
-                    <div class="flex justify-content-end mb-3">
-                        <a href="/recuperar-contraseña" class="forgot-password">¿Olvidaste tu contraseña?</a>
-                    </div>
-
+                    <div class="flex justify-content-end mb-3"></div>
                     <div class="w-full">
                         <Button label="Ingresar" style="background-color: #252525;" class="w-full" type="submit" />
                         <small v-if="loginError" class="p-error block mt-2">Credenciales incorrectas.</small>
