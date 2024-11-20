@@ -73,11 +73,11 @@
       <div class="mb-4">
         <div class="grid">
           <div
-            v-for="(card, index) in productReviews"
+            v-for="(review, index) in productReviews"
             :key="index"
             class="col-12 lg:col-6 xl:col-6"
           >
-            <ClientCardsReview />
+            <ClientCardsReview :data="review" />
           </div>
         </div>
       </div>
@@ -90,7 +90,7 @@ import Galleria from "primevue/galleria";
 import CardsProducts from "../components/CardsProducts.vue";
 import ClientCardsReview from "../components/ClientCardsReview.vue";
 import CategoryCard from "../components/ClientCardCategory.vue";
-import carouselImage1 from "@/assets/images/carousel-7.png";
+import carouselImage1 from "@/assets/images/carousel-4.png";
 import carouselImage2 from "@/assets/images/carousel-2.png";
 import carouselImage3 from "@/assets/images/carousel-1.png";
 import carouselImage4 from "@/assets/images/carousel-3.png";
@@ -126,7 +126,7 @@ export default {
       topRatedProducts: [],
       newProducts: [],
       categories: [],
-      productReviews: [1, 2, 3, 4],
+      productReviews: [],
     };
   },
   methods: {
@@ -154,11 +154,21 @@ export default {
         console.error(error);
       }
     },
+    async getTopRatedComments() {
+      try {
+        const response = await ClientService.getTopRatedComments();
+        console.log(response.data);
+        this.productReviews = response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
   mounted() {
     this.getNewProducts();
     this.getTopRatedProducts();
     this.getCategories();
+    this.getTopRatedComments();
   },
 };
 </script>

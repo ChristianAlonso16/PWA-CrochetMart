@@ -37,9 +37,19 @@ const getCategories = async () => {
   }
 };
 
+const getTopRatedComments = async () => {
+  try {
+    const response = await axiosPublic.get("/review/getTopRatedComments");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+  
 export default {
   getProductsHome,
   getNewProducts,
   getCategories,
   getTopRatedProducts,
+  getTopRatedComments
 };
