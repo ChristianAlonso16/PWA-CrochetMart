@@ -95,7 +95,7 @@ import carouselImage2 from "@/assets/images/carousel-2.png";
 import carouselImage3 from "@/assets/images/carousel-1.png";
 import carouselImage4 from "@/assets/images/carousel-3.png";
 import ClientService from "../services/ClientServices";
-
+import alert from "@/core/utils/Alerts.js";
 export default {
   components: {
     Galleria,
@@ -157,8 +157,9 @@ export default {
     async getTopRatedComments() {
       try {
         const response = await ClientService.getTopRatedComments();
-        console.log(response.data);
         this.productReviews = response.data;
+        //title, text, icon = 'warning', options = {}
+        alert.showAlert("Comentarios Destacados", "Comentarios destacados cargados correctamente", "success");
       } catch (error) {
         console.error(error);
       }
