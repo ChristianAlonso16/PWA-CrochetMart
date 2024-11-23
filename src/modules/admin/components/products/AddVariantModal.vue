@@ -3,41 +3,59 @@
     <Dialog
       header="Agregar variante"
       :visible.sync="localVisible"
-      :containerStyle="{ width: '80vw' }"
+      :containerStyle="{ width: '50vw' }"
       class="font-bold"
       @hide="closeModal"
       modal
       closable
     >
       <div class="flex flex-wrap md:flex-nowrap">
-        <div class="col-12 md:col-8 mb-3 md:mb-0">
-          <FileUpload
-            :key="fileUploadKey"
-            name="images"
-            :multiple="true"
-            accept="image/*"
-            :maxFileSize="1000000"
-            chooseLabel="Seleccionar"
-            cancelLabel="Cancelar"
-            :class="{ 'p-invalid': isImageInvalid }"
-            @select="onSelect"
-            @clear="onClear"
-            @remove="onRemove"
-            :showUploadButton="false"
-            invalidFileSizeMessage="Tamaño de archivo excedido"
-            invalidFileMessage="Tipo de archivo no permitido"
-            invalidFileLimitMessage="Máximo número de archivos excedido"
-            :fileLimit="5"
-          >
-            <template #empty>
-              <p>Arrastra y suelta archivos aquí para subir.</p>
-            </template>
-          </FileUpload>
-          <small v-if="isImageInvalid" class="p-error">
-            Debe cargar al menos una imagen.
-          </small>
+        <div class="col-12 md:col-7 mb-3 md:mb-0">
+          <div class="image-upload-container">
+            <input
+              type="file"
+              ref="fileInput"
+              multiple
+              accept="image/*"
+              class="hidden-input"
+              @change="handleFileInput"
+            />
+            <div
+              class="upload-area"
+              @click="triggerFileInput"
+              @dragover.prevent
+              @drop.prevent="handleFileDrop"
+            >
+              <i class="pi pi-upload"></i>
+              <p>Arrastra y suelta archivos aquí para subir o selecciona.</p>
+            </div>
+            <div v-if="uploadedFiles.length" class="uploaded-images">
+              <div
+                v-for="(file, index) in uploadedFiles"
+                :key="index"
+                class="image-item flex align-items-center"
+              >
+                <img
+                  :src="file.objectURL"
+                  alt="Uploaded"
+                  class="uploaded-image"
+                />
+                <div class="file-info">
+                  <p class="file-name">{{ file.name }}</p>
+                  <p class="file-size">
+                    {{ (file.size / 1024).toFixed(2) }} KB
+                  </p>
+                </div>
+                <Button
+                  icon="pi pi-times"
+                  class="p-button-danger"
+                  @click="removeImage(index)"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-12 md:col-4">
+        <div class="col-12 md:col-5">
           <div class="p-fluid">
             <div class="field">
               <label for="price">Precio</label>
@@ -116,7 +134,6 @@
 
 
 <script>
-import FileUpload from "primevue/fileupload";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 import InputNumber from "primevue/inputnumber";
@@ -125,7 +142,6 @@ import AdminServices from "@/modules/admin/services/AdminServices";
 
 export default {
   components: {
-    FileUpload,
     Button,
     Dialog,
     InputNumber,
@@ -160,7 +176,9 @@ export default {
   methods: {
     async getAttributes() {
       try {
-        const response = await AdminServices.getAttributesAvailable(this.numProduct);
+        const response = await AdminServices.getAttributesAvailable(
+          this.numProduct
+        );
         this.colors = response.data.map((attr) => ({
           name: attr.name,
           value: "#" + attr.value,
@@ -190,35 +208,39 @@ export default {
       this.isStockInvalid = false;
       this.isImageInvalid = false;
     },
-    onSelect(event) {
-      this.uploadedFiles = [...event.files];
+    triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
+    handleFileInput(event) {
+      const files = Array.from(event.target.files).map((file) => ({
+        file,
+        objectURL: URL.createObjectURL(file),
+        name: file.name,
+        size: file.size,
+      }));
+      this.uploadedFiles.push(...files);
+      this.validateImage();
+    },
+    handleFileDrop(event) {
+      const files = Array.from(event.dataTransfer.files).map((file) => ({
+        file,
+        objectURL: URL.createObjectURL(file),
+        name: file.name,
+        size: file.size,
+      }));
+      this.uploadedFiles.push(...files);
+      this.validateImage();
+    },
+    removeImage(index) {
+      const file = this.uploadedFiles[index];
+      URL.revokeObjectURL(file.objectURL);
+      this.uploadedFiles.splice(index, 1);
+      this.validateImage();
+    },
+    validateImage() {
+      this.isImageInvalid = this.uploadedFiles.length === 0;
+    },
 
-      event.files.forEach((file) => {
-        if (
-          !this.uploadedFiles.find(
-            (uploadedFile) => uploadedFile.name === file.name
-          )
-        ) {
-          this.uploadedFiles.push(file);
-        }
-      });
-
-      console.log("Uploaded files:", this.uploadedFiles);
-      this.validateImage();
-    },
-    onClear() {
-      this.uploadedFiles = [];
-      this.validateImage();
-    },
-    onRemove(event) {
-      const fileIndex = this.uploadedFiles.findIndex(
-        (file) => file.name === event.file.name
-      );
-      if (fileIndex !== -1) {
-        this.uploadedFiles.splice(fileIndex, 1);
-      }
-      this.validateImage();
-    },
     validatePrice() {
       this.isPriceInvalid = !this.price || this.price.toString().length > 10;
     },
@@ -227,9 +249,6 @@ export default {
     },
     validateStock() {
       this.isStockInvalid = !this.stock || this.stock.toString().length > 10;
-    },
-    validateImage() {
-      this.isImageInvalid = this.uploadedFiles.length === 0;
     },
     submitForm() {
       this.validatePrice();
@@ -274,7 +293,6 @@ export default {
     },
   },
   mounted() {
-    
     this.getAttributes();
   },
   watch: {
@@ -295,5 +313,62 @@ export default {
 }
 .p-error {
   color: red;
+}
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+}
+.upload-area {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  text-align: center;
+  padding: 20px;
+  cursor: pointer;
+}
+.upload-area i {
+  font-size: 2rem;
+  color: #555;
+}
+.upload-area p {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #888;
+}
+.hidden-input {
+  display: none;
+}
+.uploaded-images {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.image-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.uploaded-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+.file-info {
+  flex-grow: 1;
+}
+.file-name {
+  font-weight: bold;
+  margin: 0;
+}
+.file-size {
+  font-size: 0.85em;
+  color: gray;
+}
+.p-button-danger {
+  margin-left: 10px;
 }
 </style>

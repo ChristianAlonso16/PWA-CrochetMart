@@ -1,5 +1,5 @@
 <template>
-  <div class="product-card surface-card p-3 shadow-2 border-round mx-2">
+  <div class="product-card surface-card p-3 shadow-2 border-round-xl mx-2">
     <img
       :src="product.image"
       alt="Producto"
@@ -7,26 +7,25 @@
     />
     <div class="flex flex-column align-items-start">
       <h3 class="mt-0 mb-2">{{ product.productName }}</h3>
-      <p class="text-600 mb-3">{{ product.description }}</p>
-      <div class="flex justify-content-between align-items-center w-full">
-        <span class="text-xl font-bold">{{ formattedPrice }}</span>
-        <Button
-          label="Añadir al carrito"
-          class="p-button-rounded p-button-sm"
-          style="width: 150px"
-        />
+      <div class="flex align-items-center w-full">
+        <span class="text-xl font-bold flex-grow-1">{{ formattedPrice }}</span>
+
+        <div class="flex align-items-center gap-1">
+          <Rating :stars="1" :readonly="true" :cancel="false" :value="1" />
+          <p>{{ formattedRating }}</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
-  
+
 <script>
-import Button from "primevue/button";
+import Rating from "primevue/rating";
 
 export default {
   name: "ProductCard",
   components: {
-    Button,
+    Rating,
   },
   props: {
     product: {
@@ -38,10 +37,13 @@ export default {
     formattedPrice() {
       return `$${parseFloat(this.product.price).toFixed(2)}`;
     },
+    formattedRating() {
+      return parseFloat(this.product.avgRating).toFixed(1);
+    },
   },
 };
 </script>
-  
+
 <style scoped>
 .product-card {
   width: 300px;
@@ -49,8 +51,8 @@ export default {
 .product-image {
   width: 100%;
   height: 300px;
-  object-fit: cover; 
-  border-radius: var(--border-radius); 
+  object-fit: cover;
+  border-radius: 50px;
 }
+
 </style>
-  

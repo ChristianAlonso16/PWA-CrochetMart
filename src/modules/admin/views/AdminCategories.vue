@@ -4,7 +4,9 @@
       <p class="text-lg font-bold">Administrar Categorías</p>
     </div>
     <div class="col-12 md:col-6 flex justify-content-end py-4">
-      <Button class="p-button-primary" @click="openModal"> Agregar </Button>
+      <Button class="" style="border-radius: 6px !important" @click="openModal">
+        Agregar
+      </Button>
     </div>
     <AddCategoryModal :visible.sync="modalVisible" @refresh="getCategories" />
 
@@ -191,4 +193,9 @@ export default {
   },
 };
 </script>
-  
+
+<style scoped>
+.p-button {
+  border-radius: 100px !important;
+}
+</style>

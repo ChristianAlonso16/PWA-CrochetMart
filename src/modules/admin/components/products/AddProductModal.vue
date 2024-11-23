@@ -3,7 +3,7 @@
     <Button class="p-button-primary" @click="openModal"> Agregar </Button>
     <Dialog
       class="font-bold"
-      :containerStyle="{ width: '70vw' }"
+      :containerStyle="{ width: '50vw' }"
       modal
       closable
       @hide="closeModal"

@@ -1,7 +1,10 @@
 <template>
   <div class="pt-5">
-    <div class="col-12">
-      <h1 class="text-center">Descubre la Magia del Crochet</h1>
+    <div class="col-12 search-container">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <InputText type="text" class="p-inputtext-lg" placeholder="Busca en CrochetMart" />
+      </span>
     </div>
     <div class="col-12">
       <Galleria
@@ -19,8 +22,9 @@
             style="
               width: 100%;
               display: block;
-              height: 600px;
+              height: 400px;
               object-fit: cover;
+              border-radius: 28px;
               object-position: center;
             "
           />
@@ -29,7 +33,7 @@
     </div>
     <div class="px-4">
       <div class="grid pt-3">
-        <h1>Más recientes</h1>
+        <h1>¡Nuevos productos!</h1>
       </div>
       <div class="horizontal-scroll-container mb-4">
         <div class="flex">
@@ -42,7 +46,7 @@
         </div>
       </div>
       <div class="grid pt-5">
-        <h1>Nuestras Categorías</h1>
+        <h1>Categorías</h1>
       </div>
       <div class="horizontal-scroll-container">
         <div class="flex">
@@ -87,6 +91,7 @@
 
 <script>
 import Galleria from "primevue/galleria";
+import InputText from "primevue/inputtext";
 import CardsProducts from "../components/CardsProducts.vue";
 import ClientCardsReview from "../components/ClientCardsReview.vue";
 import CategoryCard from "../components/ClientCardCategory.vue";
@@ -102,6 +107,7 @@ export default {
     CardsProducts,
     ClientCardsReview,
     CategoryCard,
+    InputText,
   },
   data() {
     return {
@@ -157,7 +163,6 @@ export default {
     async getTopRatedComments() {
       try {
         const response = await ClientService.getTopRatedComments();
-        console.log(response.data);
         this.productReviews = response.data;
       } catch (error) {
         console.error(error);
@@ -209,5 +214,24 @@ export default {
 .horizontal-scroll-container::-webkit-scrollbar-thumb {
   background-color: #252525;
   border-radius: 10px;
+}
+
+.search-container {
+  width: 100%;
+}
+
+.p-input-icon-left {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: 1px solid #d3d3d3;
+}
+
+.p-input-icon-left .p-inputtext {
+  flex: 1;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  width: 100%;
 }
 </style>

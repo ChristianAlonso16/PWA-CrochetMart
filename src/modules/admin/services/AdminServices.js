@@ -186,7 +186,7 @@ const addVariant = async (price, color, stock, files, numProduct) => {
     formData.append("color", color);
     formData.append("stock", stock);
     formData.append("numProduct", numProduct);
-    files.forEach((file) => {
+    files.forEach(({ file }) => {
       formData.append("imagesDtoList", file);
     });
 
@@ -212,7 +212,7 @@ const updateVariant = async (data) => {
     formData.append("color", data.color);
     formData.append("stock", data.stock);
     formData.append("numProduct", data.numVariant);
-    data.images.forEach((file) => {
+    data.images.forEach(({file}) => {
       formData.append("imagesDtoList", file);
     });
 
@@ -229,7 +229,7 @@ const updateVariant = async (data) => {
   } catch (error) {
     return error;
   }
-}
+};
 const addCategory = async (name, description, icon) => {
   try {
     const category = {
@@ -254,7 +254,6 @@ const getAllOrders = async () => {
     return error;
   }
 };
-
 
 export default {
   loginAdmin,
