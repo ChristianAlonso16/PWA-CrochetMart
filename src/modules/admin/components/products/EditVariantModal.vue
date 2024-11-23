@@ -3,7 +3,7 @@
     <Dialog
       header="Editar variante"
       :visible.sync="localVisible"
-      :containerStyle="{ width: '80vw' }"
+      :containerStyle="{ width: '50vw' }"
       class="font-bold"
       @hide="closeModal"
       modal
@@ -11,28 +11,48 @@
     >
       <div class="flex flex-wrap md:flex-nowrap">
         <div class="col-12 md:col-8 mb-3 md:mb-0">
-          <div>
-            <FileUpload
-              ref="fileUpload"
-              name="images"
-              :multiple="true"
-              :accept="'image/*'"
-              :maxFileSize="1000000"
-              :customUpload="true"
-              :auto="false"
-              :showUploadButton="false"
-              :fileLimit="5"
-              :previewWidth="100"
-              chooseLabel="Seleccionar"
-              cancelLabel="Cancelar"
-              :class="{ 'p-invalid': isImageInvalid }"
-              @select="onSelect"
-              @clear="onClear"
+          <div class="image-upload-container">
+            <input
+              type="file"
+              ref="fileInput"
+              multiple
+              accept="image/*"
+              class="hidden-input"
+              @change="handleFileInput"
+            />
+            <div
+              class="upload-area"
+              @click="triggerFileInput"
+              @dragover.prevent
+              @drop.prevent="handleFileDrop"
             >
-              <template #empty>
-                <p>Arrastra y suelta archivos aquí para subir o selecciona.</p>
-              </template>
-            </FileUpload>
+              <i class="pi pi-upload"></i>
+              <p>Arrastra y suelta archivos aquí para subir o selecciona.</p>
+            </div>
+            <div v-if="uploadedFiles.length" class="uploaded-images">
+              <div
+                v-for="(file, index) in uploadedFiles"
+                :key="index"
+                class="image-item flex align-items-center"
+              >
+                <img
+                  :src="file.objectURL"
+                  alt="Uploaded"
+                  class="uploaded-image"
+                />
+                <div class="file-info">
+                  <p class="file-name">{{ file.name }}</p>
+                  <p class="file-size">
+                    {{ (file.size / 1024).toFixed(2) }} KB
+                  </p>
+                </div>
+                <Button
+                  icon="pi pi-times"
+                  class="p-button-danger"
+                  @click="removeImage(index)"
+                />
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-12 md:col-4">
@@ -113,7 +133,6 @@
 </template>
 
 <script>
-import FileUpload from "primevue/fileupload";
 import Button from "primevue/button";
 import Dialog from "primevue/dialog";
 import InputNumber from "primevue/inputnumber";
@@ -122,7 +141,6 @@ import AdminServices from "@/modules/admin/services/AdminServices";
 
 export default {
   components: {
-    FileUpload,
     Button,
     Dialog,
     InputNumber,
@@ -134,6 +152,10 @@ export default {
       default: false,
     },
     variant: {
+      type: String,
+      required: true,
+    },
+    numProduct: {
       type: String,
       required: true,
     },
@@ -157,7 +179,9 @@ export default {
   methods: {
     async getAttributes() {
       try {
-        const response = await AdminServices.getAttributesByName("Color");
+        const response = await AdminServices.getAttributesAvailable(
+          this.numProduct
+        );
         this.colors = response.data.map((attr) => ({
           name: attr.name,
           value: "#" + attr.value,
@@ -182,16 +206,10 @@ export default {
       this.isStockInvalid = false;
       this.isImageInvalid = false;
     },
-    onSelect(event) {
-      this.uploadedFiles = [];
-      this.uploadedFiles.push(...event.files);
-      //falta algo
-      console.log(event);
-      console.log(this.uploadedFiles);
-      this.validateImages();
-    },
-    onClear() {
-      this.uploadedFiles = [];
+    removeImage(index) {
+      const file = this.uploadedFiles[index];
+      URL.revokeObjectURL(file.objectURL);
+      this.uploadedFiles.splice(index, 1);
       this.validateImages();
     },
     validatePrice() {
@@ -257,29 +275,27 @@ export default {
         if (statusCode === 200) {
           this.price = data.price;
           this.stock = data.stock;
-
-          const colorAttribute = data.attributes.find(
-            (attr) => attr.name === "Color"
+          this.colors.push({
+            name: data.attributes[0].value,
+            value: "#" + data.attributes[0].c,
+          });
+          this.selectedColor = this.colors.find(
+            (color) => color.name === data.attributes[0].value
           );
-
-          if (colorAttribute) {
-            this.selectedColor =
-              this.colors.find(
-                (color) => color.name === colorAttribute.value
-              ) || null;
-          } else {
-            this.selectedColor = null;
-          }
 
           this.uploadedFiles = [];
-
-          const files = await Promise.all(
-            data.images.map((base64, index) =>
-              this.base64ToFileWithObjectURL(base64, `image_${index}.jpeg`)
-            )
-          );
-
-          this.addFilesToFileUpload(files);
+          for (const [index, base64] of data.images.entries()) {
+            const file = await this.base64ToFileWithObjectURL(
+              base64,
+              `image_${index}.jpeg`
+            );
+            this.uploadedFiles.push({
+              file,
+              objectURL: file.objectURL,
+              name: file.name,
+              size: file.size,
+            });
+          }
         }
       } catch (error) {
         console.error("Error loading variant data:", error);
@@ -314,16 +330,36 @@ export default {
         }
       });
     },
-
-    addFilesToFileUpload(files) {
-      if (this.$refs.fileUpload) {
-        const fileUpload = this.$refs.fileUpload;
-
-        if (fileUpload.files) {
-          fileUpload.files.push(...files);
-        }
-
-        fileUpload.$emit("select", { files });
+    triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
+    handleFileInput(event) {
+      const files = Array.from(event.target.files).map((file) => ({
+        file,
+        objectURL: URL.createObjectURL(file),
+        name: file.name,
+        size: file.size,
+      }));
+      this.uploadedFiles.push(...files);
+      this.validateImages();
+    },
+    handleFileDrop(event) {
+      const files = Array.from(event.dataTransfer.files).map((file) => ({
+        file,
+        objectURL: URL.createObjectURL(file),
+        name: file.name,
+        size: file.size,
+      }));
+      this.uploadedFiles.push(...files);
+      this.validateImages();
+    },
+    async openModal() {
+      try {
+        await this.getAttributes();
+        await this.loadVariantData();
+        this.localVisible = true;
+      } catch (error) {
+        console.error("Error al cargar los datos del modal:", error);
       }
     },
   },
@@ -333,9 +369,10 @@ export default {
   },
   watch: {
     visible(newValue) {
-      this.localVisible = newValue;
       if (newValue) {
-        this.loadVariantData();
+        this.openModal();
+      } else {
+        this.closeModal();
       }
     },
   },
@@ -352,5 +389,62 @@ export default {
 }
 .p-error {
   color: red;
+}
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+}
+.upload-area {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  text-align: center;
+  padding: 20px;
+  cursor: pointer;
+}
+.upload-area i {
+  font-size: 2rem;
+  color: #555;
+}
+.upload-area p {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #888;
+}
+.hidden-input {
+  display: none;
+}
+.uploaded-images {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.image-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.uploaded-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+.file-info {
+  flex-grow: 1;
+}
+.file-name {
+  font-weight: bold;
+  margin: 0;
+}
+.file-size {
+  font-size: 0.85em;
+  color: gray;
+}
+.p-button-danger {
+  margin-left: 10px;
 }
 </style>

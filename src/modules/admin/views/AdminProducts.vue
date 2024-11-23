@@ -175,3 +175,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.p-button {
+  border-radius: 100px !important;
+}
+</style>

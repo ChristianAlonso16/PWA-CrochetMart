@@ -2,9 +2,6 @@
     <div class="col-12">
         <Card>
             <template #title>
-                <div>
-                    <h5 class="m-0">Producto - {{ localData.numProduct }}</h5>
-                </div>
                 <div class="flex justify-content-between flex-wrap">
                      
                     <Rating 
