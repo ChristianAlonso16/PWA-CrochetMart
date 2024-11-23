@@ -4,6 +4,7 @@ import Products from "../../modules/admin/views/AdminProducts.vue";
 import ProductVariants from "../../modules/admin/views/AdminProductVariants.vue";
 import AdminCategories from "@/modules/admin/views/AdminCategories.vue";
 import AdminKeys from "@/modules/admin/views/AdminKeys.vue";
+import AdminHelp from "@/modules/admin/views/AdminHelpInformation.vue";
 
 export default [
   {
@@ -73,6 +74,16 @@ export default [
         component: AdminKeys,
         meta: {
           title: "Key",
+          role: "admin",
+          requireAuth:true
+        },
+      },
+      {
+        path: "/admin/help",
+        name: "help",
+        component: AdminHelp,
+        meta: {
+          title: "Ayuda e Información",
           role: "admin",
           requireAuth:true
         },
