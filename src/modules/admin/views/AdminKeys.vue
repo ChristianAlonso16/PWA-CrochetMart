@@ -70,8 +70,7 @@ export default {
       try {
         const response = await AdminServices.getKeyStripe();
         const { data, statusCode } = response;
-        console.log(response);
-
+        
         if (statusCode === 200) {
           this.stripeKeys = Utils.formatDate(data[0].updateAt);
         }
