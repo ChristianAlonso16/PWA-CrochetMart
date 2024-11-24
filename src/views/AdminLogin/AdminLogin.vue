@@ -84,20 +84,16 @@ export default {
             if (!this.emailError && !this.passwordError) {
                 try {
                     const response = await AdminServices.loginAdmin(this.email, this.password);
-                    const { data, statusCode } = response;
-                    console.log(response)
+                    const { data, statusCode, message } = response;
                     if (statusCode === 200) {
                         this.loginUser(data);
                         const role = utils.getRole();
                         if (role.toString().toLowerCase() === 'admin') {
                             this.$router.push('/admin');
                         }
-                    } else if (statusCode === 404) {
-                        alert("Usuario no encontrado");
-                    } else if (statusCode === 423) {
-                        alert("Cuenta bloqueada");
-                    } else if (statusCode === 401) {
-                        alert("Credenciales inválidas");
+                    } else {
+                        this.$toast.error(message);
+
                     }
 
                 } catch (error) {
