@@ -259,7 +259,15 @@ const getOrderByNumOrder = async (numOrder) => {
   try {
     const response = await axiosPrivate.get(`/order/getOrderByNumOrder/${numOrder}`);
     return response.data;
-    
+  } catch (error) {
+    return error;
+  }
+};
+
+const updateStatusOrder = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.post(`/order/updateStatusOrder?numOrder=${numOrder}`);
+    return response.data;
   } catch (error) {
     return error;
   }
@@ -288,4 +296,5 @@ export default {
   getAttributesAvailable,
   getAllOrders,
   getOrderByNumOrder,
+  updateStatusOrder,
 };

@@ -1,5 +1,6 @@
 <template>
     <div class="grid">
+        <ConfirmDialog></ConfirmDialog>
         <div class="col-12">
             <Card>
                 <template #content>
@@ -29,20 +30,28 @@
 <script>
 import Card from "primevue/card";
 import Button from "primevue/button";
+import AdminServices from "../../services/AdminServices";
+import ConfirmDialog from 'primevue/confirmdialog';
 
 export default {
     components: {
         Card,
         Button,
+        ConfirmDialog
     },
     props: {
         status: {
             type: String,
             required: true
-        }
+        },
+        numOrder: {
+            type: String,
+            required: true
+        },
     },
     data() {
         return {
+            numOrderDetails: '',
             steps: ["Aceptado", "Preparando", "Enviado", "Entregado"],
             arrayLabel: ["Aceptar", "Preparar", "Enviar", "Finalizar"],
             stateOptions: {
@@ -58,7 +67,22 @@ export default {
         };
     },
     methods: {
+        async changeStatus(numOrder) {
+            try {
+                const response = await AdminServices.updateStatusOrder(numOrder);
+                const { statusCode } = response;
+                if (statusCode === 200) {
+                    if (!this.isPaymentIssue && this.currentStep <= this.steps.length - 1) {
+                        this.currentStep++;
+                        this.labelStepF(this.currentStep);
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
         updateCurrentStep() {
+            this.numOrderDetails = this.numOrder != undefined ? this.numOrder : null;
             if (this.status === "pending_payment" && this.stateOptions["pending_payment"] === true) {
                 this.isPaymentIssue = true;
                 this.currentStep = 0;
@@ -74,10 +98,18 @@ export default {
             this.labelStep = this.arrayLabel[position];
         },
         nextStep() {
-            if (!this.isPaymentIssue && this.currentStep <= this.steps.length - 1) {
-                this.currentStep++;
-                this.labelStepF(this.currentStep);
-            }
+            this.$confirm.require({
+                message: `¿Seguro que quieres cambiar el estado a "${this.steps[this.currentStep]}"?`,
+                header: 'Confirmation',
+                icon: 'pi pi-exclamation-triangle',
+                accept: () => {
+                    this.changeStatus(this.numOrderDetails);
+                },
+                reject: () => {
+                    console.log('Action was rejected by the user');
+                }
+            });
+            
         },
     },
     watch: {
@@ -87,9 +119,12 @@ export default {
                 this.updateCurrentStep();
             },
         },
-    },
-    mounted() {
-        this.updateCurrentStep();
+        numOrder: {
+            immediate: true,
+            handler() {
+                this.updateCurrentStep();
+            },
+        },
     },
 };
 </script>

@@ -7,8 +7,9 @@
                 </div>
             </div>
             <ProgressOrder
-                v-if="details?.status"
+                v-if="details?.status && details?.numOrder"
                 :status="details?.status"
+                :numOrder="details?.numOrder"
             />
             <div class="grid">
                 <div class="col-12">
@@ -39,6 +40,7 @@ import DetailsOrder from '../components/orders/DetailsOrder.vue';
 import ProductsOrder from '../components/orders/ProductsOrder.vue';
 import ScrollPanel from 'primevue/scrollpanel';
 import AdminServices from "../services/AdminServices";
+
 export default {
     components: {
         ProgressOrder,
