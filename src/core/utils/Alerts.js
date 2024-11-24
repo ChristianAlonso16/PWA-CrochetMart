@@ -1,84 +1,45 @@
-import Swal from 'sweetalert2';
-import './Custom.css';
+import Vue from 'vue';
+import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
 
-const defaultOptions = {
-    customClass: {
-        confirmButton: 'swal-confirm-button', 
-        cancelButton: 'swal-cancel-button', 
+const ToastPlugin = {
+    install(VueInstance) {
+        const ToastConstructor = Vue.extend(Toast);
+        const toastInstance = new ToastConstructor();
+        toastInstance.$mount(document.createElement('div'));
+        document.body.appendChild(toastInstance.$el);
+
+        VueInstance.prototype.$toast = {
+            /**
+             * @param {Object} options 
+             * @param {string} options.severity 
+             * @param {string} options.summary 
+             * @param {string} options.detail 
+             * @param {number} options.life 
+             */
+            show({ severity, summary, detail, life = 3000 }) {
+                toastInstance.add({ severity, summary, detail, life });
+            },
+
+            success(detail, life = 3000) {
+                this.show({ severity: 'success', summary: 'Operacion exitosa', detail, life });
+            },
+            error(detail, life = 3000) {
+                this.show({ severity: 'error', summary: 'Operacion fallida', detail, life });
+            },
+            info(detail, life = 3000) {
+                this.show({ severity: 'info', summary: 'Informacion', detail, life });
+            },
+            warn(detail, life = 3000) {
+                this.show({ severity: 'warn', summary: 'Advertencia', detail, life });
+            },
+        };
     },
 };
 
-const showAlert = (title, text, icon = 'info', options = {}) => {
-    return Swal.fire({
-        title,
-        text,
-        icon,
-        confirmButtonText: 'Guardar',
-        confirmButtonColor: '#ffffff', 
-        cancelButtonColor: '#000000', 
-        ...defaultOptions, 
-        ...options, 
-    });
-};
+Vue.use(ToastService);
+Vue.use(ToastPlugin);
 
-const showConfirm = (title, text, icon = 'warning', options = {}) => {
-    return Swal.fire({
-        title,
-        text,
-        icon,
-        showCancelButton: true,
-        confirmButtonText: 'Guardar',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#ffffff',
-        cancelButtonColor: '#000000',
-        ...defaultOptions,
-        ...options,
-    });
-};
+export default ToastPlugin;
 
-const showSuccess = (title = '¡Éxito!', text = 'Operación realizada correctamente.', options = {}) => {
-    return Swal.fire({
-        title,
-        text,
-        icon: 'success',
-        confirmButtonText: 'Guardar',
-        confirmButtonColor: '#ffffff',
-        cancelButtonColor: '#000000',
-        ...defaultOptions,
-        ...options,
-    });
-};
 
-const showError = (title = 'Error', text = 'Algo salió mal. Inténtalo de nuevo.', options = {}) => {
-    return Swal.fire({
-        title,
-        text,
-        icon: 'error',
-        confirmButtonText: 'Guardar',
-        confirmButtonColor: '#ffffff',
-        cancelButtonColor: '#000000',
-        ...defaultOptions,
-        ...options,
-    });
-};
-
-const showCancel = (title = 'Cancelado', text = 'Cancelando ...', options = {}) => {
-    return Swal.fire({
-        title,
-        text,
-        icon: 'info',
-        confirmButtonText: 'Guardar',
-        confirmButtonColor: '#ffffff',
-        cancelButtonColor: '#000000',
-        ...defaultOptions,
-        ...options,
-    });
-};
-
-export default {
-    showAlert,
-    showConfirm,
-    showSuccess,
-    showError,
-    showCancel,
-};

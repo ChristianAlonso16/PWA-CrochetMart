@@ -33,11 +33,7 @@
                         </Password>
                         <small v-if="passwordError" class="p-error">La contraseña es requerida.</small>
                     </div>
-
-                    <div class="flex justify-content-end mb-3">
-                        <a href="/recuperar-contraseña" class="forgot-password">¿Olvidaste tu contraseña?</a>
-                    </div>
-
+                    <div class="flex justify-content-end mb-3"></div>
                     <div class="w-full">
                         <Button label="Ingresar" style="background-color: #252525;" class="w-full" type="submit" />
                         <small v-if="loginError" class="p-error block mt-2">Credenciales incorrectas.</small>
@@ -88,20 +84,16 @@ export default {
             if (!this.emailError && !this.passwordError) {
                 try {
                     const response = await AdminServices.loginAdmin(this.email, this.password);
-                    const { data, statusCode } = response;
-                    console.log(response)
+                    const { data, statusCode, message } = response;
                     if (statusCode === 200) {
                         this.loginUser(data);
                         const role = utils.getRole();
                         if (role.toString().toLowerCase() === 'admin') {
                             this.$router.push('/admin');
                         }
-                    } else if (statusCode === 404) {
-                        alert("Usuario no encontrado");
-                    } else if (statusCode === 423) {
-                        alert("Cuenta bloqueada");
-                    } else if (statusCode === 401) {
-                        alert("Credenciales inválidas");
+                    } else {
+                        this.$toast.error(message);
+
                     }
 
                 } catch (error) {
