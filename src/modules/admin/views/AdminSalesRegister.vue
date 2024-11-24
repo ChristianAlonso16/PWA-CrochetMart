@@ -43,7 +43,7 @@
               <Button
                 icon="pi pi-eye"
                 class="p-button-rounded p-button-text"
-                @click="viewOrder(data.orderNumber)"
+                @click="handleRowClick(data)"
               />
             </template>
           </Column>
@@ -106,6 +106,13 @@ export default {
       } catch (error) {
         console.error(error);
       }
+    },
+    handleRowClick(order) {
+      sessionStorage.setItem("selectedOrder", JSON.stringify(order));
+      this.$router.push({
+        name: "details-sales",
+        params: { numOrder: order.numOrder},
+      });
     },
   },
   mounted() {

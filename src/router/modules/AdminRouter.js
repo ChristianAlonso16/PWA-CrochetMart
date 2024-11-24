@@ -4,6 +4,7 @@ import Products from "../../modules/admin/views/AdminProducts.vue";
 import ProductVariants from "../../modules/admin/views/AdminProductVariants.vue";
 import AdminCategories from "@/modules/admin/views/AdminCategories.vue";
 import AdminKeys from "@/modules/admin/views/AdminKeys.vue";
+import AdminSalesDetails from "@/modules/admin/views/AdminSalesDetails.vue";
 
 export default [
   {
@@ -77,6 +78,16 @@ export default [
           requireAuth:true
         },
       },
+      {
+        path: "/admin/details-sales",
+        name: "details-sales",
+        component: AdminSalesDetails,
+        meta: {
+          title: "Detalle pedido",
+          role: "admin",
+          requireAuth:true
+        },
+      }
     ],
   },
 ];
