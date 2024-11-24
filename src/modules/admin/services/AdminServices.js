@@ -44,6 +44,35 @@ const getProducts = async () => {
   }
 };
 
+
+const getKeyStripe = async () => { 
+  try {
+    const response = await axiosPrivate.get("/stripekeys/getAll");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getLinkAndroindApp = async () => {
+  try {
+    const response = await axiosPrivate.get("/linkapp/getLinkAndroid");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getLinkIosApp = async () => {
+  try {
+    const response = await axiosPrivate.get("/linkapp/getLinkIos");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 const getProductDetails = async (numberProduct) => {
   try {
     const response = await axiosPrivate.get(
@@ -255,6 +284,24 @@ const getAllOrders = async () => {
   }
 };
 
+const getOrderByNumOrder = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.get(`/order/getOrderByNumOrder/${numOrder}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const updateStatusOrder = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.post(`/order/updateStatusOrder?numOrder=${numOrder}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   loginAdmin,
   getReportOrders,
@@ -277,4 +324,9 @@ export default {
   addCategory,
   getAttributesAvailable,
   getAllOrders,
+  getOrderByNumOrder,
+  updateStatusOrder,
+  getKeyStripe,
+  getLinkAndroindApp,
+  getLinkIosApp,
 };
