@@ -35,7 +35,41 @@ export default {
         Card,
         Button,
     },
+    props: {
+        status: {
+            type: String,
+            required: true
+        }
+    },
+    data() {
+        return {
+            steps: ["Aceptado", "Preparando", "Enviado", "Entregado"],
+            arrayLabel: ["Aceptar", "Preparar", "Enviar", "Finalizar"],
+            stateOptions: {
+                "accepted": 1,
+                "in_progress": 2,
+                "sent": 3,
+                "delivered": 4,
+                "pending_payment": true,
+            },
+            labelStep: "Aceptar",
+            currentStep: 0,
+            isPaymentIssue: false,
+        };
+    },
     methods: {
+        updateCurrentStep() {
+            if (this.status === "pending_payment" && this.stateOptions["pending_payment"] === true) {
+                this.isPaymentIssue = true;
+                this.currentStep = 0;
+                this.labelStep = null;
+            } else {
+                this.isPaymentIssue = false;
+                const stepValue = this.stateOptions[this.status];
+                this.currentStep = stepValue !== undefined ? stepValue : 0;
+                this.labelStepF(this.currentStep);
+            }
+        },
         labelStepF(position) {
             this.labelStep = this.arrayLabel[position];
         },
@@ -46,14 +80,16 @@ export default {
             }
         },
     },
-    data() {
-        return {
-            steps: ["Aceptado", "Preparando", "Enviado", "Entregado"],
-            arrayLabel: ["Aceptar", "Preparar", "Enviar", "Finalizar"],
-            labelStep: "Aceptar",
-            currentStep: 0,
-            isPaymentIssue: true,
-        };
+    watch: {
+        status: {
+            immediate: true,
+            handler() {
+                this.updateCurrentStep();
+            },
+        },
+    },
+    mounted() {
+        this.updateCurrentStep();
     },
 };
 </script>

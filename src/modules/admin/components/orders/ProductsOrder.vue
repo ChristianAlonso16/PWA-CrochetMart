@@ -3,17 +3,19 @@
         <div class="col-12">
             <Card>
                 <template #content>
-                    <div class="grid px-5">
-                        <div class="col-12 md:col-6 lg:col-4 xl:col-3 flex justify-content-center flex-wrap">
-                            <ImagePreview src="https://www.elsoldemorelia.com.mx/gossip/funx8q-crochet/ALTERNATES/LANDSCAPE_1140/crochet" alt="Image" width="150" height="150" />
-                        </div>
-                        <div class="col-12 md:col-6 lg:col-5 xl:col-5">
-                            <p class="text-black">Estambre</p>
-                            <p class="text-gray">Color:  Blanco</p>
-                            <p class="text-gray">Cantidad:  1</p>
-                        </div>
-                        <div class="col-12 lg:col-3 xl:col-4 flex justify-content-end flex-wrap">
-                            <p class="text-black">Total: $66.00</p>
+                    <div v-for="(product, index) in productsOrder" :key="index">
+                        <div class="grid px-5">
+                            <div class="col-12 md:col-6 lg:col-4 xl:col-3 flex justify-content-center flex-wrap">
+                                <img :src="product?.image" alt="product" class="sized"/>
+                            </div>
+                            <div class="col-12 md:col-6 lg:col-5 xl:col-5">
+                                <p class="text-black">{{product?.name}}</p>
+                                <p class="text-gray">Color:  {{product?.color}}</p>
+                                <p class="text-gray">Cantidad:  {{product?.quantity}}</p>
+                            </div>
+                            <div class="col-12 lg:col-3 xl:col-4 flex justify-content-end flex-wrap">
+                                <p class="text-black">Total: ${{product?.total.toFixed(2)}}</p>
+                            </div>
                         </div>
                     </div>
                 </template>
@@ -23,30 +25,53 @@
 </template>
 <script>
 import Card from 'primevue/card'
-import ImagePreview from 'primevue/imagepreview';
 export default {
     components: {
         Card,
-        ImagePreview,
+    },
+    props: {
+        products: {
+            type: Array,
+            required: true
+        },
     },
     data() {
         return {
-            
+            productsOrder: [],
         }
+    },
+    methods: {
+        updateCurrentProps() {
+            this.productsOrder = this.products !== undefined ? this.products : [];
+        }
+    },
+    watch: {
+        products: {
+            immediate: true,
+            handler() {
+                this.updateCurrentProps();
+            },
+        },
+    },
+    mounted() {
+        this.updateCurrentProps();
     },
 }
 </script>
 
 <style scoped>
 p {
-    font-size: 16px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
     font-weight: bold;
 }
-.text-black{
+.text-black {
     color: #252525;
 }
-.text-gray{
+.text-gray {
     color: #7D7D7D;
+}
+.sized {
+    width: 150px;
+    height: 150px;
 }
 </style>

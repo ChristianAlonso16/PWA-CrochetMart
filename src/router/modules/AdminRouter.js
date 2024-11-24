@@ -83,7 +83,7 @@ export default [
         name: "details-sales",
         component: AdminSalesDetails,
         meta: {
-          title: "Detalle pedido",
+          title: "Pedido /",
           role: "admin",
           requireAuth:true
         },

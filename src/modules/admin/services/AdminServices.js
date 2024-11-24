@@ -255,6 +255,16 @@ const getAllOrders = async () => {
   }
 };
 
+const getOrderByNumOrder = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.get(`/order/getOrderByNumOrder/${numOrder}`);
+    return response.data;
+    
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   loginAdmin,
   getReportOrders,
@@ -277,4 +287,5 @@ export default {
   addCategory,
   getAttributesAvailable,
   getAllOrders,
+  getOrderByNumOrder,
 };
