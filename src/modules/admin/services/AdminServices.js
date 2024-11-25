@@ -212,7 +212,7 @@ const updateVariant = async (data) => {
     formData.append("color", data.color);
     formData.append("stock", data.stock);
     formData.append("numProduct", data.numVariant);
-    data.images.forEach(({file}) => {
+    data.images.forEach(({ file }) => {
       formData.append("imagesDtoList", file);
     });
 
@@ -255,6 +255,54 @@ const getAllOrders = async () => {
   }
 };
 
+const getLinkIos = async () => {
+  try {
+    const response = await axiosPrivate.get("/linkapp/getLinkIos");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const getLinkAndroid = async () => {
+  try {
+    const response = await axiosPrivate.get("/linkapp/getLinkAndroid");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const getLinkStripe = async () => {
+  try {
+    const response = await axiosPrivate.get("/stripekeys/getDevKeys");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const updateAppAndroid = async (url) => {
+  try {
+    const response = await axiosPrivate.put("/linkapp/updateLinkAppAndroid", url);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const updateAppIos = async (url) => {
+  try {
+    const response = await axiosPrivate.put("/linkapp/updateLinkAppIos", url);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const updateKeysStripe = async (keys) => {
+  try {
+    const response = await axiosPrivate.put("/stripekeys/updateKeysStripe", keys);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
 export default {
   loginAdmin,
   getReportOrders,
@@ -277,4 +325,10 @@ export default {
   addCategory,
   getAttributesAvailable,
   getAllOrders,
+  updateAppAndroid,
+  updateAppIos,
+  updateKeysStripe,
+  getLinkIos,
+  getLinkAndroid,
+  getLinkStripe
 };
