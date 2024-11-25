@@ -29,8 +29,8 @@ const formatDate = (dateString) => {
     minute: "numeric",
     hour12: true,
   };
-
-  return new Intl.DateTimeFormat("es-ES", options).format(date);
+  
+  return new Intl.DateTimeFormat("es-MX", options).format(date);
 };
 
 export default {

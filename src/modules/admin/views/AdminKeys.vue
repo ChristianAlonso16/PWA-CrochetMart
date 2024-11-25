@@ -70,6 +70,7 @@ import CardsLinks from '../components/keys/CardsLinks.vue';
 import AdminServices from '../../admin/services/AdminServices';
 import Dialog from 'primevue/dialog';
 import InputText from 'primevue/inputtext';
+import Utils from "@/core/utils/FunctionGlobals";
 
 export default {
     components: {
@@ -154,7 +155,7 @@ export default {
         async getStripe() {
             try {
                 const stripeResponse = await AdminServices.getLinkStripe();
-                this.stripeKey = stripeResponse.data.updateAt;
+                this.stripeKey = Utils.formatDate(stripeResponse.data.updateAt) || null;
             } catch (error) {
                 this.$toast.error('No se pudo obtener el link.');
             }
@@ -181,5 +182,10 @@ p {
     margin: 0;
     text-align: center;
     color: #888;
+}
+.p-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0f0f0;
 }
 </style>
