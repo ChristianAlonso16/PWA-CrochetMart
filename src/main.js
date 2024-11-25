@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router/index';
 import PrimeVue from 'primevue/config';
+import ToastService from 'primevue/toastservice';
+import ConfirmationService from 'primevue/confirmationservice';
 import ToastPlugin from '@/core/utils/Alerts';
 
 import "@/assets/styles/main.css";
@@ -13,6 +15,8 @@ import store from './store/store';
 Vue.config.productionTip = false;
 Vue.use(PrimeVue);
 Vue.use(store);
+Vue.use(ToastService);
+Vue.use(ConfirmationService);
 Vue.use(ToastPlugin);
 
 new Vue({

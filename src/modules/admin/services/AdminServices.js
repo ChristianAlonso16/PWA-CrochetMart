@@ -44,6 +44,35 @@ const getProducts = async () => {
   }
 };
 
+
+const getKeyStripe = async () => { 
+  try {
+    const response = await axiosPrivate.get("/stripekeys/getAll");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getLinkAndroindApp = async () => {
+  try {
+    const response = await axiosPrivate.get("/linkapp/getLinkAndroid");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getLinkIosApp = async () => {
+  try {
+    const response = await axiosPrivate.get("/linkapp/getLinkIos");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 const getProductDetails = async (numberProduct) => {
   try {
     const response = await axiosPrivate.get(
@@ -258,6 +287,9 @@ const getAllOrders = async () => {
 const getLinkIos = async () => {
   try {
     const response = await axiosPrivate.get("/linkapp/getLinkIos");
+const getOrderByNumOrder = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.get(`/order/getOrderByNumOrder/${numOrder}`);
     return response.data;
   } catch (error) {
     return error;
@@ -266,6 +298,10 @@ const getLinkIos = async () => {
 const getLinkAndroid = async () => {
   try {
     const response = await axiosPrivate.get("/linkapp/getLinkAndroid");
+
+const updateStatusOrder = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.post(`/order/updateStatusOrder?numOrder=${numOrder}`);
     return response.data;
   } catch (error) {
     return error;
@@ -274,6 +310,14 @@ const getLinkAndroid = async () => {
 const getLinkStripe = async () => {
   try {
     const response = await axiosPrivate.get("/stripekeys/getDevKeys");
+
+const updateStatusProduct = async (numProduct, status) => {
+  try {
+    const product = {
+      numProduct: numProduct,
+      status: status,
+    };
+    const response = await axiosPrivate.post(`/product/updateStatusProduct`, product);
     return response.data;
   } catch (error) {
     return error;
@@ -303,6 +347,8 @@ const updateKeysStripe = async (keys) => {
     return error;
   }
 };
+}
+
 export default {
   loginAdmin,
   getReportOrders,
@@ -331,4 +377,10 @@ export default {
   getLinkIos,
   getLinkAndroid,
   getLinkStripe
+  getOrderByNumOrder,
+  updateStatusOrder,
+  getKeyStripe,
+  getLinkAndroindApp,
+  getLinkIosApp,
+  updateStatusProduct,
 };

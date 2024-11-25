@@ -1,6 +1,5 @@
 <template>
   <div class="main">
-    <ConfirmDialog />
     <router-view />
   </div>
 </template>

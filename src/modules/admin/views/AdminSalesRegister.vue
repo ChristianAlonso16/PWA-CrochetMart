@@ -43,7 +43,7 @@
               <Button
                 icon="pi pi-eye"
                 class="p-button-rounded p-button-text"
-                @click="viewOrder(data.orderNumber)"
+                @click="handleRowClick(data)"
               />
             </template>
           </Column>
@@ -102,10 +102,16 @@ export default {
           ...order,
           dateOrder: Utils.formatDate(order.dateOrder),
         }));
-        console.log(this.orders);
       } catch (error) {
-        console.error(error);
+        this.$toast.error("Error al obtener los pedidos");
       }
+    },
+    handleRowClick(order) {
+      sessionStorage.setItem("selectedOrder", JSON.stringify(order));
+      this.$router.push({
+        name: "details-sales",
+        params: { numOrder: order.numOrder},
+      });
     },
   },
   mounted() {
