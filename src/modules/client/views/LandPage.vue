@@ -100,7 +100,6 @@ import carouselImage2 from "@/assets/images/carousel-2.png";
 import carouselImage3 from "@/assets/images/carousel-1.png";
 import carouselImage4 from "@/assets/images/carousel-3.png";
 import ClientService from "../services/ClientServices";
-import alert from "@/core/utils/Alerts.js";
 export default {
   components: {
     Galleria,
@@ -141,7 +140,7 @@ export default {
         const response = await ClientService.getNewProducts();
         this.newProducts = response.data;
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     },
     async getTopRatedProducts() {
@@ -149,7 +148,7 @@ export default {
         const response = await ClientService.getTopRatedProducts();
         this.topRatedProducts = response.data;
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     },
     async getCategories() {
@@ -157,17 +156,15 @@ export default {
         const response = await ClientService.getCategories();
         this.categories = response.data;
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     },
     async getTopRatedComments() {
       try {
         const response = await ClientService.getTopRatedComments();
         this.productReviews = response.data;
-        //title, text, icon = 'warning', options = {}
-        alert.showAlert("Comentarios Destacados", "Comentarios destacados cargados correctamente", "success");
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     },
   },

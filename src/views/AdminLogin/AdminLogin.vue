@@ -97,7 +97,7 @@ export default {
                     }
 
                 } catch (error) {
-                    alert("Error en el proceso, verifique su conexion");
+                    this.$toast.error("Ocurrió un error");
                 }
             }
         },

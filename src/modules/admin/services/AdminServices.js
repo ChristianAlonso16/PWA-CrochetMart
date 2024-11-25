@@ -302,6 +302,19 @@ const updateStatusOrder = async (numOrder) => {
   }
 };
 
+const updateStatusProduct = async (numProduct, status) => {
+  try {
+    const product = {
+      numProduct: numProduct,
+      status: status,
+    };
+    const response = await axiosPrivate.post(`/product/updateStatusProduct`, product);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
 export default {
   loginAdmin,
   getReportOrders,
@@ -329,4 +342,5 @@ export default {
   getKeyStripe,
   getLinkAndroindApp,
   getLinkIosApp,
+  updateStatusProduct,
 };

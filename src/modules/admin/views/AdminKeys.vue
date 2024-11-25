@@ -70,12 +70,12 @@ export default {
       try {
         const response = await AdminServices.getKeyStripe();
         const { data, statusCode } = response;
-        
+
         if (statusCode === 200) {
           this.stripeKeys = Utils.formatDate(data[0].updateAt);
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener las keys de stripe");
       }
     },
     async getLinkIosApp() {
@@ -87,7 +87,7 @@ export default {
           this.linkIos = data.url;
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener el link de la app de ios");
       }
     },
     async getLinkAndroidApp() {
@@ -99,7 +99,7 @@ export default {
           this.linkAndroid = data.url;
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener el link de la app de android");
       }
     },
   },

@@ -31,9 +31,9 @@
 
 <script>
 import AdminServices from "../services/AdminServices";
-import ProgressOrder from '../components/orders/ProgressOrder.vue';
-import DetailsOrder from '../components/orders/DetailsOrder.vue';
-import ProductsOrder from '../components/orders/ProductsOrder.vue';
+import ProgressOrder from "../components/orders/ProgressOrder.vue";
+import DetailsOrder from "../components/orders/DetailsOrder.vue";
+import ProductsOrder from "../components/orders/ProductsOrder.vue";
 
 export default {
   components: {
@@ -48,17 +48,15 @@ export default {
     };
   },
   methods: {
-    async getDetailOrde(numOrder) {
+    async getDetailOrder(numOrder) {
       try {
         const response = await AdminServices.getOrderByNumOrder(numOrder);
         const { data, statusCode } = response;
-        console.log(response);
-
         if (statusCode === 200) {
           this.details = data;
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener los detalles del pedido");
       }
     },
   },
@@ -68,7 +66,7 @@ export default {
       this.order = JSON.parse(storedProduct);
       if (this.order) {
         this.$root.$emit("updateNavbarSubtitle", this.order.numOrder);
-        this.getDetailOrde(this.order.numOrder);
+        this.getDetailOrder(this.order.numOrder);
       }
     }
   },

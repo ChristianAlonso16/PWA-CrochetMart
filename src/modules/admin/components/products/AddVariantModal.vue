@@ -54,6 +54,9 @@
               </div>
             </div>
           </div>
+          <small v-if="isImageInvalid" class="p-error">
+            Debes subir al menos una imagen y no debe pesar más de 1 MB.
+          </small>
         </div>
         <div class="col-12 md:col-5">
           <div class="p-fluid">
@@ -184,7 +187,7 @@ export default {
           value: "#" + attr.value,
         }));
       } catch (error) {
-        console.error("Error fetching colors:", error);
+        this.$toast.error("Error al obtener los colores disponibles.");
         this.colors = [];
       }
     },
@@ -218,7 +221,23 @@ export default {
         name: file.name,
         size: file.size,
       }));
-      this.uploadedFiles.push(...files);
+
+      const validFiles = files.filter((file) => file.size <= 1048576);
+      const invalidFiles = files.filter((file) => file.size > 1048576);
+
+      if (this.uploadedFiles.length + validFiles.length > 5) {
+        this.$toast.warn("Solo puedes subir un máximo de 5 imágenes.");
+        return;
+      }
+
+      if (invalidFiles.length > 0) {
+        this.$toast.error(
+          `Las siguientes imágenes exceden el tamaño permitido de 1 MB: ${invalidFiles
+            .map((file) => file.name)
+            .join(", ")}`
+        );
+      }
+      this.uploadedFiles.push(...validFiles);
       this.validateImage();
     },
     handleFileDrop(event) {
@@ -228,7 +247,24 @@ export default {
         name: file.name,
         size: file.size,
       }));
-      this.uploadedFiles.push(...files);
+
+      const validFiles = files.filter((file) => file.size <= 1048576);
+      const invalidFiles = files.filter((file) => file.size > 1048576);
+
+      if (this.uploadedFiles.length + validFiles.length > 5) {
+        this.$toast.warn("Solo puedes subir un máximo de 5 imágenes.");
+        return;
+      }
+
+      if (invalidFiles.length > 0) {
+        this.$toast.error(
+          `Las siguientes imágenes exceden el tamaño permitido de 1 MB: ${invalidFiles
+            .map((file) => file.name)
+            .join(", ")}`
+        );
+      }
+
+      this.uploadedFiles.push(...validFiles);
       this.validateImage();
     },
     removeImage(index) {
@@ -238,7 +274,8 @@ export default {
       this.validateImage();
     },
     validateImage() {
-      this.isImageInvalid = this.uploadedFiles.length === 0;
+      this.isImageInvalid =
+        this.uploadedFiles.length === 0 || this.uploadedFiles.length > 5;
     },
 
     validatePrice() {
@@ -269,12 +306,10 @@ export default {
             this.closeModal();
           });
         } catch (error) {
-          console.log("Error adding variant:", error);
+          this.$toast.error("Error al agregar la variante.");
         } finally {
           this.isSubmitting = false;
         }
-      } else {
-        console.log("algo ta mal");
       }
     },
     async addVariant() {
@@ -286,9 +321,14 @@ export default {
           this.uploadedFiles,
           this.numProduct
         );
-        console.log("Response:", response);
+        const { statusCode, message } = response;
+        if (statusCode === 200) {
+          this.$toast.success(message);
+        } else {
+          this.$toast.error(message);
+        }
       } catch (error) {
-        console.error("Error adding variant:", error);
+        this.$toast.error("Error al agregar la variante.");
       }
     },
   },
