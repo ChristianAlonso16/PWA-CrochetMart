@@ -1,35 +1,25 @@
 <template>
     <footer>
-        <div class="w-full footer">
-            <div class="grid align-items-start">
-                <div class="col-12 md:col-4 lg:col-4">
-                    <h3>Acerca de Nosotros</h3>
-                    <p>Somos una tienda dedicada a ofrecer los mejores productos de crochet hechos a mano con amor y dedicación.</p>
-                    <div class="flex gap-3">
-                        <div class="flex align-items-center justify-content-center w-4rem h-4rem border-circle icon-circle">
-                            <i class="pi pi-fw pi-facebook"/>
-                        </div>
-                        <div class="flex align-items-center justify-content-center w-4rem h-4rem border-circle icon-circle">
-                            <i class="pi pi-fw pi-instagram"/>
-                        </div>
-                        <div class="flex align-items-center justify-content-center w-4rem h-4rem border-circle icon-circle">
-                            <i class="pi pi-fw pi-twitter"/>
-                        </div>
-                    </div>
+        <div class="footer-container">
+            <div class="top-section">
+                <div class="logo">
+                    <img src="logo-placeholder.png" alt="Logo" class="logo-img">
                 </div>
-                <div class="col-12 md:col-4 lg:col-4">
-                    <h3>Enlaces Rápidos</h3>
-                    <p><router-link class="footer-link" to="/productos">Inicio</router-link></p>
-                    <p><router-link class="footer-link" to="/productos">Productos</router-link></p>
-                </div>
-                <div class="col-12 md:col-4 lg:col-4">
-                    <h3>Contáctanos</h3>
-                    <p>Email: info@crochetmart.com</p>
-                    <p>Teléfono: (123) 456-7890</p>
-                </div>
+                <nav class="nav-links">
+                    <a href="#" class="footer-link">Home</a>
+                    <a href="#" class="footer-link">About</a>
+                    <a href="#" class="footer-link">Services</a>
+                    <a href="#" class="footer-link">Contact Us</a>
+                </nav>
             </div>
-            <hr>
-            <div class="text-center">
+
+            <div class="social-icons">
+                <a href="#" class="icon-circle"><i class="pi pi-facebook"></i></a>
+                <a href="#" class="icon-circle"><i class="pi pi-twitter"></i></a>
+                <a href="#" class="icon-circle"><i class="pi pi-instagram"></i></a>
+            </div>
+
+            <div class="bottom-section">
                 <p>&copy; 2024 Crochet Creaciones. Todos los derechos reservados.</p>
             </div>
         </div>
@@ -43,37 +33,61 @@ export default {
 </script>
 
 <style scoped>
-.footer {
-    padding: 10px 32px;
-    background: #EAEDED;
+.footer-container {
+    padding: 20px;
+    background: #F8F9FA;
+    text-align: center;
+    color: #252525;
 }
 
-.footer .icon-circle {
-    background-color: #f0f2f5;
-    font-size: 24px;
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo-img {
+    width: 120px;
+    height: auto;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-link {
     color: #252525;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.social-icons {
+    margin: 20px 0;
+}
+
+.icon-circle {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    background-color: #EAEDED;
+    color: #252525;
+    margin: 0 10px;
+    font-size: 18px;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.footer .icon-circle:hover {
-    background-color: #e0e3e7;
+.icon-circle:hover {
+    background-color: #007BFF;
+    color: #FFFFFF;
 }
 
-.footer .footer-link {
-    color: #252525;
-    text-decoration: none;
-    transition: color 0.3s ease, text-decoration 0.3s ease;
-}
-
-.footer .footer-link:hover {
-    color: #252525;
-    text-decoration: underline;
-}
-
-.footer hr {
-    border: none;
-    height: 2px;
-    background-color: #252525;
-    margin: 1rem 0;
+.bottom-section {
+    font-size: 14px;
+    color: #6C757D;
 }
 </style>
