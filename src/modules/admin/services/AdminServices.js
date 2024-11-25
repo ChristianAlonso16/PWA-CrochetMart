@@ -241,7 +241,7 @@ const updateVariant = async (data) => {
     formData.append("color", data.color);
     formData.append("stock", data.stock);
     formData.append("numProduct", data.numVariant);
-    data.images.forEach(({file}) => {
+    data.images.forEach(({ file }) => {
       formData.append("imagesDtoList", file);
     });
 
@@ -284,6 +284,9 @@ const getAllOrders = async () => {
   }
 };
 
+const getLinkIos = async () => {
+  try {
+    const response = await axiosPrivate.get("/linkapp/getLinkIos");
 const getOrderByNumOrder = async (numOrder) => {
   try {
     const response = await axiosPrivate.get(`/order/getOrderByNumOrder/${numOrder}`);
@@ -292,6 +295,9 @@ const getOrderByNumOrder = async (numOrder) => {
     return error;
   }
 };
+const getLinkAndroid = async () => {
+  try {
+    const response = await axiosPrivate.get("/linkapp/getLinkAndroid");
 
 const updateStatusOrder = async (numOrder) => {
   try {
@@ -301,6 +307,9 @@ const updateStatusOrder = async (numOrder) => {
     return error;
   }
 };
+const getLinkStripe = async () => {
+  try {
+    const response = await axiosPrivate.get("/stripekeys/getDevKeys");
 
 const updateStatusProduct = async (numProduct, status) => {
   try {
@@ -313,6 +322,31 @@ const updateStatusProduct = async (numProduct, status) => {
   } catch (error) {
     return error;
   }
+};
+const updateAppAndroid = async (url) => {
+  try {
+    const response = await axiosPrivate.put("/linkapp/updateLinkAppAndroid", url);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const updateAppIos = async (url) => {
+  try {
+    const response = await axiosPrivate.put("/linkapp/updateLinkAppIos", url);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const updateKeysStripe = async (keys) => {
+  try {
+    const response = await axiosPrivate.put("/stripekeys/updateKeysStripe", keys);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
 }
 
 export default {
@@ -337,6 +371,12 @@ export default {
   addCategory,
   getAttributesAvailable,
   getAllOrders,
+  updateAppAndroid,
+  updateAppIos,
+  updateKeysStripe,
+  getLinkIos,
+  getLinkAndroid,
+  getLinkStripe
   getOrderByNumOrder,
   updateStatusOrder,
   getKeyStripe,
