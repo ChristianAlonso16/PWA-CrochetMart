@@ -78,7 +78,7 @@ export default {
                     }
                 }
             } catch (error) {
-                console.log(error);
+                this.$toast.error("Error al cambiar el estado del pedido");
             }
         },
         updateCurrentStep() {
@@ -100,13 +100,13 @@ export default {
         nextStep() {
             this.$confirm.require({
                 message: `¿Seguro que quieres cambiar el estado a "${this.steps[this.currentStep]}"?`,
-                header: 'Confirmation',
+                header: 'Confirmar',
                 icon: 'pi pi-exclamation-triangle',
+                acceptLabel: 'Sí',
                 accept: () => {
                     this.changeStatus(this.numOrderDetails);
                 },
                 reject: () => {
-                    console.log('Action was rejected by the user');
                 }
             });
             

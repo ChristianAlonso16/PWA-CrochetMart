@@ -125,9 +125,6 @@ export default {
       this.selectedProduct = product;
       this.isEditModalVisible = true;
     },
-    deleteProduct(product) {
-      console.log("eliminar:", product);
-    },
     async getProduct() {
       try {
         const response = await AdminServices.getProducts();
@@ -140,7 +137,7 @@ export default {
           }));
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener los productos");
       }
     },
     handleRowClick(product) {
@@ -161,12 +158,22 @@ export default {
     async toggleStatus(product) {
       try {
         const newStatus = product.status === "enable" ? "disabled" : "enable";
-        console.log("cambiar estado:", product.numProduct, newStatus);
 
-        //await AdminServices.updateProductStatus(product.numProduct, newStatus);
+        const response = await AdminServices.updateStatusProduct(
+          product.numProduct,
+          newStatus
+        );
+
+        const { statusCode, message } = response;
+        if (statusCode === 200) {
+          this.$toast.success(message);
+        } else {
+          this.$toast.error(message);
+        }
+
         this.refreshTable();
       } catch (error) {
-        console.error("Error al cambiar el estado:", error);
+        this.$toast.error("Error al cambiar el estado del producto");
       }
     },
   },

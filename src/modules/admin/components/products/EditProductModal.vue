@@ -151,7 +151,7 @@ export default {
           this.selectedCategories = data.categories || [];
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener los detalles del producto");
       }
     },
     updateProduct() {
@@ -172,7 +172,7 @@ export default {
           this.categories = response.data;
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener las categorías");
       }
     },
     async saveProduct() {
@@ -187,12 +187,16 @@ export default {
           ),
         };
         const response = await AdminServices.updateProduct(data);
+        const { statusCode, message } = response;
 
-        if (response.statusCode === 200) {
+        if (statusCode === 200) {
           this.$emit("product-updated");
+          this.$toast.success(message);
+        } else {
+          this.$toast.error(message);
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al actualizar el producto");
       } finally {
         this.isLoading = false;
       }

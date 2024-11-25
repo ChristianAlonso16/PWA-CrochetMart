@@ -46,11 +46,7 @@
                     {{ (file.size / 1024).toFixed(2) }} KB
                   </p>
                 </div>
-                <Button
-                  icon="pi pi-times"
-                  class="p-button-danger"
-                  @click="removeImage(index)"
-                />
+                <Button icon="pi pi-times" @click="removeImage(index)" />
               </div>
             </div>
           </div>
@@ -222,7 +218,8 @@ export default {
       this.isStockInvalid = !this.stock || this.stock.toString().length > 10;
     },
     validateImages() {
-      this.isImageInvalid = this.uploadedFiles.length === 0;
+      this.isImageInvalid =
+        this.uploadedFiles.length === 0 || this.uploadedFiles.length > 5;
     },
     async submitForm() {
       this.validatePrice();
@@ -243,7 +240,7 @@ export default {
           });
           this.closeModal();
         } catch (error) {
-          console.log(error);
+          this.$toast.error("Error al actualizar la variante");
         } finally {
           this.isLoading = false;
         }
@@ -259,12 +256,14 @@ export default {
           numVariant: this.variant,
         };
         const response = await AdminServices.updateVariant(variantopc);
-
-        if (response.statusCode === 200) {
-          console.log("Variant updated successfully");
+        const { statusCode, message } = response;
+        if (statusCode === 200) {
+          this.$toast.success(message);
+        } else {
+          this.$toast.error(message);
         }
       } catch (error) {
-        console.error("Error updating variant:", error);
+        this.$toast.error("Error al actualizar la variante");
       }
     },
     async loadVariantData() {
@@ -298,7 +297,7 @@ export default {
           }
         }
       } catch (error) {
-        console.error("Error loading variant data:", error);
+        this.$toast.error("Error al cargar los datos de la variante");
       }
     },
     base64ToFileWithObjectURL(base64, filename) {
@@ -325,7 +324,7 @@ export default {
 
           resolve(file);
         } catch (error) {
-          console.error("Invalid base64 string:", base64);
+          this.$toast.error("Imagen inválida");
           reject(error);
         }
       });
@@ -340,7 +339,24 @@ export default {
         name: file.name,
         size: file.size,
       }));
-      this.uploadedFiles.push(...files);
+
+      const validFiles = files.filter((file) => file.size <= 1048576);
+      const invalidFiles = files.filter((file) => file.size > 1048576);
+
+      if (this.uploadedFiles.length + validFiles.length > 5) {
+        this.$toast.warn("Solo puedes subir un máximo de 5 imágenes.");
+        return;
+      }
+
+      if (invalidFiles.length > 0) {
+        this.$toast.error(
+          `Las siguientes imágenes exceden el tamaño permitido de 1 MB: ${invalidFiles
+            .map((file) => file.name)
+            .join(", ")}`
+        );
+      }
+
+      this.uploadedFiles.push(...validFiles);
       this.validateImages();
     },
     handleFileDrop(event) {
@@ -350,7 +366,24 @@ export default {
         name: file.name,
         size: file.size,
       }));
-      this.uploadedFiles.push(...files);
+
+      const validFiles = files.filter((file) => file.size <= 1048576);
+      const invalidFiles = files.filter((file) => file.size > 1048576);
+
+      if (this.uploadedFiles.length + validFiles.length > 5) {
+        this.$toast.warn("Solo puedes subir un máximo de 5 imágenes.");
+        return;
+      }
+
+      if (invalidFiles.length > 0) {
+        this.$toast.error(
+          `Las siguientes imágenes exceden el tamaño permitido de 1 MB: ${invalidFiles
+            .map((file) => file.name)
+            .join(", ")}`
+        );
+      }
+
+      this.uploadedFiles.push(...validFiles);
       this.validateImages();
     },
     async openModal() {
@@ -359,7 +392,7 @@ export default {
         await this.loadVariantData();
         this.localVisible = true;
       } catch (error) {
-        console.error("Error al cargar los datos del modal:", error);
+        this.$toast.error("Error al abrir el modal");
       }
     },
   },

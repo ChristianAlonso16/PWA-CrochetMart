@@ -102,9 +102,8 @@ export default {
           ...order,
           dateOrder: Utils.formatDate(order.dateOrder),
         }));
-        console.log(this.orders);
       } catch (error) {
-        console.error(error);
+        this.$toast.error("Error al obtener los pedidos");
       }
     },
     handleRowClick(order) {

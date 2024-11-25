@@ -158,7 +158,7 @@ export default {
           this.variants = data;
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener las variantes");
       }
     },
     refreshTable() {

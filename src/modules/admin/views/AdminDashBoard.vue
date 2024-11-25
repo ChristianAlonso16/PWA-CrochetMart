@@ -57,7 +57,7 @@ export default {
           this.countProducts = data;
         }
       } catch (error) {
-        console.error(error);
+        this.$toast.error("Error al obtener los productos");
       }
     },
     async getCountOrders() {
@@ -68,7 +68,7 @@ export default {
           this.countOrders = data;
         }
       } catch (error) {
-        console.error(error);
+        this.$toast.error("Error al obtener los pedidos");
       }
     },
     async getCountUsers() {
@@ -79,7 +79,7 @@ export default {
           this.countUsers = data;
         }
       } catch (error) {
-        console.error(error);
+        this.$toast.error("Error al obtener los usuarios");
       }
     },
   },

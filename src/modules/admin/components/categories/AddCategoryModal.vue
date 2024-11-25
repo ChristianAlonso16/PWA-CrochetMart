@@ -75,7 +75,13 @@
           @click="closeModal"
           class="p-button-text p-button-secondary"
         />
-        <Button label="Registrar" class="p-button" @click="submitForm" />
+        <Button
+          label="Registrar"
+          class="p-button"
+          @click="submitForm"
+          :loading="isLoading"
+          :disabled="isLoading"
+        />
       </template>
     </Dialog>
   </div>
@@ -120,6 +126,7 @@ export default {
         path,
       })),
       filteredIcons: [],
+      isLoading: false,
     };
   },
   methods: {
@@ -149,12 +156,12 @@ export default {
       );
     },
     async submitForm() {
+      this.isLoading = true;
       this.validateCategoryName();
       this.validateIcon();
       if (this.isCategoryNameInvalid || this.isIconInvalid) {
         return;
       }
-      console.log(this.icono);
       const camelCaseIcon = this.icono.name
         .toLowerCase()
         .split(" ")
@@ -172,14 +179,19 @@ export default {
           this.categoryDescription,
           icon
         );
-        const { statusCode } = response;
+        const { statusCode, message } = response;
         if (statusCode === 201) {
           this.$emit("category-added");
           this.$emit("refresh");
           this.closeModal();
+          this.$toast.success(message);
+        } else {
+          this.$toast.error(message);
         }
       } catch (error) {
-        console.error(error);
+        this.$toast.error("Error al registrar la categoría");
+      } finally {
+        this.isLoading = false;
       }
     },
   },
