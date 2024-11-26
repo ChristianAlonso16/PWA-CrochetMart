@@ -91,6 +91,12 @@ const updateCategory = async (name, description, icon) => {
   }
 };
 
+const getAllUsers = async () =>
+  handleRequest(() => axiosPrivate.get("user/getAll"));
+
+const updateStatusUser = async (email, status) => 
+  handleRequest(() => axiosPrivate.post("user/updateStatus", { email, status }));
+
 const getAttributesByName = async (name) => {
   try {
     const response = await axiosPrivate.get(`/attribute/getByName/${name}`);
@@ -340,6 +346,7 @@ export default {
   getReportOrders,
   getCategoriesByStatus,
   getAllCategories,
+  getAllUsers,
   getProducts,
   getProductDetails,
   getAttributesByName,
@@ -360,6 +367,7 @@ export default {
   updateAppAndroid,
   updateAppIos,
   updateKeysStripe,
+  updateStatusUser,
   getLinkIos,
   getLinkAndroid,
   getLinkStripe,
