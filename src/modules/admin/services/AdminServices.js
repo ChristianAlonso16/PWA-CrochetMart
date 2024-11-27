@@ -91,11 +91,28 @@ const updateCategory = async (name, description, icon) => {
   }
 };
 
-const getAllUsers = async () =>
-  handleRequest(() => axiosPrivate.get("user/getAll"));
+const getAllUsers = async () => {
+  try {
+    const response = await axiosPrivate.get("/user/getAll");
 
-const updateStatusUser = async (email, status) => 
-  handleRequest(() => axiosPrivate.post("user/updateStatus", { email, status }));
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+const updateStatusUser = async (email, status) => {
+  try {
+    const user = {
+      email: email,
+      status: status,
+    };
+    const response = await axiosPrivate.post("/user/updateStatus", user);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
 
 const getAttributesByName = async (name) => {
   try {
