@@ -22,7 +22,6 @@
             style="
               width: 100%;
               display: block;
-              height: 500px;
               object-fit: contain;
               border-radius: 28px;
               object-position: center;
