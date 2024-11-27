@@ -5,6 +5,7 @@ import ProductVariants from "../../modules/admin/views/AdminProductVariants.vue"
 import AdminCategories from "@/modules/admin/views/AdminCategories.vue";
 import AdminKeys from "@/modules/admin/views/AdminKeys.vue";
 import AdminSalesDetails from "@/modules/admin/views/AdminSalesDetails.vue";
+import AdminUsers from "@/modules/admin/views/AdminUsers.vue";
 
 export default [
   {
@@ -56,6 +57,16 @@ export default [
           title: "Categorias",
           role: "admin",
           requireAuth:true
+        },
+      },
+      {
+        path: "/admin/users",
+        name: "users",
+        component: AdminUsers,
+        meta: {
+          title: "Usuarios",
+          role: "admin",
+          requireAuth: true
         },
       },
       {
