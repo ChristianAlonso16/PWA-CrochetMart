@@ -1,79 +1,108 @@
 <template>
-    <footer>
-        <div class="w-full footer">
-            <div class="grid align-items-start">
-                <div class="col-12 md:col-4 lg:col-4">
-                    <h3>Acerca de Nosotros</h3>
-                    <p>Somos una tienda dedicada a ofrecer los mejores productos de crochet hechos a mano con amor y dedicación.</p>
-                    <div class="flex gap-3">
-                        <div class="flex align-items-center justify-content-center w-4rem h-4rem border-circle icon-circle">
-                            <i class="pi pi-fw pi-facebook"/>
-                        </div>
-                        <div class="flex align-items-center justify-content-center w-4rem h-4rem border-circle icon-circle">
-                            <i class="pi pi-fw pi-instagram"/>
-                        </div>
-                        <div class="flex align-items-center justify-content-center w-4rem h-4rem border-circle icon-circle">
-                            <i class="pi pi-fw pi-twitter"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 md:col-4 lg:col-4">
-                    <h3>Enlaces Rápidos</h3>
-                    <p><router-link class="footer-link" to="/productos">Inicio</router-link></p>
-                    <p><router-link class="footer-link" to="/productos">Productos</router-link></p>
-                </div>
-                <div class="col-12 md:col-4 lg:col-4">
-                    <h3>Contáctanos</h3>
-                    <p>Email: info@crochetmart.com</p>
-                    <p>Teléfono: (123) 456-7890</p>
-                </div>
-            </div>
-            <hr>
-            <div class="text-center">
-                <p>&copy; 2024 Crochet Creaciones. Todos los derechos reservados.</p>
-            </div>
+  <footer>
+    <div class="footer-container">
+      <!-- Logo and Navigation -->
+      <div class="top-section">
+        <div class="logo">
+          <img :src="logo" alt="Logo" class="logo-img" />
         </div>
-    </footer>
+        <nav class="nav-links">
+          <a href="#" class="footer-link">Inicio</a>
+          <a href="#" class="footer-link">Productos</a>
+          <a href="#" class="footer-link">Más</a>
+        </nav>
+      </div>
+
+      <!-- Social Icons -->
+      <div class="social-icons">
+        <a href="#" class="icon-circle"><i class="pi pi-facebook"></i></a>
+        <a href="#" class="icon-circle"><i class="pi pi-twitter"></i></a>
+        <a href="#" class="icon-circle"><i class="pi pi-instagram"></i></a>
+        <a href="#" class="icon-circle"><i class="pi pi-linkedin"></i></a>
+      </div>
+
+      <!-- Footer Text -->
+      <div class="bottom-section">
+        <p>&copy; 2024 Crochet Creaciones. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <script>
+import logo from "@/assets/images/grillo.png";
+
 export default {
-    name: 'FooterComponent',
+  data() {
+    return {
+      logo: logo,
+    };
+  },
 };
 </script>
 
 <style scoped>
-.footer {
-    padding: 10px 32px;
-    background: #EAEDED;
+.footer-container {
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+  text-align: center;
+  color: #6c757d;
+  font-family: Arial, sans-serif;
 }
 
-.footer .icon-circle {
-    background-color: #f0f2f5;
-    font-size: 24px;
-    color: #252525;
-    transition: background-color 0.3s ease, color 0.3s ease;
+.top-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
-.footer .icon-circle:hover {
-    background-color: #e0e3e7;
+.logo-img {
+  width: 100px;
+  margin-bottom: 10px;
 }
 
-.footer .footer-link {
-    color: #252525;
-    text-decoration: none;
-    transition: color 0.3s ease, text-decoration 0.3s ease;
+.nav-links {
+  display: flex;
+  gap: 30px;
 }
 
-.footer .footer-link:hover {
-    color: #252525;
-    text-decoration: underline;
+.footer-link {
+  color: #252525;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.3s ease;
 }
 
-.footer hr {
-    border: none;
-    height: 2px;
-    background-color: #252525;
-    margin: 1rem 0;
+.social-icons {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.icon-circle {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #252525;
+  color: white;
+  font-size: 20px;
+  transition: transform 0.3s ease;
+  text-decoration: none;
+}
+
+.icon-circle:hover {
+  transform: scale(1.1);
+}
+
+.bottom-section {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #6c757d;
 }
 </style>

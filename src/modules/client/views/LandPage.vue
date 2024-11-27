@@ -22,8 +22,7 @@
             style="
               width: 100%;
               display: block;
-              height: 400px;
-              object-fit: cover;
+              object-fit: contain;
               border-radius: 28px;
               object-position: center;
             "
@@ -95,10 +94,10 @@ import InputText from "primevue/inputtext";
 import CardsProducts from "../components/CardsProducts.vue";
 import ClientCardsReview from "../components/ClientCardsReview.vue";
 import CategoryCard from "../components/ClientCardCategory.vue";
-import carouselImage1 from "@/assets/images/carousel-4.png";
-import carouselImage2 from "@/assets/images/carousel-2.png";
-import carouselImage3 from "@/assets/images/carousel-1.png";
-import carouselImage4 from "@/assets/images/carousel-3.png";
+import carouselImage1 from "@/assets/images/Banner-1.png";
+import carouselImage2 from "@/assets/images/Banner-2.png";
+import carouselImage3 from "@/assets/images/Banner-3.png";
+import carouselImage4 from "@/assets/images/Banner-4.png";
 import ClientService from "../services/ClientServices";
 export default {
   components: {
