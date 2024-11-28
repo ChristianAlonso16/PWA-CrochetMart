@@ -358,6 +358,24 @@ const getLinkStripe = async () => {
   }
 };
 
+const sendEmailSent = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.post(`/mail/statusOrderSent/${numOrder}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+const sendEmailDelivered = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.post(`/mail/statusOrderDelivery/${numOrder}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
 export default {
   loginAdmin,
   getReportOrders,
@@ -391,4 +409,6 @@ export default {
   getOrderByNumOrder,
   updateStatusOrder,
   updateStatusProduct,
+  sendEmailSent,
+  sendEmailDelivered,
 };

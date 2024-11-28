@@ -75,6 +75,12 @@ export default {
                     if (!this.isPaymentIssue && this.currentStep <= this.steps.length - 1) {
                         this.currentStep++;
                         this.labelStepF(this.currentStep);
+                        if (this.steps[this.currentStep - 1] === "Enviado") {
+                            await this.sendEmailSent(numOrder);
+                        }
+                        if (this.steps[this.currentStep - 1] === "Entregado") {
+                            await this.sendEmailDelivered(numOrder);
+                        }
                     }
                 }
             } catch (error) {
@@ -110,6 +116,28 @@ export default {
                 }
             });
             
+        },
+        async sendEmailSent(numOrder) {
+            try {
+                const response = await AdminServices.sendEmailSent(numOrder);
+                const { statusCode } = response;
+                if (statusCode === 200) {
+                    this.$toast.success("Correo enviado correctamente");
+                }
+            } catch (error) {
+                this.$toast.error("Error al enviar el correo");
+            }
+        },
+        async sendEmailDelivered(numOrder) {
+            try {
+                const response = await AdminServices.sendEmailDelivered(numOrder);
+                const { statusCode } = response;
+                if (statusCode === 200) {
+                    this.$toast.success("Correo enviado correctamente");
+                }
+            } catch (error) {
+                this.$toast.error("Error al enviar el correo");
+            }
         },
     },
     watch: {
