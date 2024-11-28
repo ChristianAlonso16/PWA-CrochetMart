@@ -46,7 +46,7 @@ export default {
 
 <style scoped>
 .product-card {
-  width: 300px;
+  width: 20rem;
 }
 .product-image {
   width: 100%;
