@@ -163,96 +163,141 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #f0f0f0;
 }
+
 .steps-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center; 
+  gap: 10px; 
+  background-color: #fff;
+  padding: 10px;
 }
 
 .step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1 1 calc(25% - 10px); 
+  min-width: 100px; 
 }
 
 .step .circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #dcdcdc;
-    color: #fff;
-    font-weight: bold;
-    font-size: 18px;
-    z-index: 1;
-    transition: background-color 0.3s ease;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #dcdcdc;
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 1;
+  transition: background-color 0.3s ease;
 }
 
 .step.active .circle {
-    background-color: #76c7c0;
+  background-color: #76c7c0;
 }
 
 .step.completed .circle {
-    background-color: #a2f07b;
+  background-color: #a2f07b;
 }
 
 .step.completed .circle i {
-    color: #fff;
+  color: #fff;
 }
 
 .step.payment-issue .circle {
-    background-color: #ff7474;
+  background-color: #ff7474;
 }
 
 .step.payment-issue .circle i {
-    color: #fff;
+  color: #fff;
 }
 
 .step .label {
-    margin-top: 10px;
-    font-size: 16px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    color: #757575;
-    text-align: center;
+  margin-top: 8px;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  color: #757575;
+  text-align: center;
 }
 
 .step.active .label,
 .step.completed .label {
-    color: #000;
+  color: #000;
 }
 
 .step.payment-issue .label {
-    color: #ff7474;
+  color: #ff7474;
 }
 
 .step .line {
-    position: absolute;
-    top: 25px;
-    left: calc(50% + 25px);
-    width: calc(100% - 50px);
-    height: 4px;
-    background-color: #e0e0e0;
-    z-index: 0;
-    transition: width 0.5s ease, background-color 0.3s ease;
+  position: absolute;
+  top: 20px;
+  left: calc(50% + 20px);
+  width: calc(100% - 40px);
+  height: 3px;
+  background-color: #e0e0e0;
+  z-index: 0;
+  transition: width 0.5s ease, background-color 0.3s ease;
 }
 
 .step .line.completed {
-    background-color: #a2f07b;
-    width: 100%;
-}
-
-.step .line.completed+.step .line {
-    background-color: #a2f07b;
+  background-color: #a2f07b;
+  width: 100%;
 }
 
 button:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .step {
+    flex: 1 1 45%;
+  }
+
+  .step .circle {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .step .line {
+    left: calc(50% + 15px);
+    width: calc(100% - 30px);
+  }
+
+  .step .label {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .step {
+    flex: 1 1 100%; 
+    flex-direction: row; /*Hacer una fila*/
+    align-items: center;
+    gap: 10px;
+  }
+
+  .step .circle {
+    margin-right: 10px;
+  }
+
+  .step .label {
+    margin: 0;
+    text-align: left;
+  }
+
+  .step .line {
+    display: none;
+  }
 }
 </style>
+
