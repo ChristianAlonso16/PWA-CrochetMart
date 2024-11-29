@@ -3,7 +3,11 @@
     <div class="col-12 search-container">
       <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
-        <InputText type="text" class="p-inputtext-lg" placeholder="Busca en CrochetMart" />
+        <InputText
+          type="text"
+          class="p-inputtext-lg"
+          placeholder="Busca en CrochetMart"
+        />
       </span>
     </div>
     <div class="col-12">
@@ -22,8 +26,7 @@
             style="
               width: 100%;
               display: block;
-              height: 400px;
-              object-fit: cover;
+              object-fit: contain;
               border-radius: 28px;
               object-position: center;
             "
@@ -35,7 +38,7 @@
       <div class="grid pt-3">
         <h1>¡Nuevos productos!</h1>
       </div>
-      <div class="horizontal-scroll-container mb-4">
+      <div class="mb-4">
         <div class="flex">
           <CardsProducts
             v-for="(product, index) in newProducts"
@@ -48,7 +51,7 @@
       <div class="grid pt-5">
         <h1>Categorías</h1>
       </div>
-      <div class="horizontal-scroll-container">
+      <div>
         <div class="flex">
           <CategoryCard
             v-for="(category, index) in categories"
@@ -61,7 +64,7 @@
       <div class="grid pt-5">
         <h1>Mejor Valorados</h1>
       </div>
-      <div class="horizontal-scroll-container">
+      <div>
         <div class="flex">
           <CardsProducts
             v-for="(product, index) in topRatedProducts"
@@ -95,10 +98,10 @@ import InputText from "primevue/inputtext";
 import CardsProducts from "../components/CardsProducts.vue";
 import ClientCardsReview from "../components/ClientCardsReview.vue";
 import CategoryCard from "../components/ClientCardCategory.vue";
-import carouselImage1 from "@/assets/images/carousel-4.png";
-import carouselImage2 from "@/assets/images/carousel-2.png";
-import carouselImage3 from "@/assets/images/carousel-1.png";
-import carouselImage4 from "@/assets/images/carousel-3.png";
+import carouselImage1 from "@/assets/images/Banner-1.png";
+import carouselImage2 from "@/assets/images/Banner-2.png";
+import carouselImage3 from "@/assets/images/Banner-3.png";
+import carouselImage4 from "@/assets/images/Banner-4.png";
 import ClientService from "../services/ClientServices";
 export default {
   components: {
@@ -138,7 +141,7 @@ export default {
     async getNewProducts() {
       try {
         const response = await ClientService.getNewProducts();
-        this.newProducts = response.data;
+        this.newProducts = response.data.slice(0, 5);
       } catch (error) {
         console.log(error);
       }
@@ -146,7 +149,7 @@ export default {
     async getTopRatedProducts() {
       try {
         const response = await ClientService.getTopRatedProducts();
-        this.topRatedProducts = response.data;
+        this.topRatedProducts = response.data.slice(0, 5);
       } catch (error) {
         console.log(error);
       }
@@ -154,7 +157,7 @@ export default {
     async getCategories() {
       try {
         const response = await ClientService.getCategories();
-        this.categories = response.data;
+        this.categories = response.data.slice(0, 10);
       } catch (error) {
         console.log(error);
       }
