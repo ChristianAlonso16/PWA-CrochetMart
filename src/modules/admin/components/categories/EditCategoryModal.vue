@@ -61,7 +61,7 @@
         <small v-if="isIconInvalid" class="p-error">
           El ícono es obligatorio.
         </small>
-        <div v-if="localIcon" class="mt-2">
+        <div v-if="localIcon" class="mt-3 icon-container">
           <span>Seleccionado: </span>
           <svg width="96" height="96" viewBox="0 0 32 32">
             <path :d="localIcon.path" />
@@ -216,3 +216,19 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.p-error {
+  color: red;
+}
+
+.icon-container {
+  position: relative;
+}
+
+svg {
+  position: absolute;
+  top: 5px; 
+  right: 0;
+}
+</style>
