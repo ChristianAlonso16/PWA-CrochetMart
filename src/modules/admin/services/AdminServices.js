@@ -91,6 +91,29 @@ const updateCategory = async (name, description, icon) => {
   }
 };
 
+const getAllUsers = async () => {
+  try {
+    const response = await axiosPrivate.get("/user/getAll");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+const updateStatusUser = async (email, status) => {
+  try {
+    const user = {
+      email: email,
+      status: status,
+    };
+    const response = await axiosPrivate.post("/user/updateStatus", user);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
 const getAttributesByName = async (name) => {
   try {
     const response = await axiosPrivate.get(`/attribute/getByName/${name}`);
@@ -335,11 +358,30 @@ const getLinkStripe = async () => {
   }
 };
 
+const sendEmailSent = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.post(`/mail/statusOrderSent/${numOrder}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+const sendEmailDelivered = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.post(`/mail/statusOrderDelivery/${numOrder}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
 export default {
   loginAdmin,
   getReportOrders,
   getCategoriesByStatus,
   getAllCategories,
+  getAllUsers,
   getProducts,
   getProductDetails,
   getAttributesByName,
@@ -360,10 +402,13 @@ export default {
   updateAppAndroid,
   updateAppIos,
   updateKeysStripe,
+  updateStatusUser,
   getLinkIos,
   getLinkAndroid,
   getLinkStripe,
   getOrderByNumOrder,
   updateStatusOrder,
   updateStatusProduct,
+  sendEmailSent,
+  sendEmailDelivered,
 };
