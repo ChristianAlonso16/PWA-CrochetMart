@@ -19,7 +19,8 @@
                                     <i class="pi pi-key" style="font-size: 2rem"></i>
                                 </div>
                                 <div class="flex justify-content-end flex-wrap">
-                                    <Button icon="pi pi-pencil" class="p-button-card p-button-raised p-button-outlined"
+                                    <Button icon="pi pi-pencil"
+                                        class="p-button-card p-button-raised p-button-outlined"
                                         @click="openStripeModal" />
                                 </div>
                             </div>
@@ -171,11 +172,12 @@ export default {
 <style scoped>
 .p-button-card {
     border-radius: 100px !important;
-    background-color: #ffff !important;
+    background-color: #fff !important;
     border-color: #252525 !important;
     color: #252525 !important;
     height: 50px !important;
     width: 50px !important;
+    margin: 15px 0px !important; /*Ajusta */
 }
 
 p {
@@ -183,9 +185,10 @@ p {
     text-align: center;
     color: #888;
 }
+
 .p-card {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f0f0f0;
 }
 </style>

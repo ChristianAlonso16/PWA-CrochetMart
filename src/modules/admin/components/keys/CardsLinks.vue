@@ -16,6 +16,7 @@
                         <div class="flex justify-content-end flex-wrap">
                             <Button icon="pi pi-pencil" class="p-button-card p-button-raised p-button-outlined"
                                 @click="openModal" />
+                                
                         </div>
                     </div>
                 </div>
@@ -170,7 +171,9 @@ export default {
     color: #252525 !important;
     height: 50px !important;
     width: 50px !important;
+    margin: 15px 0px !important; /*Ajusta */
 }
+
 .p-card {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
