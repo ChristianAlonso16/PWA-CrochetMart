@@ -1,6 +1,9 @@
 import axios from "axios";
 import router from "@/router";
 import store from "@/store/store";
+import PouchDB from "pouchdb";
+const db = new PouchDB("offline_requests");
+
 const SERVER_URL = "http://127.0.0.1:8080/api"
 const client = axios.create({
     baseURL: SERVER_URL,
@@ -29,6 +32,19 @@ client.interceptors.response.use(
     },
     async (error) => {
         if (!error.response) {
+            const offlineRequest = {
+                _id: new Date().toISOString(),
+                method: error.config.method,
+                url: error.config.url,
+                data: error.config.data || {},
+                headers: error.config.headers,
+            };
+            try {
+                await db.put(offlineRequest);
+                console.warn("Peticion guardada en modo offline.");
+            } catch (dbError) {
+                console.error("Error al guardar la peticion offline:", dbError);
+            }
             localStorage.removeItem('token')
             return Promise.reject(error)
         }
@@ -54,6 +70,29 @@ client.interceptors.response.use(
         return Promise.reject(error)
     }
 )
+const retryOfflineRequests = async () => {
+    try {
+        const allDocs = await db.allDocs({ include_docs: true });
+        for (const doc of allDocs.rows) {
+            const request = doc.doc;
+            try {
+                await axios({
+                    method: request.method,
+                    url: `${SERVER_URL}${request.url}`,
+                    data: request.data,
+                    headers: request.headers,
+                });
+                await db.remove(request);
+                console.log("Peticion reenviada con exito:", request);
+            } catch (error) {
+                console.error("Error al reintentar peticion offline:", error);
+            }
+        }
+    } catch (error) {
+        console.error("Error al procesar peticiones offline:", error);
+    }
+};
+retryOfflineRequests();
 
 export default {
     get: function (endPoint, config) {
