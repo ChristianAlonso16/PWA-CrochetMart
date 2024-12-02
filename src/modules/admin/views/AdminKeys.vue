@@ -153,12 +153,10 @@ export default {
             }
         },
         async getStripe() {
-            try {
-                const stripeResponse = await AdminServices.getLinkStripe();
-                this.stripeKey = Utils.formatDate(stripeResponse.data.updateAt) || null;
-            } catch (error) {
-                this.$toast.error('No se pudo obtener el link.');
-            }
+            const stripeResponse = await AdminServices.getLinkStripe();
+            this.stripeKey = stripeResponse?.data?.updateAt
+                ? Utils.formatDate(stripeResponse.data.updateAt)
+                : null;
         }
     },
     mounted() {
@@ -183,9 +181,10 @@ p {
     text-align: center;
     color: #888;
 }
+
 .p-card {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f0f0f0;
 }
 </style>
