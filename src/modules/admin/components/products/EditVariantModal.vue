@@ -271,9 +271,14 @@ export default {
       }
     },
     async urlToFile(url, filename) {
-      const response = await fetch(url);
-      const blob = await response.blob();
-      return new File([blob], filename, { type: blob.type });
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return new File([blob], filename, { type: blob.type });
+      } catch (error) {
+        console.error("Error al convertir URL a archivo:", error);
+        throw error;
+      }
     },
     async loadVariantData() {
       try {
@@ -283,23 +288,25 @@ export default {
         if (statusCode === 200) {
           this.price = data.price;
           this.stock = data.stock;
-          this.colors.push({
-            name: data.attributes[0].value,
-            value: "#" + data.attributes[0].c,
-          });
+          this.colors = data.attributes.map((attr) => ({
+            name: attr.value,
+            value: "#" + attr.c,
+          }));
           this.selectedColor = this.colors.find(
-            (color) => color.name === data.attributes[0].value
+            (color) => color.name === data.attributes[0]?.value
           );
-          console.log(data.images)
-          //quiero que de la url de la imagen me genere un file pero es un array
-          const file = await this.urlToFile(data.images[0].url, "image.jpg");
-          console.log(file);
-          this.uploadedFiles.push({
+
+          const imagePromises = data.images.map((imageUrl, index) =>
+            this.urlToFile(this.cleanUrl(imageUrl), `image_${index + 1}.webp`)
+          );
+
+          const files = await Promise.all(imagePromises);
+          this.uploadedFiles = files.map((file) => ({
             file,
             objectURL: URL.createObjectURL(file),
-            name: "image.jpg",
+            name: file.name,
             size: file.size,
-          });
+          }));
         }
       } catch (error) {
         this.$toast.error("Error al cargar los datos de la variante");
