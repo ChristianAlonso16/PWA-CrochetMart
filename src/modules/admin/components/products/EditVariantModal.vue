@@ -42,9 +42,6 @@
                 />
                 <div class="file-info">
                   <p class="file-name">{{ file.name }}</p>
-                  <p class="file-size">
-                    {{ (file.size / 1024).toFixed(2) }} KB
-                  </p>
                 </div>
                 <Button icon="pi pi-times" @click="removeImage(index)" />
               </div>
@@ -235,6 +232,8 @@ export default {
       ) {
         this.isLoading = true;
         try {
+          console.log("submitForm");
+          console.log(this.uploadedFiles);
           this.updateVariant().then(() => {
             this.$emit("variantUpdated");
           });
@@ -248,22 +247,37 @@ export default {
     },
     async updateVariant() {
       try {
-        const variantopc = {
-          price: this.price,
-          stock: this.stock,
-          color: this.selectedColor ? this.selectedColor.name : null,
-          images: this.uploadedFiles,
-          numVariant: this.variant,
-        };
-        const response = await AdminServices.updateVariant(variantopc);
+        const formData = new FormData();
+        formData.append("price", this.price != null ? this.price : 0);
+        formData.append("stock", this.stock != null ? this.stock : 0);
+        formData.append("color", this.selectedColor?.name || "");
+        formData.append("numProduct", this.variant);
+
+        this.uploadedFiles.forEach(({ file }) => {
+          formData.append("imagesDtoList", file);
+        });
+
+        const response = await AdminServices.updateVariant(formData);
         const { statusCode, message } = response;
+
         if (statusCode === 200) {
           this.$toast.success(message);
         } else {
           this.$toast.error(message);
         }
       } catch (error) {
+        console.error("Error al actualizar la variante:", error);
         this.$toast.error("Error al actualizar la variante");
+      }
+    },
+    async urlToFile(url, filename) {
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return new File([blob], filename, { type: blob.type });
+      } catch (error) {
+        console.error("Error al convertir URL a archivo:", error);
+        throw error;
       }
     },
     async loadVariantData() {
@@ -274,31 +288,40 @@ export default {
         if (statusCode === 200) {
           this.price = data.price;
           this.stock = data.stock;
-          this.colors.push({
-            name: data.attributes[0].value,
-            value: "#" + data.attributes[0].c,
-          });
+          this.colors = data.attributes.map((attr) => ({
+            name: attr.value,
+            value: "#" + attr.c,
+          }));
           this.selectedColor = this.colors.find(
-            (color) => color.name === data.attributes[0].value
+            (color) => color.name === data.attributes[0]?.value
           );
 
-          this.uploadedFiles = [];
-          for (const [index, base64] of data.images.entries()) {
-            const file = await this.base64ToFileWithObjectURL(
-              base64,
-              `image_${index}.jpeg`
-            );
-            this.uploadedFiles.push({
-              file,
-              objectURL: file.objectURL,
-              name: file.name,
-              size: file.size,
-            });
-          }
+          const imagePromises = data.images.map((imageUrl, index) =>
+            this.urlToFile(this.cleanUrl(imageUrl), `image_${index + 1}.webp`)
+          );
+
+          const files = await Promise.all(imagePromises);
+          this.uploadedFiles = files.map((file) => ({
+            file,
+            objectURL: URL.createObjectURL(file),
+            name: file.name,
+            size: file.size,
+          }));
         }
       } catch (error) {
         this.$toast.error("Error al cargar los datos de la variante");
       }
+    },
+    fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+      });
+    },
+    cleanUrl(url) {
+      return url.replace(/http:\/\/[^/]+\/http:\/\//, "http://");
     },
     base64ToFileWithObjectURL(base64, filename) {
       return new Promise((resolve, reject) => {

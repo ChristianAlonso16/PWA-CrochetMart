@@ -230,18 +230,9 @@ const addVariant = async (price, color, stock, files, numProduct) => {
 
 const updateVariant = async (data) => {
   try {
-    const formData = new FormData();
-    formData.append("price", data.price);
-    formData.append("color", data.color);
-    formData.append("stock", data.stock);
-    formData.append("numProduct", data.numVariant);
-    data.images.forEach(({ file }) => {
-      formData.append("imagesDtoList", file);
-    });
-
     const response = await axiosPrivate.post(
       "/product/updateProductVariantWithImages",
-      formData,
+      data,
       {
         headers: {
           "Content-Type": "multipart/form-data",
