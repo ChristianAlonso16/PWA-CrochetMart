@@ -1,14 +1,8 @@
 <template>
   <div class="color-picker">
     <div class="colors">
-      <div
-        v-for="(color, index) in colors"
-        :key="index"
-        :style="{ backgroundColor: `#${color.value}` }"
-        class="color-circle"
-        :class="{ selected: selectedColor?.value === color.value }"
-        @click="selectColor(color)"
-      ></div>
+      <div v-for="(color, index) in colors" :key="index" :style="{ backgroundColor: color.value }" class="color-circle"
+        :class="{ selected: selectedColor?.value === color.value }" @click="selectColor(color)"></div>
     </div>
   </div>
 </template>
@@ -47,6 +41,7 @@ export default {
 
 .colors {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 10px;
 }
@@ -62,5 +57,19 @@ export default {
 
 .color-circle.selected {
   border-color: #252525;
+}
+
+@media (max-width: 768px) {
+  .color-circle {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .color-circle {
+    width: 25px;
+    height: 25px;
+  }
 }
 </style>
