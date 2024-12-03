@@ -45,11 +45,31 @@ const getTopRatedComments = async () => {
     return error;
   }
 }
+
+const getLinkAndroid = async () => {
+  try {
+    const response = await axiosPublic.get("/linkapp/getLinkAndroid");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
   
+const  getLinkIos = async () => {
+  try {
+    const response = await axiosPublic.get("/linkapp/getLinkIos");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   getProductsHome,
   getNewProducts,
   getCategories,
   getTopRatedProducts,
-  getTopRatedComments
+  getTopRatedComments,
+  getLinkAndroid,
+  getLinkIos,
 };
