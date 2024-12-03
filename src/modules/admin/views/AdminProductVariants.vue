@@ -40,7 +40,11 @@
 
           <Column field="image" header="Imagen">
             <template #body="{ data }">
-              <img :src="data.image" alt="product" class="product-image" />
+              <img
+                :src="data.image || image"
+                alt="product"
+                class="product-image"
+              />
             </template>
           </Column>
           <Column field="price" header="Precio" :sortable="true">
@@ -98,6 +102,7 @@
 <script>
 import AddVariantModal from "@/modules/admin/components/products/AddVariantModal.vue";
 import EditVariantModal from "@/modules/admin/components/products/EditVariantModal.vue";
+import image from "@/assets/images/noImageFound.png";
 import Button from "primevue/button";
 import AdminServices from "../services/AdminServices";
 import DataTable from "primevue/datatable";
@@ -115,6 +120,7 @@ export default {
   },
   data() {
     return {
+      image,
       variants: [],
       product: null,
       selectedProduct: null,
@@ -152,6 +158,7 @@ export default {
     async getVariants(numProduct) {
       try {
         const response = await AdminServices.getVariants(numProduct);
+        console.log(response);
         const { data, statusCode } = response;
 
         if (statusCode === 200) {
