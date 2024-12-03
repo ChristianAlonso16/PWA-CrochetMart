@@ -28,12 +28,14 @@
 
           <Column field="numOrder" header="No. Pedido" :sortable="true" />
           <Column field="dateOrder" header="Fecha" :sortable="true" />
-          <Column field="status" header="Estado">
-            <template #body="{ data }">
-              <Badge
-                :value="data.status"
-                :severity="getStatusSeverity(data.status)"
-              />
+          <Column field="status" header="Estado" sortable>
+            <template #body="slotProps">
+              <span
+                class="status-badge font-bold"
+                :style="statusStyles[slotProps.data.status]"
+              >
+                {{ statusTexts[slotProps.data.status] || "Desconocido" }}
+              </span>
             </template>
           </Column>
           <Column header="Acciones">
@@ -41,7 +43,7 @@
               <Button
                 icon="pi pi-eye"
                 class="p-button-rounded p-button-text"
-                @click="viewOrder(data.orderNumber)"
+                @click="handleRowClick(data)"
               />
             </template>
           </Column>
@@ -56,8 +58,8 @@ import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
-import Badge from "primevue/badge";
 import AdminServices from "../services/AdminServices";
+import Utils from "@/core/utils/FunctionGlobals";
 
 export default {
   components: {
@@ -65,7 +67,6 @@ export default {
     DataTable,
     Column,
     InputText,
-    Badge,
   },
   data() {
     return {
@@ -76,6 +77,20 @@ export default {
       selectedCategory: null,
       isEditModalVisible: false,
       orders: [],
+      statusTexts: {
+        accepted: "Aceptado",
+        in_progress: "En Proceso",
+        sent: "Enviado",
+        delivered: "Entregado",
+        pending_payment: "Pago Pendiente",
+      },
+      statusStyles: {
+        accepted: { backgroundColor: "#c9fdd4" },
+        in_progress: { backgroundColor: "#fff3cd" },
+        sent: { backgroundColor: "#ddc9fd" },
+        delivered: { backgroundColor: "#c9e1fd" },
+        pending_payment: { backgroundColor: "#fdc9c9" },
+      },
     };
   },
 
@@ -83,14 +98,20 @@ export default {
     async getOrders() {
       try {
         const response = await AdminServices.getAllOrders();
-        this.orders = response.data;
-        console.log(this.orders);
+        this.orders = response.data.map((order) => ({
+          ...order,
+          dateOrder: Utils.formatDate(order.dateOrder),
+        }));
       } catch (error) {
-        console.error(error);
+        this.$toast.error("Error al obtener los pedidos");
       }
     },
-    getStatusSeverity(status) {
-      console.log(status);
+    handleRowClick(order) {
+      sessionStorage.setItem("selectedOrder", JSON.stringify(order));
+      this.$router.push({
+        name: "details-sales",
+        params: { numOrder: order.numOrder},
+      });
     },
   },
   mounted() {
@@ -98,3 +119,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.p-button {
+  border-radius: 100px !important;
+}
+</style>

@@ -4,7 +4,9 @@
       <p class="text-lg font-bold">Administrar Categorías</p>
     </div>
     <div class="col-12 md:col-6 flex justify-content-end py-4">
-      <Button class="p-button-primary" @click="openModal"> Agregar </Button>
+      <Button class="" style="border-radius: 6px !important" @click="openModal">
+        Agregar
+      </Button>
     </div>
     <AddCategoryModal :visible.sync="modalVisible" @refresh="getCategories" />
 
@@ -135,7 +137,7 @@ export default {
           this.categories = data;
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener las categorías");
       }
     },
     findIconPath(iconName) {
@@ -161,17 +163,26 @@ export default {
         this.isEditModalVisible = false;
         this.selectedCategory = null;
       } catch (error) {
-        console.error(error);
+        this.$toast.error("Error al actualizar la categoría");
       }
     },
     async toggleStatus(category) {
       try {
         const newStatus =
           category.status.statusName === "enable" ? "disabled" : "enable";
-        await AdminServices.deleteCategory(category.categoryName, newStatus);
-        this.getCategories();
+        const response = await AdminServices.deleteCategory(
+          category.categoryName,
+          newStatus
+        );
+        const { statusCode, message } = response;
+        if (statusCode === 200) {
+          this.getCategories();
+          this.$toast.success(message);
+        } else {
+          this.$toast.error(message);
+        }
       } catch (error) {
-        console.error("Error al cambiar el estado:", error);
+        this.$toast.error("Error al actualizar la categoría");
       }
     },
     async deleteCategory(name, status) {
@@ -191,4 +202,9 @@ export default {
   },
 };
 </script>
-  
+
+<style scoped>
+.p-button {
+  border-radius: 100px !important;
+}
+</style>

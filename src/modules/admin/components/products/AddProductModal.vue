@@ -3,7 +3,7 @@
     <Button class="p-button-primary" @click="openModal"> Agregar </Button>
     <Dialog
       class="font-bold"
-      :containerStyle="{ width: '70vw' }"
+      :containerStyle="{ width: '50vw' }"
       modal
       closable
       @hide="closeModal"
@@ -145,7 +145,7 @@ export default {
           this.categories = data;
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener las categorías");
       }
     },
     async addProduct() {
@@ -160,13 +160,16 @@ export default {
         };
         const response = await AdminServices.addProduct(data);
 
-        const { statusCode } = response;
+        const { statusCode, message } = response;
         if (statusCode === 201) {
           this.$emit("product-added");
           this.closeModal();
+          this.$toast.success(message);
+        } else {
+          this.$toast.error(message);
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al agregar el producto");
       } finally {
         this.isLoading = false;
       }

@@ -4,6 +4,8 @@ import Products from "../../modules/admin/views/AdminProducts.vue";
 import ProductVariants from "../../modules/admin/views/AdminProductVariants.vue";
 import AdminCategories from "@/modules/admin/views/AdminCategories.vue";
 import AdminKeys from "@/modules/admin/views/AdminKeys.vue";
+import AdminSalesDetails from "@/modules/admin/views/AdminSalesDetails.vue";
+import AdminUsers from "@/modules/admin/views/AdminUsers.vue";
 import AdminHelp from "@/modules/admin/views/AdminHelpInformation.vue";
 
 export default [
@@ -59,6 +61,16 @@ export default [
         },
       },
       {
+        path: "/admin/users",
+        name: "users",
+        component: AdminUsers,
+        meta: {
+          title: "Usuarios",
+          role: "admin",
+          requireAuth: true
+        },
+      },
+      {
         path: "/admin/sales-register",
         name: "sales-register",
         component: AdminSalesRegister,
@@ -74,6 +86,16 @@ export default [
         component: AdminKeys,
         meta: {
           title: "Key",
+          role: "admin",
+          requireAuth:true
+        },
+      },
+      {
+        path: "/admin/details-sales",
+        name: "details-sales",
+        component: AdminSalesDetails,
+        meta: {
+          title: "Pedido /",
           role: "admin",
           requireAuth:true
         },

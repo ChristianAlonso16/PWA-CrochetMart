@@ -17,6 +17,7 @@
           placeholder="Ingrese el nombre de la categoría"
           :class="{ 'p-invalid': isCategoryNameInvalid }"
           @blur="validateCategoryName"
+          disabled
         />
         <small v-if="isCategoryNameInvalid" class="p-error">
           El nombre de la categoría es obligatorio y debe tener menos de 100
@@ -74,7 +75,13 @@
         @click="closeModal"
         class="p-button-text p-button-secondary"
       />
-      <Button label="Guardar" class="p-button" @click="submitEdit" />
+      <Button
+        label="Guardar"
+        class="p-button"
+        @click="submitEdit"
+        :loading="isLoading"
+        :disabled="isLoading"
+      />
     </template>
   </Dialog>
 </template>
@@ -121,6 +128,7 @@ export default {
         path,
       })),
       filteredIcons: [],
+      isLoading: false,
     };
   },
   methods: {
@@ -148,12 +156,15 @@ export default {
           description,
           icon
         );
-        const { statusCode } = response;
-        if (statusCode === 200) {
+        const { statusCode, message } = response;
+        if (statusCode === 201) {
           this.closeModal();
+          this.$toast.success(message);
+        } else {
+          this.$toast.error(message);
         }
       } catch (error) {
-        console.error(error);
+        this.$toast.error("Error al actualizar la categoría");
       }
     },
     findIconByName(iconName) {
@@ -163,6 +174,7 @@ export default {
       return this.icons.find((icon) => icon.name === formattedName);
     },
     async submitEdit() {
+      this.isLoading = true;
       this.validateCategoryName();
       this.validateIcon();
       if (this.isCategoryNameInvalid || this.isIconInvalid) {
@@ -175,6 +187,7 @@ export default {
         this.localIcon.name
       );
       this.$emit("update-category");
+      this.isLoading = false;
     },
     syncCategoryData() {
       if (this.category) {

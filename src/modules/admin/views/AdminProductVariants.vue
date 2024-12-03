@@ -75,7 +75,8 @@
             <template #body="{ data }">
               <Button
                 icon="pi pi-pencil"
-                class="p-button-rounded p-button-success mr-2"
+                class="mr-2"
+                style="border-radius: 100px !important"
                 @click="openModalEdit(data)"
               />
             </template>
@@ -86,6 +87,7 @@
         v-if="selectedVariant"
         :visible.sync="isEditModalVisible"
         :variant="selectedVariant?.id"
+        :numProduct="product.numProduct"
         @close="selectedVariant = null"
         @variantUpdated="refreshTable"
       />
@@ -156,7 +158,7 @@ export default {
           this.variants = data;
         }
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al obtener las variantes");
       }
     },
     refreshTable() {

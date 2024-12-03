@@ -91,6 +91,29 @@ const updateCategory = async (name, description, icon) => {
   }
 };
 
+const getAllUsers = async () => {
+  try {
+    const response = await axiosPrivate.get("/user/getAll");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+const updateStatusUser = async (email, status) => {
+  try {
+    const user = {
+      email: email,
+      status: status,
+    };
+    const response = await axiosPrivate.post("/user/updateStatus", user);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
 const getAttributesByName = async (name) => {
   try {
     const response = await axiosPrivate.get(`/attribute/getByName/${name}`);
@@ -186,7 +209,7 @@ const addVariant = async (price, color, stock, files, numProduct) => {
     formData.append("color", color);
     formData.append("stock", stock);
     formData.append("numProduct", numProduct);
-    files.forEach((file) => {
+    files.forEach(({ file }) => {
       formData.append("imagesDtoList", file);
     });
 
@@ -212,7 +235,7 @@ const updateVariant = async (data) => {
     formData.append("color", data.color);
     formData.append("stock", data.stock);
     formData.append("numProduct", data.numVariant);
-    data.images.forEach((file) => {
+    data.images.forEach(({ file }) => {
       formData.append("imagesDtoList", file);
     });
 
@@ -229,7 +252,7 @@ const updateVariant = async (data) => {
   } catch (error) {
     return error;
   }
-}
+};
 const addCategory = async (name, description, icon) => {
   try {
     const category = {
@@ -255,12 +278,110 @@ const getAllOrders = async () => {
   }
 };
 
+const getOrderByNumOrder = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.get(`/order/getOrderByNumOrder/${numOrder}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const updateStatusOrder = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.post(`/order/updateStatusOrder?numOrder=${numOrder}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const updateStatusProduct = async (numProduct, status) => {
+  try {
+    const product = {
+      numProduct: numProduct,
+      status: status,
+    };
+    const response = await axiosPrivate.post(`/product/updateStatusProduct`, product);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const updateAppAndroid = async (url) => {
+  try {
+    const response = await axiosPrivate.put("/linkapp/updateLinkAppAndroid", url);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const updateAppIos = async (url) => {
+  try {
+    const response = await axiosPrivate.put("/linkapp/updateLinkAppIos", url);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const updateKeysStripe = async (keys) => {
+  try {
+    const response = await axiosPrivate.put("/stripekeys/updateKeysStripe", keys);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getLinkIos = async () => {
+  try {
+    const response = await axiosPrivate.get("/linkapp/getLinkIos");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const getLinkAndroid = async () => {
+  try {
+    const response = await axiosPrivate.get("/linkapp/getLinkAndroid");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+const getLinkStripe = async () => {
+  try {
+    const response = await axiosPrivate.get("/stripekeys/getDevKeys");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const sendEmailSent = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.post(`/mail/statusOrderSent/${numOrder}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+const sendEmailDelivered = async (numOrder) => {
+  try {
+    const response = await axiosPrivate.post(`/mail/statusOrderDelivery/${numOrder}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
 
 export default {
   loginAdmin,
   getReportOrders,
   getCategoriesByStatus,
   getAllCategories,
+  getAllUsers,
   getProducts,
   getProductDetails,
   getAttributesByName,
@@ -278,4 +399,16 @@ export default {
   addCategory,
   getAttributesAvailable,
   getAllOrders,
+  updateAppAndroid,
+  updateAppIos,
+  updateKeysStripe,
+  updateStatusUser,
+  getLinkIos,
+  getLinkAndroid,
+  getLinkStripe,
+  getOrderByNumOrder,
+  updateStatusOrder,
+  updateStatusProduct,
+  sendEmailSent,
+  sendEmailDelivered,
 };
