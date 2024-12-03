@@ -85,6 +85,36 @@ const getProductsByFilters = async (filters) => {
       throw error;
   }
 };
+
+const getVariationAttributes = async (productNum) => {
+  try {
+    const response = await axiosPublic.get(`/product/getVariationAttributes/${productNum}/color`);
+    return response.data;
+  } catch (error) {
+    console.error("Error obteniendo atributos de variación:", error);
+    return error;
+  }
+};
+
+const getProductVariantImages = async (variantId) => {
+  try {
+    const response = await axiosPublic.get(`/product/getProductVariantImages/${variantId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error obteniendo imágenes de variantes de productos:", error);
+    return error;
+  }
+};
+
+const getReviewProduct = async (productNum) => {
+  try {
+    const response = await axiosPublic.get(`/review/product/${productNum}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error obteniendo comentarios de producto:", error);
+    return error;
+  }
+}
   
 export default {
   getProductsHome,
@@ -95,5 +125,8 @@ export default {
   getMinAndMaxPrice,
   getCategoryByStatus,
   getAttributeByName,
-  getProductsByFilters
+  getProductsByFilters,
+  getVariationAttributes,
+  getProductVariantImages,
+  getReviewProduct
 };

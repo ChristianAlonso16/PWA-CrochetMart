@@ -18,14 +18,14 @@
             </div>
             <div class="col-12 lg:col-6 xl:col-6">
                 <div :class="paddingPosition == 'px-8' ? 'pr-8' : paddingPosition">
-                    <h2 class="m-0">2pcs Hilo Algodón Natural P/ Macramé 3mmx200m Knitting Yarn</h2>
+                    <h2 class="m-0">{{productDetails.productVariant.product.name}}</h2>
                     <div class="flex align-items-center justify-content-start">
-                        <Rating v-model="rating" :stars="5" :readonly="true" :cancel="false" />
-                        <p class="m-2">(35)</p>
+                        <Rating v-model="rating.avgProductReviews" :stars="5" :readonly="true" :cancel="false" />
+                        <p class="m-2">({{rating.totalProductReviews}})</p>
                     </div>
-                    <h1>$ 270.00</h1>
+                    <h1>${{productDetails.productVariant.price}}</h1>
                     <h3>Color</h3>
-                    <ButtonSelectColor/>
+                    <ButtonSelectColor :colors="productDetails.attributeHasValue" @color-selected="handleColorSelected"/>
                     <h3>Cantidad</h3>
                     <div class="flex flex-row flex-wrap">
                         <div class="flex align-items-center justify-content-center mr-4 mb-4">
@@ -39,11 +39,11 @@
             </div>
         </div>
         <div :class="paddingPosition">
-            <div class="grid pt-5">
+            <div class="pt-5">
                 <h1>Descripcion</h1>
                 <div>
                     <p class="m-0" style="font-size: 20px;">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque
+                        {{productDetails.productVariant.product.productDescription}}
                     </p>
                 </div>             
             </div>
@@ -52,14 +52,10 @@
             </div>
             <div class="grid">
                 <div class="col-12 lg:col-4 xl:col-3">
-                    <TableReview/>
+                    <TableReview :avgProductReviews="rating.avgProductReviews" :totalProductReviews="rating.totalProductReviews"/>
                 </div>
-                <div class="col-12 lg:col-8 xl:col-9">
-                    <div class="grid">
-                        <ClientCardsReview/>
-                        <ClientCardsReview/>
-                        <ClientCardsReview/>
-                    </div>
+                <div class="col-12 lg:col-8 xl:col-9" v-for="(comment, index) in comments" :key="index">
+                    <ClientCardsReview :data="comment"/>
                 </div>
             </div>
             <div class="grid pt-5">
@@ -67,12 +63,7 @@
             </div>
             <div class="horizontal-scroll-container">
                 <div class="flex">
-                    <CardsProducts
-                        v-for="(product, index) in relatedProducts"
-                        :key="index"
-                        :product="product"
-                        class="related-product-card"
-                    />
+                    <CardsProducts v-for="(product, index) in relatedProducts" :key="index" :product="product" class="related-product-card"/>
                 </div>
             </div>
             <div class="grid pt-5">
@@ -80,12 +71,7 @@
             </div>
             <div class="horizontal-scroll-container">
                 <div class="flex">
-                    <CardsProducts
-                        v-for="(product, index) in relatedProducts"
-                        :key="index"
-                        :product="product"
-                        class="related-product-card"
-                    />
+                    <CardsProducts v-for="(product, index) in relatedProducts" :key="index" :product="product" class="related-product-card"/>
                 </div>
             </div>
             <div class="grid pt-5">
@@ -93,12 +79,7 @@
             </div>
             <div class="horizontal-scroll-container">
                 <div class="flex">
-                    <CardsProducts
-                        v-for="(product, index) in relatedProducts"
-                        :key="index"
-                        :product="product"
-                        class="related-product-card"
-                    />
+                    <CardsProducts v-for="(product, index) in relatedProducts" :key="index" :product="product" class="related-product-card"/>
                 </div>
             </div>
         </div>      
@@ -115,6 +96,7 @@ import ButtonCounter from '../components/ButtonCounter.vue';
 import ButtonSelectColor from '../components/ButtonSelectColor.vue';
 import TableReview from '../components/TableReview.vue';
 import CardsProducts from '../components/CardsProducts.vue';
+import ClientService from "../services/ClientServices";
 
 export default {
     components: {
@@ -130,7 +112,7 @@ export default {
     },
     data() {
         return {
-            rating: 4,
+            rating: [],
             images: [
                 {
                     "itemImageSrc": "https://m.media-amazon.com/images/I/81Vx5EVsNNL._UF1000,1000_QL80_.jpg",
@@ -177,73 +159,79 @@ export default {
                     numVisible: 4
                 }
             ],
-            comments: [
-                {
-                    "text": 'Estuvo bien culero',
-                    "rating": 1,
-                    "date": "dads"
-                },
-                {
-                    "text": 'Estuvo bien culero',
-                    "rating": 2,
-                    "date": "dads"
-                },
-                {
-                    "text": 'Estuvo bien culero',
-                    "rating": 5,
-                    "date": "dads"
-                }
-            ],
-            
-            relatedProducts: [
-                {
-                    name: 'Estambre rosa',
-                    description: 'Hermoso producto hecho a mano',
-                    price: 59.99,
-                    image: 'https://via.placeholder.com/300'
-                },
-                {
-                    name: 'Hilo azul',
-                    description: 'Alta calidad para tus proyectos',
-                    price: 45.5,
-                    image: 'https://via.placeholder.com/300'
-                },
-                {
-                    name: 'Lana verde',
-                    description: 'Perfecta para el invierno',
-                    price: 65.0,
-                    image: 'https://via.placeholder.com/300'
-                },
-                {
-                    name: 'Lana verde',
-                    description: 'Perfecta para el invierno',
-                    price: 65.0,
-                    image: 'https://via.placeholder.com/300'
-                },
-                {
-                    name: 'Lana verde',
-                    description: 'Perfecta para el invierno',
-                    price: 65.0,
-                    image: 'https://via.placeholder.com/300'
-                }
-            ],
+            comments: [], // Contendrá las reseñas del producto
+            relatedProducts: [],
             thumbnailsPosition: 'left',
             paddingPosition: 'px-8',
             home: {icon: 'pi pi-home', to: '/'},
             items: [
                 {label: 'Peluches de flores'},
             ],
+            productDetails: null, // Para los detalles del producto
+            selectedColor: null, // Color seleccionado
         }
     },
     methods: {
+        handleColorSelected(color) {
+            this.selectedColor = color;
+            console.log("Color seleccionado:", color);
+        },
         updateThumbnailsPosition() {
             this.thumbnailsPosition = window.innerWidth <= 768 ? 'bottom' : 'left';
         },
         updatePadingPosition() {
             this.paddingPosition = window.innerWidth <= 768 ? 'px-4' : 'px-8';
-        }
+        },
+        async getVariationAttributes(productNum) {
+            try {
+                const response = await ClientService.getVariationAttributes(productNum);
+                if (!response.error) {
+                    this.productDetails = response.data[0]; // Guardamos los detalles del producto
+                    // Ahora obtenemos las imágenes
+                    // await this.fetchProductImages(this.productDetails.productVariant.idProductVariant);
+                }
+            } catch (error) {
+                console.error("Error obteniendo atributos de variación:", error);
+            }
+        },
+        // async fetchProductImages(variantId) {
+        //     try {
+        //         const response = await ClientService.getProductVariantImages(variantId);
+        //         if (!response.error) {
+        //             this.images = response.data.map(img => ({
+        //                 itemImageSrc: img.url,
+        //                 thumbnailImageSrc: img.url,
+        //                 alt: img.description || "Product Image",
+        //             }));
+        //         }
+        //     } catch (error) {
+        //         console.error("Error obteniendo imágenes de producto:", error);
+        //     }
+        // },
+        async getCommentsProduct(productNum) {
+            try {
+                const response = await ClientService.getReviewProduct(productNum);
+                if (!response.error) {
+                    this.comments = response.data.productReviews; // Accede a las reseñas
+                    this.rating = response.data; // Accede a las estrellas
+                }
+            } catch (error) {
+                console.error("Error obteniendo comentarios:", error);
+            }
+        },
+        async getNewProducts() {
+            try {
+                const response = await ClientService.getNewProducts();
+                this.relatedProducts = response.data.slice(0, 5);
+            } catch (error) {
+                console.log(error);
+            }
+        },
     },
     mounted() {
+        this.getVariationAttributes("P008");
+        this.getCommentsProduct("P008");
+        this.getNewProducts();
         this.updateThumbnailsPosition();
         window.addEventListener('resize', this.updateThumbnailsPosition);
         this.updatePadingPosition();
@@ -263,31 +251,31 @@ export default {
 }
 
 .horizontal-scroll-container {
-  overflow-x: scroll;
-  display: flex;
-  scroll-behavior: smooth;
-  padding-bottom: 1rem;
+    overflow-x: scroll;
+    display: flex;
+    scroll-behavior: smooth;
+    padding-bottom: 1rem;
 }
 
 .horizontal-scroll-content {
-  display: flex;
-  gap: 1rem;
-  scroll-snap-type: x mandatory;
+    display: flex;
+    gap: 1rem;
+    scroll-snap-type: x mandatory;
 }
 
 .related-product-card {
-  scroll-snap-align: start;
-  flex: 0 0 auto;
-  width: 220px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+    width: 220px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
 }
 
 .related-product-card:hover {
-  transform: translateY(-5px);
+    transform: translateY(-5px);
 }
 
 .horizontal-scroll-container::-webkit-scrollbar {
@@ -298,5 +286,4 @@ export default {
     background-color: #252525;
     border-radius: 10px;
 }
-
 </style>

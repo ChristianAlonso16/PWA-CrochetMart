@@ -4,7 +4,7 @@
       <div
         v-for="(color, index) in colors"
         :key="index"
-        :style="{ backgroundColor: color.value }"
+        :style="{ backgroundColor: `#${color.value}` }"
         class="color-circle"
         :class="{ selected: selectedColor?.value === color.value }"
         @click="selectColor(color)"
@@ -17,7 +17,7 @@
 export default {
   props: {
     colors: {
-      type: Array,
+      type: [Array, Object],
       required: true, // Array de objetos { name, value }
     },
     initialSelectedColor: {

@@ -44,6 +44,7 @@
             v-for="(product, index) in newProducts"
             :key="index"
             :product="product"
+            @click="redirectToProduct()"
             class="related-product-card"
           />
         </div>
@@ -169,6 +170,9 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    redirectToProduct() {
+      this.$router.push('/details-product');
     },
   },
   mounted() {

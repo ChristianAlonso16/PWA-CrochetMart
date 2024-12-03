@@ -26,10 +26,10 @@
                 </template>
             </Card>
         </div>
-        <div class="col-9">
+        <div class="col-9 pl-5">
             <h1>Productos</h1>
-            <div v-if="products.length > 0" class="horizontal-scroll-container mb-4">
-                <div class="flex">
+            <div v-if="products.length > 0" class="mb-4">
+                <div class="grid gap-5">
                     <CardsProducts v-for="(product, index) in filteredProducts" :key="index" :product="product" class="related-product-card"/>
                 </div>
             </div>
@@ -111,7 +111,7 @@ export default {
                     // Guardar la estructura { name, value }
                     this.availableColors = response.data.map(color => ({
                         name: color.name,
-                        value: `#${color.value}`, // Convertimos el valor a hexadecimal
+                        value: color.value, // Convertimos el valor a hexadecimal
                     }));
                 }
             } catch (error) {
