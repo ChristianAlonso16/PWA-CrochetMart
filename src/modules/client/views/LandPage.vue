@@ -44,7 +44,7 @@
       <div>
         <div class="flex">
           <CardsProducts v-for="(product, index) in topRatedProducts" :key="index" :product="product"
-            class="related-product-card" />
+          @click="redirectToProduct(product.numProduct)" class="related-product-card" />
         </div>
       </div>
       <div class="grid pt-5">

@@ -31,7 +31,7 @@
             <div v-if="filteredProducts.length > 0">
                 <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="col" v-for="(product, index) in paginatedProducts" :key="index">
-                        <CardsProducts :product="product" class="related-product-card" />
+                        <CardsProducts :product="product" @click="redirectToProduct(product.numProduct)" class="related-product-card" />
                     </div>
                 </div>
                 <Paginator :rows="itemsPerPage" :totalRecords="filteredProducts.length" :page="currentPage"
@@ -138,7 +138,6 @@ export default {
                 Object.keys(filters).forEach(key => {
                     if (!filters[key]) delete filters[key];
                 });
-
                 const response = await ClientService.getProductsByFilters(filters);
                 if (response && response.data && Array.isArray(response.data)) {
                     this.products = response.data;
@@ -155,6 +154,10 @@ export default {
         },
         onPageChange(event) {
             this.currentPage = event.page + 1;
+        },
+        redirectToProduct(numProduct) {
+            localStorage.setItem("selectedProduct", JSON.stringify(numProduct));
+            this.$router.push({ name: "DetailsProduct" });
         },
     },
     mounted() {

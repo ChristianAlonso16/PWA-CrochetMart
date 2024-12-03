@@ -1,84 +1,85 @@
 <template lang="">
-<div>
-    <div class="grid pt-5">
-        <div class="col-12 lg:col-6 xl:col-6">
-            <div :class="paddingPosition == 'px-4' ? 'px-0' : 'pl-8'">
-                <Galleria 
-                    :value="images.length > 0 ? images : placeholderImages" 
-                    :responsiveOptions="responsiveOptions" 
-                    :numVisible="4" 
-                    :thumbnailsPosition="thumbnailsPosition"
-                    :showItemNavigatorsOnHover="true" 
-                    :showItemNavigators="true" 
-                    :circular="true">
-                    <template #item="slotProps">
-                        <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt || 'Placeholder image'" style="width: 100%; height: 500px; display: block; object-fit: cover;" />
-                    </template>
-<template #thumbnail="slotProps">
-                        <div class="grid grid-nogutter justify-content-center">
-                            <img :src="slotProps.item.thumbnailImageSrc" :alt="slotProps.item.alt || 'Placeholder image'" style="width: 60px; height: 60px; display: block; object-fit: cover;" />
+    <div>
+        <div class="grid pt-5">
+            <div class="col-12 lg:col-6 xl:col-6">
+                <div :class="paddingPosition == 'px-4' ? 'px-0' : 'pl-8'">
+                    <Galleria 
+                        :value="images.length > 0 ? images : placeholderImages" 
+                        :responsiveOptions="responsiveOptions" 
+                        :numVisible="4" 
+                        :thumbnailsPosition="thumbnailsPosition"
+                        :showItemNavigatorsOnHover="true" 
+                        :showItemNavigators="true" 
+                        :circular="true"
+                    >
+                        <template #item="slotProps">
+                            <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt || 'Placeholder image'" style="width: 100%; height: 500px; display: block; object-fit: cover;" />
+                        </template>
+                        <template #thumbnail="slotProps">
+                            <div class="grid grid-nogutter justify-content-center">
+                                <img :src="slotProps.item.thumbnailImageSrc" :alt="slotProps.item.alt || 'Placeholder image'" style="width: 60px; height: 60px; display: block; object-fit: cover;" />
+                            </div>
+                        </template>
+                    </Galleria>
+                </div>
+            </div>
+            <div class="col-12 lg:col-6 xl:col-6">
+                <div :class="paddingPosition == 'px-8' ? 'pr-8' : paddingPosition">
+                    <h2 class="m-0">{{ productDetails?.productVariant?.product?.name }}</h2>
+                    <div class="flex align-items-center justify-content-start">
+                        <Rating v-model="rating.avgProductReviews" :stars="5" :readonly="true" :cancel="false" />
+                        <p class="m-2">({{ rating.totalProductReviews }})</p>
+                    </div>
+                    <h1>${{ productDetails?.productVariant?.price }}</h1>
+                    <h3>Color</h3>
+                    <ButtonSelectColor :colors="productDetails.attributeHasValue" @color-selected="handleColorSelected" />
+                    <h3>Cantidad</h3>
+                    <div class="flex flex-row flex-wrap">
+                        <div class="flex align-items-center justify-content-center mr-4 mb-4">
+                            <ButtonCounter />
                         </div>
-                    </template>
-</Galleria>
-</div>
-</div>
-<div class="col-12 lg:col-6 xl:col-6">
-    <div :class="paddingPosition == 'px-8' ? 'pr-8' : paddingPosition">
-        <h2 class="m-0">{{ productDetails?.productVariant?.product?.name }}</h2>
-        <div class="flex align-items-center justify-content-start">
-            <Rating v-model="rating.avgProductReviews" :stars="5" :readonly="true" :cancel="false" />
-            <p class="m-2">({{ rating.totalProductReviews }})</p>
-        </div>
-        <h1>${{ productDetails?.productVariant?.price }}</h1>
-        <h3>Color</h3>
-        <ButtonSelectColor :colors="productDetails.attributeHasValue" @color-selected="handleColorSelected" />
-        <h3>Cantidad</h3>
-        <div class="flex flex-row flex-wrap">
-            <div class="flex align-items-center justify-content-center mr-4 mb-4">
-                <ButtonCounter />
-            </div>
-            <div class="flex align-items-center justify-content-center mb-4">
-                <Button label="Agregar al carrito" class="p-button" />
+                        <div class="flex align-items-center justify-content-center mb-4">
+                            <Button label="Agregar al carrito" class="p-button" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-</div>
-<div :class="paddingPosition">
-    <!-- Descripción -->
-    <div class="pt-5">
-        <h1>Descripción</h1>
-        <div>
-            <p class="m-0" style="font-size: 20px;">
-                {{ productDetails?.productVariant?.product?.productDescription }}
-            </p>
+        <div :class="paddingPosition">
+            <!-- Descripción -->
+            <div class="pt-5">
+                <h1>Descripción</h1>
+                <div>
+                    <p class="m-0" style="font-size: 20px;">
+                        {{ productDetails?.productVariant?.product?.productDescription }}
+                    </p>
+                </div>
+            </div>
+            <!-- Reseñas -->
+            <div class="grid pt-5">
+                <h1>Reseñas del producto</h1>
+            </div>
+            <div class="grid">
+                <div class="col-12 lg:col-4 xl:col-3">
+                    <TableReview :avgProductReviews="rating.avgProductReviews"
+                        :totalProductReviews="rating.totalProductReviews" />
+                </div>
+                <div class="col-12 lg:col-8 xl:col-9" v-for="(comment, index) in comments" :key="index">
+                    <ClientCardsReview :data="comment" />
+                </div>
+            </div>
+            <!-- Productos relacionados -->
+            <div class="grid pt-5">
+                <h1>Productos relacionados</h1>
+            </div>
+            <div class="horizontal-scroll-container">
+                <div class="flex">
+                    <CardsProducts v-for="(product, index) in relatedProducts" :key="index" :product="product"
+                        class="related-product-card" />
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Reseñas -->
-    <div class="grid pt-5">
-        <h1>Reseñas del producto</h1>
-    </div>
-    <div class="grid">
-        <div class="col-12 lg:col-4 xl:col-3">
-            <TableReview :avgProductReviews="rating.avgProductReviews"
-                :totalProductReviews="rating.totalProductReviews" />
-        </div>
-        <div class="col-12 lg:col-8 xl:col-9" v-for="(comment, index) in comments" :key="index">
-            <ClientCardsReview :data="comment" />
-        </div>
-    </div>
-    <!-- Productos relacionados -->
-    <div class="grid pt-5">
-        <h1>Productos relacionados</h1>
-    </div>
-    <div class="horizontal-scroll-container">
-        <div class="flex">
-            <CardsProducts v-for="(product, index) in relatedProducts" :key="index" :product="product"
-                class="related-product-card" />
-        </div>
-    </div>
-</div>
-</div>
 </template>
 
 <script>
@@ -146,14 +147,28 @@ export default {
                     ClientService.getReviewProduct(productNum),
                     ClientService.getNewProducts(),
                 ]);
-
-                if (!variationResponse.error) this.productDetails = variationResponse.data[0];
+                let variantId = null;
+                if (!variationResponse.error && variationResponse.data.length > 0) {
+                    this.productDetails = variationResponse.data[0];
+                    variantId = variationResponse.data[0].productVariant.idProductVariant;
+                }
                 if (!commentsResponse.error) {
                     this.comments = commentsResponse.data.productReviews;
                     this.rating = commentsResponse.data;
                 }
                 if (!newProductsResponse.error) {
                     this.relatedProducts = newProductsResponse.data.slice(0, 5);
+                }
+                if (variantId) {
+                    const imagesResponse = await ClientService.getProductVariantImages(variantId);
+                    if (!imagesResponse.error) {
+                        this.images = imagesResponse.data.map((img) => ({
+                            itemImageSrc: img.url,
+                            thumbnailImageSrc: img.url,
+                            alt: img.description || "Product Image",
+                        }));
+                        console.log(imagesResponse);
+                    }
                 }
             } catch (error) {
                 console.error("Error al cargar datos:", error);
