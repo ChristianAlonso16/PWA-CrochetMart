@@ -61,12 +61,12 @@
         <small v-if="isIconInvalid" class="p-error">
           El ícono es obligatorio.
         </small>
-        <div v-if="localIcon" class="mt-2">
-          <span>Seleccionado: </span>
-          <svg width="96" height="96" viewBox="0 0 32 32">
-            <path :d="localIcon.path" />
-          </svg>
-        </div>
+        <div v-if="localIcon" class="mt-3 flex justify-content-between align-items-center">
+            <span>Seleccionado:</span>
+            <svg width="96" height="96" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path :d="localIcon.path" />
+            </svg>
+          </div>
       </div>
     </div>
     <template #footer>
@@ -216,3 +216,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.p-error {
+  color: red;
+}
+</style>

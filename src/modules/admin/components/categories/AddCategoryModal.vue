@@ -1,24 +1,12 @@
 <template>
   <div>
-    <Dialog
-      header="Crear Categoría"
-      :visible.sync="localVisible"
-      :containerStyle="{ width: '50vw' }"
-      class="font-bold"
-      @hide="closeModal"
-      modal
-      closable
-    >
+    <Dialog header="Crear Categoría" :visible.sync="localVisible" :containerStyle="{ width: '50vw' }" class="font-bold"
+      @hide="closeModal" modal closable>
       <div class="p-fluid">
         <div class="field">
           <label for="categoryName">Nombre de la Categoría</label>
-          <InputText
-            id="categoryName"
-            v-model="categoryName"
-            placeholder="Ingrese el nombre de la categoría"
-            :class="{ 'p-invalid': isCategoryNameInvalid }"
-            @blur="validateCategoryName"
-          />
+          <InputText id="categoryName" v-model="categoryName" placeholder="Ingrese el nombre de la categoría"
+            :class="{ 'p-invalid': isCategoryNameInvalid }" @blur="validateCategoryName" />
           <small v-if="isCategoryNameInvalid" class="p-error">
             El nombre de la categoría es obligatorio y debe tener menos de 100
             caracteres.
@@ -26,32 +14,16 @@
         </div>
         <div class="field">
           <label for="categoryDescription">Descripción</label>
-          <Textarea
-            id="categoryDescription"
-            v-model="categoryDescription"
-            placeholder="Ingrese una descripción"
-            rows="4"
-          />
+          <Textarea id="categoryDescription" v-model="categoryDescription" placeholder="Ingrese una descripción"
+            rows="4" />
         </div>
         <div class="field">
           <label for="icono">Ícono</label>
-          <AutoComplete
-            id="icono"
-            v-model="icono"
-            :suggestions="filteredIcons"
-            @complete="searchIcon"
-            :dropdown="true"
-            field="name"
-            appendTo="body"
-          >
+          <AutoComplete id="icono" v-model="icono" :suggestions="filteredIcons" @complete="searchIcon" :dropdown="true"
+            field="name" appendTo="body">
             <template #item="slotProps">
               <div>
-                <svg
-                  :width="24"
-                  :height="24"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                <svg :width="24" :height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path :d="slotProps.item.path" />
                 </svg>
                 <span>{{ slotProps.item.name }}</span>
@@ -61,27 +33,17 @@
           <small v-if="isIconInvalid" class="p-error">
             El ícono es obligatorio.
           </small>
-          <div v-if="icono" class="mt-2">
-            <span style="icon-item">Seleccionado: </span>
-            <svg width="96" height="96" viewBox="0 0 32 32">
+          <div v-if="icono" class="mt-3 flex justify-content-between align-items-center">
+            <span>Seleccionado:</span>
+            <svg width="96" height="96" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path :d="icono.path" />
             </svg>
           </div>
         </div>
       </div>
       <template #footer>
-        <Button
-          label="Cancelar"
-          @click="closeModal"
-          class="p-button-text p-button-secondary"
-        />
-        <Button
-          label="Registrar"
-          class="p-button"
-          @click="submitForm"
-          :loading="isLoading"
-          :disabled="isLoading"
-        />
+        <Button label="Cancelar" @click="closeModal" class="p-button-text p-button-secondary" />
+        <Button label="Registrar" class="p-button" @click="submitForm" :loading="isLoading" :disabled="isLoading" />
       </template>
     </Dialog>
   </div>
