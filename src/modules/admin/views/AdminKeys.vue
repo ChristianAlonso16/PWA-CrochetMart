@@ -8,19 +8,17 @@
                 <Card>
                     <template #content>
                         <div class="grid px-5">
-                            <div
-                                class="col-12 sm:col-6 md:col-6 lg:col-6 xl:col-6 flex flex-column justify-content-between flex-wrap">
-                                <h3>Key Stripe</h3>
-                                <h5>{{ stripeKey || 'Aún no se ha configurado la clave.' }}</h5>
-                            </div>
-                            <div
-                                class="col-12 sm:col-6 md:col-6 lg:col-6 xl:col-6 flex flex-column justify-content-between flex-wrap">
-                                <div class="flex justify-content-end flex-wrap">
-                                    <i class="pi pi-key" style="font-size: 2rem"></i>
+                            <div class="col-12 flex justify-content-between align-items-start">
+                                <div class="flex align-items-center">
+                                    <i class="pi pi-key" style="font-size: 2rem; margin-right: 1rem;"></i>
+                                    <div>
+                                        <h3>Key Stripe</h3>
+                                        <h5>{{ stripeKey || 'Aún no se ha configurado la clave.' }}</h5>
+                                    </div>
                                 </div>
-                                <div class="flex justify-content-end flex-wrap">
-                                    <Button icon="pi pi-pencil"
-                                        class="p-button-card p-button-raised p-button-outlined"
+
+                                <div class="flex justify-content-end">
+                                    <Button icon="pi pi-pencil" class="p-button-card p-button-raised p-button-outlined"
                                         @click="openStripeModal" />
                                 </div>
                             </div>
@@ -29,6 +27,7 @@
                 </Card>
             </div>
         </div>
+
         <Dialog class="font-bold" header="Actualizar Stripe Key" :visible.sync="stripeModalVisible"
             :containerStyle="{ width: '30vw' }" modal closable>
             <div class="p-fluid">
@@ -177,7 +176,8 @@ export default {
     color: #252525 !important;
     height: 50px !important;
     width: 50px !important;
-    margin: 15px 0px !important; /*Ajusta */
+    margin: 15px 0px !important;
+    /*Ajusta */
 }
 
 p {

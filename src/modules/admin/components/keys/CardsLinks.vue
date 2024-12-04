@@ -3,20 +3,20 @@
         <Card>
             <template #content>
                 <div class="grid px-5">
-                    <div
-                        class="col-12 sm:col-6 md:col-6 lg:col-6 xl:col-6 flex flex-column justify-content-between flex-wrap">
-                        <h3>{{ title }}</h3>
-                        <h5>{{ subtitle }}</h5>
-                    </div>
-                    <div
-                        class="col-12 sm:col-6 md:col-6 lg:col-6 xl:col-6 flex flex-column justify-content-between flex-wrap">
-                        <div class="flex justify-content-end flex-wrap">
-                            <i :class="iconClass" style="font-size: 2rem"></i>
+                    <div class="col-12 flex justify-content-between align-items-start">
+                        <!-- Contenedor del texto y el ícono -->
+                        <div class="flex align-items-center">
+                            <i :class="iconClass" style="font-size: 2rem; margin-right: 1rem;"></i>
+                            <div>
+                                <h3>{{ title }}</h3>
+                                <h5>{{ subtitle }}</h5>
+                            </div>
                         </div>
-                        <div class="flex justify-content-end flex-wrap">
+
+                        <!-- Botón alineado a la derecha -->
+                        <div class="flex justify-content-end">
                             <Button icon="pi pi-pencil" class="p-button-card p-button-raised p-button-outlined"
                                 @click="openModal" />
-                                
                         </div>
                     </div>
                 </div>
@@ -171,12 +171,29 @@ export default {
     color: #252525 !important;
     height: 50px !important;
     width: 50px !important;
-    margin: 15px 0px !important; /*Ajusta */
+    margin: 15px 0px !important;
+    /*Ajusta */
 }
 
 .p-card {
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f0f0f0;
+}
+
+.flex {
+    display: flex;
+}
+
+.align-items-start {
+    align-items: flex-start;
+}
+
+.justify-content-between {
+    justify-content: space-between;
+}
+
+.justify-content-end {
+    justify-content: flex-end;
 }
 </style>
