@@ -1,15 +1,10 @@
 <template>
-  <div class="product-card surface-card p-3 shadow-2 border-round-xl mx-2">
-    <img
-      :src="product.image"
-      alt="Producto"
-      class="product-image w-full border-round mb-3"
-    />
+  <div class="product-card surface-card p-3 shadow-2 border-round-xl mx-2" @click="$emit('click')">
+    <img :src="product.image" alt="Producto" class="product-image w-full border-round mb-3"/>
     <div class="flex flex-column align-items-start">
       <h3 class="mt-0 mb-2">{{ product.productName }}</h3>
       <div class="flex align-items-center w-full">
         <span class="text-xl font-bold flex-grow-1">{{ formattedPrice }}</span>
-
         <div class="flex align-items-center gap-1">
           <Rating :stars="1" :readonly="true" :cancel="false" :value="1" />
           <p>{{ formattedRating }}</p>
@@ -47,6 +42,7 @@ export default {
 <style scoped>
 .product-card {
   width: 20rem;
+  cursor: pointer;
 }
 .product-image {
   width: 100%;
