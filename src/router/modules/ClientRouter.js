@@ -1,5 +1,7 @@
 import LandPage from "@/modules/client/views/LandPage.vue";
 import DetailsProduct from "@/modules/client/views/DetailsProduct.vue";
+import DownloadApp from "@/modules/client/views/DownloadApp.vue";
+import ProductsPage from "@/modules/client/views/ProductsPage.vue";
 export default [
     {
         path: "/",
@@ -25,6 +27,22 @@ export default [
                 component: DetailsProduct,
                 meta: {
                     title: 'Detalle de productos'
+                }
+            },
+            {
+                path: '/productos',
+                name: 'Products',
+                component: ProductsPage,
+                meta: {
+                    title: 'Productos'
+                }
+            },
+            {
+                path: '/descarga',
+                name: 'DownloadApp',
+                component: DownloadApp,
+                meta: {
+                    title: 'Descargar App'
                 }
             }
         ],

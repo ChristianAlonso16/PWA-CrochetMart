@@ -7,9 +7,9 @@
           <img :src="logo" alt="Logo" class="logo-img" />
         </div>
         <nav class="nav-links">
-          <a href="#" class="footer-link">Inicio</a>
-          <a href="#" class="footer-link">Productos</a>
-          <a href="#" class="footer-link">Más</a>
+          <router-link to="/" class="footer-link">Inicio</router-link>
+          <router-link to="/productos" class="footer-link">Productos</router-link>
+          <router-link to="/descarga" class="footer-link">Más</router-link>
         </nav>
       </div>
 

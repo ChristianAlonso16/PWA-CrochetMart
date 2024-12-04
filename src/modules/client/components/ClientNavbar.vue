@@ -1,17 +1,17 @@
 <template>
   <nav class="navbar">
     <div class="navbar-brand">
-      <span>CrochetMart</span>
+      <router-link to="/" style="text-decoration: none; color: white"
+        >CrochetMart</router-link
+      >
     </div>
     <button class="navbar-toggler" @click="toggleMenu">
       <i class="pi pi-bars"></i>
     </button>
     <div :class="['navbar-links', { 'navbar-links-active': isMenuOpen }]">
-      <router-link to="/productos" class="navbar-link">
-        <i class="pi pi-box"></i> Productos
-      </router-link>
-      <router-link to="/login" class="navbar-link">
-        <i class="pi pi-user"></i> Iniciar Sesión
+      <router-link to="/productos" class="navbar-link"> Productos </router-link>
+      <router-link to="/descarga" class="navbar-link">
+        Iniciar Sesión
       </router-link>
     </div>
   </nav>
@@ -78,7 +78,7 @@ export default {
 }
 
 .navbar-link:hover {
-  color: gray
+  color: gray;
 }
 
 @media (max-width: 768px) {

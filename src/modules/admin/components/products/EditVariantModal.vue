@@ -232,8 +232,6 @@ export default {
       ) {
         this.isLoading = true;
         try {
-          console.log("submitForm");
-          console.log(this.uploadedFiles);
           this.updateVariant().then(() => {
             this.$emit("variantUpdated");
           });
