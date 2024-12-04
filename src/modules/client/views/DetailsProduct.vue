@@ -59,14 +59,14 @@
     <!-- Reseñas -->
     <div v-if="comments.length > 0 || rating.totalProductReviews > 0" class="grid pt-5">
         <h1>Reseñas del producto</h1>
-        <div class="grid">
-            <div class="col-12 lg:col-4 xl:col-3">
-                <TableReview :avgProductReviews="rating.avgProductReviews"
-                    :totalProductReviews="rating.totalProductReviews" />
-            </div>
-            <div class="col-12 lg:col-8 xl:col-9" v-for="(comment, index) in comments" :key="index">
-                <ClientCardsReview :data="comment" />
-            </div>
+    </div>
+    <div v-if="comments.length > 0 || rating.totalProductReviews > 0" class="grid">
+        <div class="col-12 lg:col-4 xl:col-3">
+            <TableReview :avgProductReviews="rating.avgProductReviews"
+                :totalProductReviews="rating.totalProductReviews" />
+        </div>
+        <div class="col-12 lg:col-8 xl:col-9" v-for="(comment, index) in comments" :key="index">
+            <ClientCardsReview :data="comment" />
         </div>
     </div>
     <!-- Productos relacionados -->
@@ -134,7 +134,6 @@ export default {
     methods: {
         handleColorSelected(color) {
             this.selectedColor = color;
-            console.log("Color seleccionado:", color);
         },
         updateThumbnailsPosition() {
             this.thumbnailsPosition = window.innerWidth <= 768 ? 'bottom' : 'left';
@@ -174,7 +173,6 @@ export default {
                             thumbnailImageSrc: url,
                             alt: "Product Image",
                         }));
-                        console.log(imagesResponse);
                     }
                 }
             } catch (error) {
