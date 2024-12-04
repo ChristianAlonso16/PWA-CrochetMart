@@ -16,10 +16,14 @@
                             <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt" style="width: 100%; height: 500px; display: block; object-fit: cover;" />
                         </template>
 <template #thumbnail="slotProps">
-                            <div class="grid grid-nogutter justify-content-center">
-                                <img :src="slotProps.item.thumbnailImageSrc" :alt="slotProps.item.alt" style="width: 60px; height: 60px; display: block; object-fit: cover;" />
-                            </div>
-                        </template>
+  <div class="grid grid-nogutter justify-content-center">
+    <img
+      :src="slotProps.item.thumbnailImageSrc"
+      :alt="slotProps.item.alt"
+      style="width: 60px; height: 60px; display: block; object-fit: cover"
+    />
+  </div>
+</template>
 </Galleria>
 </div>
 </div>
@@ -70,13 +74,27 @@
         </div>
     </div>
     <!-- Productos relacionados -->
-    <div class="grid pt-5">
-        <h1>Productos relacionados</h1>
+   <div class="grid align-items-center justify-content-between">
+        <h1 class="col-10">Productos relacionados</h1>
+        <router-link
+          to="/productos"
+          class="col-2 text-right"
+          style="text-decoration: none; color: #252525; font-weight: bold"
+        >
+          <h2>Ver más</h2>
+        </router-link>
     </div>
-    <div class="horizontal-scroll-container">
-        <div class="flex">
-            <CardsProducts v-for="(product, index) in relatedProducts" :key="index" :product="product"
-                class="related-product-card" />
+    <div class="grid pt-3 mb-5">
+        <div
+          class="col-12 md:col-6 lg:col-4 xl:col-3"
+          v-for="(product, index) in relatedProducts"
+          :key="index"
+        >
+          <CardsProducts
+            :product="product"
+            @click="redirectToProduct(product.numProduct)"
+            class="related-product-card"
+          />
         </div>
     </div>
 </div>
@@ -165,7 +183,7 @@ export default {
                     this.rating = commentsResponse.data;
                 }
                 if (!newProductsResponse.error) {
-                    this.relatedProducts = newProductsResponse.data.slice(0, 5);
+                    this.relatedProducts = newProductsResponse.data.slice(0, 4);
                 }
                 if (variantId) {
                     const imagesResponse = await ClientService.getProductVariantImages(variantId);
