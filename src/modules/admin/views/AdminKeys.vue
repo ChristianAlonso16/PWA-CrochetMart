@@ -8,8 +8,8 @@
                 <Card>
                     <template #content>
                         <div class="grid px-5">
-                            <div class="col-12 flex justify-content-between align-items-start">
-                                <div class="flex align-items-center">
+                            <div class="col-12 flex flex-column lg:flex-row justify-content-between align-items-start">
+                                <div class="flex align-items-center mb-3 lg:mb-0">
                                     <i class="pi pi-key" style="font-size: 2rem; margin-right: 1rem;"></i>
                                     <div>
                                         <h3>Key Stripe</h3>
@@ -22,6 +22,7 @@
                                         @click="openStripeModal" />
                                 </div>
                             </div>
+
                         </div>
                     </template>
                 </Card>

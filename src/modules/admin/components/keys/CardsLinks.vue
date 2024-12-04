@@ -4,21 +4,19 @@
             <template #content>
                 <div class="grid px-5">
                     <div class="col-12 flex justify-content-between align-items-start">
-                        <!-- Contenedor del texto y el ícono -->
-                        <div class="flex align-items-center">
+                        <div class="flex align-items-center flex-grow-1">
                             <i :class="iconClass" style="font-size: 2rem; margin-right: 1rem;"></i>
                             <div>
                                 <h3>{{ title }}</h3>
                                 <h5>{{ subtitle }}</h5>
                             </div>
                         </div>
-
-                        <!-- Botón alineado a la derecha -->
-                        <div class="flex justify-content-end">
+                        <div class="ml-auto">
                             <Button icon="pi pi-pencil" class="p-button-card p-button-raised p-button-outlined"
                                 @click="openModal" />
                         </div>
                     </div>
+
                 </div>
             </template>
         </Card>
