@@ -3,34 +3,20 @@
     <div class="col-12 search-container">
       <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
-        <InputText
-          type="text"
-          class="p-inputtext-lg"
-          placeholder="Busca en CrochetMart"
-        />
+        <InputText type="text" class="p-inputtext-lg" placeholder="Busca en CrochetMart" />
       </span>
     </div>
     <div class="col-12">
-      <Galleria
-        :value="images"
-        :numVisible="5"
-        :circular="true"
-        :showItemNavigators="true"
-        :showThumbnails="false"
-        :showIndicators="true"
-      >
+      <Galleria :value="images" :numVisible="5" :circular="true" :showItemNavigators="true" :showThumbnails="false"
+        :showIndicators="true">
         <template #item="slotProps">
-          <img
-            :src="slotProps.item.itemImageSrc"
-            :alt="slotProps.item.alt"
-            style="
+          <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt" style="
               width: 100%;
               display: block;
               object-fit: contain;
               border-radius: 28px;
               object-position: center;
-            "
-          />
+            " />
         </template>
       </Galleria>
     </div>
@@ -40,12 +26,8 @@
       </div>
       <div class="mb-4">
         <div class="flex">
-          <CardsProducts
-            v-for="(product, index) in newProducts"
-            :key="index"
-            :product="product"
-            class="related-product-card"
-          />
+          <CardsProducts v-for="(product, index) in newProducts" :key="index" :product="product"
+            @click="redirectToProduct(product.numProduct)" class="related-product-card" />
         </div>
       </div>
       <div class="grid pt-5">
@@ -53,12 +35,7 @@
       </div>
       <div>
         <div class="flex">
-          <CategoryCard
-            v-for="(category, index) in categories"
-            :key="index"
-            :category="category"
-            class="p-4"
-          />
+          <CategoryCard v-for="(category, index) in categories" :key="index" :category="category" class="p-4" />
         </div>
       </div>
       <div class="grid pt-5">
@@ -66,12 +43,8 @@
       </div>
       <div>
         <div class="flex">
-          <CardsProducts
-            v-for="(product, index) in topRatedProducts"
-            :key="index"
-            :product="product"
-            class="related-product-card"
-          />
+          <CardsProducts v-for="(product, index) in topRatedProducts" :key="index" :product="product"
+          @click="redirectToProduct(product.numProduct)" class="related-product-card" />
         </div>
       </div>
       <div class="grid pt-5">
@@ -79,11 +52,7 @@
       </div>
       <div class="mb-4">
         <div class="grid">
-          <div
-            v-for="(review, index) in productReviews"
-            :key="index"
-            class="col-12 lg:col-6 xl:col-6"
-          >
+          <div v-for="(review, index) in productReviews" :key="index" class="col-12 lg:col-6 xl:col-6">
             <ClientCardsReview :data="review" />
           </div>
         </div>
@@ -169,6 +138,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    redirectToProduct(numProduct) {
+      localStorage.setItem("selectedProduct", JSON.stringify(numProduct));
+      this.$router.push({ name: "DetailsProduct" });
     },
   },
   mounted() {

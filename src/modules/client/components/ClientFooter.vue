@@ -9,7 +9,7 @@
         <nav class="nav-links">
           <router-link to="/" class="footer-link">Inicio</router-link>
           <router-link to="/about" class="footer-link">Productos</router-link>
-          <router-link to="/download-app" class="footer-link">Más</router-link>
+          <router-link to="/descarga" class="footer-link">Más</router-link>
         </nav>
       </div>
 

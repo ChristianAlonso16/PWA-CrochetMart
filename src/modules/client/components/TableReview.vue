@@ -1,10 +1,10 @@
 <template>
     <div class="rating-component">
       <div class="average-rating">
-        <span class="rating-number">{{ averageRating }}</span>
+        <span class="rating-number">{{ avgProductReviews }}</span>
         <div class="flex flex-column">
-            <Rating v-model="rating" :stars="5" :readonly="true" :cancel="false" />
-            <h4 class="m-0 my-1">37 Calificaciones</h4>
+            <Rating v-model="computedRating" :stars="5" :readonly="true" :cancel="false" />
+            <h4 class="m-0 my-1">{{ totalProductReviews }} Calificaciones</h4>
         </div>
       </div>
   
@@ -30,14 +30,30 @@
     components:{
         Rating
     },
+    props: {
+      avgProductReviews: {
+        type: Number,
+        required: true,
+        default: 0,
+      },
+      totalProductReviews: {
+        type: Number,
+        required: true,
+        default: 0,
+      },
+    },
     data() {
       return {
-        rating: 4,
-        averageRating: 4.9,
-        totalReviews: 37,
         ratingsDistribution: [5, 3, 10, 12, 7],
       };
     },
+    computed: {
+      computedRating: {
+        get() {
+          return this.avgProductReviews;
+        },
+      },
+    }
   };
   </script>
   

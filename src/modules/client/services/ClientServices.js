@@ -46,18 +46,89 @@ const getTopRatedComments = async () => {
   }
 }
 
-const getLinkAndroid = async () => {
+const getMinAndMaxPrice = async () => {
   try {
-    const response = await axiosPublic.get("/linkapp/getLinkAndroid");
+    const response = await axiosPublic.get("/product/getMinAndMaxPrice");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+const getCategoryByStatus = async (status) => {
+  try {
+    const response = await axiosPublic.get(`/category/getByStatus/${status}`);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+const getAttributeByName = async (name) => {
+  try {
+    const response = await axiosPublic.get(`/attribute/getByName/${name}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+const getProductsByFilters = async (filters) => {
+  try {
+      // Construimos la query string con los filtros
+      const queryParams = new URLSearchParams(filters).toString();
+      const response = await axiosPublic.get(`/product/getProductsByFilters?${queryParams}`);
+      return response.data;
+  } catch (error) {
+      console.error("Error obteniendo productos con filtros:", error);
+      throw error;
+  }
+};
+
+const getVariationAttributes = async (productNum) => {
+  try {
+    const response = await axiosPublic.get(`/product/getVariationAttributes/${productNum}/color`);
+    return response.data;
+  } catch (error) {
+    console.error("Error obteniendo atributos de variación:", error);
+    return error;
+  }
+};
+
+const getProductVariantImages = async (variantId) => {
+  try {
+    const response = await axiosPublic.get(`/product/getProductVariantImages/${variantId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error obteniendo imágenes de variantes de productos:", error);
+    return error;
+  }
+};
+
+const getReviewProduct = async (productNum) => {
+  try {
+    const response = await axiosPublic.get(`/review/product/${productNum}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error obteniendo comentarios de producto:", error);
+    return error;
+  }
+}
+  
+const  getLinkIos = async () => {
+  try {
+    const response = await axiosPublic.get("/linkapp/getLinkIos");
     return response.data;
   } catch (error) {
     return error;
   }
 };
-  
-const  getLinkIos = async () => {
+
+
+const getLinkAndroid = async () => {
   try {
-    const response = await axiosPublic.get("/linkapp/getLinkIos");
+    const response = await axiosPublic.get("/linkapp/getLinkAndroid");
     return response.data;
   } catch (error) {
     return error;
@@ -70,6 +141,13 @@ export default {
   getCategories,
   getTopRatedProducts,
   getTopRatedComments,
-  getLinkAndroid,
+  getMinAndMaxPrice,
+  getCategoryByStatus,
+  getAttributeByName,
+  getProductsByFilters,
+  getVariationAttributes,
+  getProductVariantImages,
+  getReviewProduct,
   getLinkIos,
+  getLinkAndroid,
 };

@@ -12,7 +12,7 @@
       <router-link to="/productos" class="navbar-link">
         <i class="pi pi-box"></i> Productos
       </router-link>
-      <router-link to="/login" class="navbar-link">
+      <router-link to="/descarga" class="navbar-link">
         <i class="pi pi-user"></i> Iniciar Sesión
       </router-link>
     </div>
