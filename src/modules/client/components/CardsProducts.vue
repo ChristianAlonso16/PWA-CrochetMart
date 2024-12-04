@@ -1,6 +1,6 @@
 <template>
   <div class="product-card surface-card p-3 shadow-2 border-round-xl mx-2" @click="$emit('click')">
-    <img :src="product.image" alt="Producto" class="product-image w-full border-round mb-3"/>
+    <img :src="product.image || notFound" alt="Producto" class="product-image w-full border-round mb-3" />
     <div class="flex flex-column align-items-start">
       <h3 class="mt-0 mb-2">{{ product.productName }}</h3>
       <div class="flex align-items-center w-full">
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import notFound from "@/assets/images/noImageFound.png";
 import Rating from "primevue/rating";
 
 export default {
@@ -36,6 +37,11 @@ export default {
       return parseFloat(this.product.avgRating).toFixed(1);
     },
   },
+  data() {
+    return {
+      notFound
+    };
+  },
 };
 </script>
 
@@ -44,11 +50,11 @@ export default {
   width: 20rem;
   cursor: pointer;
 }
+
 .product-image {
   width: 100%;
   height: 300px;
   object-fit: cover;
   border-radius: 50px;
 }
-
 </style>

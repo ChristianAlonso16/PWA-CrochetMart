@@ -87,6 +87,7 @@
 import Galleria from 'primevue/galleria';
 import Rating from 'primevue/rating';
 import Button from 'primevue/button';
+import notFound from "@/assets/images/noImageFound.png";
 
 import ClientCardsReview from '../components/ClientCardsReview.vue';
 import ButtonCounter from '../components/ButtonCounter.vue';
@@ -108,6 +109,7 @@ export default {
     },
     data() {
         return {
+            notFound,
             rating: { avgProductReviews: 0, totalProductReviews: 0 },
             images: [],
             responsiveOptions: [
@@ -117,8 +119,8 @@ export default {
             ],
             placeholderImages: [
                 {
-                    itemImageSrc: 'https://placehold.co/500x500',
-                    thumbnailImageSrc: 'https://placehold.co/60x60',
+                    itemImageSrc: notFound,
+                    thumbnailImageSrc: notFound,
                     alt: 'No image available',
                 },
             ],

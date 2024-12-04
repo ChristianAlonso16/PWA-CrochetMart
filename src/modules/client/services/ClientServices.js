@@ -116,6 +116,25 @@ const getReviewProduct = async (productNum) => {
   }
 }
   
+const  getLinkIos = async () => {
+  try {
+    const response = await axiosPublic.get("/linkapp/getLinkIos");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+
+const getLinkAndroid = async () => {
+  try {
+    const response = await axiosPublic.get("/linkapp/getLinkAndroid");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
 export default {
   getProductsHome,
   getNewProducts,
@@ -128,5 +147,7 @@ export default {
   getProductsByFilters,
   getVariationAttributes,
   getProductVariantImages,
-  getReviewProduct
+  getReviewProduct,
+  getLinkIos,
+  getLinkAndroid,
 };
