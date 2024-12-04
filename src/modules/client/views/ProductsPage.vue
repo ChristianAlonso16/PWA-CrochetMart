@@ -28,8 +28,8 @@
         <div class="col-12 md:col-9">
             <h1>Productos</h1>
             <div v-if="filteredProducts.length > 0">
-                <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="col" v-for="(product, index) in paginatedProducts" :key="index">
+                <div class="grid gap-2">
+                    <div class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-3" v-for="(product, index) in paginatedProducts" :key="index">
                         <CardsProducts :product="product" @click="redirectToProduct(product.numProduct)" class="related-product-card" />
                     </div>
                 </div>

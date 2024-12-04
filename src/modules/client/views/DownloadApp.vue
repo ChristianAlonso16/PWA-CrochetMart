@@ -1,5 +1,5 @@
 <template>
-  <div class="download-app-screen mb-5">
+  <div class="download-app-screen my-5">
     <div class="content">
       <h1 class="title">¡Compra desde nuestra App!</h1>
       <p class="description">

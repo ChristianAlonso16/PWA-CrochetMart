@@ -1,58 +1,85 @@
 <template>
   <div class="pt-5">
-    <div class="col-12 search-container">
-      <span class="p-input-icon-left">
-        <i class="pi pi-search"></i>
-        <InputText type="text" class="p-inputtext-lg" placeholder="Busca en CrochetMart" />
-      </span>
-    </div>
-    <div class="col-12">
-      <Galleria :value="images" :numVisible="5" :circular="true" :showItemNavigators="true" :showThumbnails="false"
-        :showIndicators="true">
-        <template #item="slotProps">
-          <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt" style="
-              width: 100%;
-              display: block;
-              object-fit: contain;
-              border-radius: 28px;
-              object-position: center;
-            " />
-        </template>
-      </Galleria>
-    </div>
+    <HeroSection />
     <div class="px-4">
+      <div class="grid align-items-center justify-content-between">
+        <h1 class="col-10">¡Nuevos productos!</h1>
+        <router-link
+          to="/productos"
+          class="col-2 text-right"
+          style="text-decoration: none; color: #252525; font-weight: bold"
+        >
+          <h2>Ver más</h2>
+        </router-link>
+      </div>
       <div class="grid pt-3">
-        <h1>¡Nuevos productos!</h1>
-      </div>
-      <div class="mb-4">
-        <div class="flex">
-          <CardsProducts v-for="(product, index) in newProducts" :key="index" :product="product"
-            @click="redirectToProduct(product.numProduct)" class="related-product-card" />
+        <div
+          class="col-12 md:col-6 lg:col-4 xl:col-3"
+          v-for="(product, index) in newProducts"
+          :key="index"
+        >
+          <CardsProducts
+            :product="product"
+            @click="redirectToProduct(product.numProduct)"
+            class="related-product-card"
+          />
         </div>
       </div>
-      <div class="grid pt-5">
-        <h1>Categorías</h1>
+
+      <div class="grid align-items-center justify-content-between mt-5">
+        <h1 class="col-10">Categorías</h1>
+        <router-link
+          to="/productos"
+          class="col-2 text-right"
+          style="text-decoration: none; color: #252525; font-weight: bold"
+        >
+          <h2>Ver más</h2>
+        </router-link>
       </div>
-      <div>
-        <div class="flex">
-          <CategoryCard v-for="(category, index) in categories" :key="index" :category="category" class="p-4" />
+      <div class="grid">
+        <div
+          class="col-12 sm:col-6 md:col-2 lg:col-2"
+          v-for="(category, index) in categories"
+          :key="index"
+        >
+          <CategoryCard :category="category" class="p-4" />
         </div>
       </div>
-      <div class="grid pt-5">
-        <h1>Mejor Valorados</h1>
+
+      <div class="grid align-items-center justify-content-between">
+        <h1 class="col-10">Mejor Valorados</h1>
+        <router-link
+          to="/productos"
+          class="col-2 text-right"
+          style="text-decoration: none; color: #252525; font-weight: bold"
+        >
+          <h2>Ver más</h2>
+        </router-link>
       </div>
-      <div>
-        <div class="flex">
-          <CardsProducts v-for="(product, index) in topRatedProducts" :key="index" :product="product"
-          @click="redirectToProduct(product.numProduct)" class="related-product-card" />
+      <div class="grid pt-3">
+        <div
+          class="col-12 md:col-6 lg:col-4 xl:col-3"
+          v-for="(product, index) in topRatedProducts"
+          :key="index"
+        >
+          <CardsProducts
+            :product="product"
+            @click="redirectToProduct(product.numProduct)"
+            class="related-product-card"
+          />
         </div>
       </div>
-      <div class="grid pt-5">
-        <h1>Comentarios Destacados</h1>
+
+      <div class="grid pt-5 mt-3">
+        <h1>Nuestros Clientes Opinan</h1>
       </div>
       <div class="mb-4">
         <div class="grid">
-          <div v-for="(review, index) in productReviews" :key="index" class="col-12 lg:col-6 xl:col-6">
+          <div
+            v-for="(review, index) in productReviews"
+            :key="index"
+            class="col-12 lg:col-6 xl:col-4"
+          >
             <ClientCardsReview :data="review" />
           </div>
         </div>
@@ -62,9 +89,8 @@
 </template>
 
 <script>
-import Galleria from "primevue/galleria";
-import InputText from "primevue/inputtext";
 import CardsProducts from "../components/CardsProducts.vue";
+import HeroSection from "../components/HeroSection.vue";
 import ClientCardsReview from "../components/ClientCardsReview.vue";
 import CategoryCard from "../components/ClientCardCategory.vue";
 import carouselImage1 from "@/assets/images/Banner-1.png";
@@ -74,11 +100,10 @@ import carouselImage4 from "@/assets/images/Banner-4.png";
 import ClientService from "../services/ClientServices";
 export default {
   components: {
-    Galleria,
     CardsProducts,
     ClientCardsReview,
     CategoryCard,
-    InputText,
+    HeroSection,
   },
   data() {
     return {
@@ -110,7 +135,7 @@ export default {
     async getNewProducts() {
       try {
         const response = await ClientService.getNewProducts();
-        this.newProducts = response.data.slice(0, 5);
+        this.newProducts = response.data.slice(0, 4);
       } catch (error) {
         console.log(error);
       }
@@ -118,7 +143,7 @@ export default {
     async getTopRatedProducts() {
       try {
         const response = await ClientService.getTopRatedProducts();
-        this.topRatedProducts = response.data.slice(0, 5);
+        this.topRatedProducts = response.data.slice(0, 4);
       } catch (error) {
         console.log(error);
       }
@@ -126,7 +151,7 @@ export default {
     async getCategories() {
       try {
         const response = await ClientService.getCategories();
-        this.categories = response.data.slice(0, 10);
+        this.categories = response.data.slice(0, 6);
       } catch (error) {
         console.log(error);
       }
@@ -134,7 +159,7 @@ export default {
     async getTopRatedComments() {
       try {
         const response = await ClientService.getTopRatedComments();
-        this.productReviews = response.data;
+        this.productReviews = response.data.slice(0, 3);
       } catch (error) {
         console.log(error);
       }
@@ -154,6 +179,57 @@ export default {
 </script>
 
 <style lang="css">
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 0;
+  background-color: #ffffff;
+}
+
+.content h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 0;
+  color: #252525;
+}
+
+.content p {
+  font-size: 1.2rem;
+  margin: 10px 0 20px 0;
+  color: #666;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 20px;
+  font-size: 1.2rem;
+  border: 1px solid #ddd;
+  border-radius: 5px 0 0 5px;
+}
+
+.search-button {
+  background-color: black;
+  color: white;
+  font-size: 1rem;
+  padding: 23px;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #333;
+}
+
 .horizontal-scroll-container {
   overflow-x: scroll;
   display: flex;
