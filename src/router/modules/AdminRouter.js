@@ -6,6 +6,7 @@ import AdminCategories from "@/modules/admin/views/AdminCategories.vue";
 import AdminKeys from "@/modules/admin/views/AdminKeys.vue";
 import AdminSalesDetails from "@/modules/admin/views/AdminSalesDetails.vue";
 import AdminUsers from "@/modules/admin/views/AdminUsers.vue";
+import AdminHelp from "@/modules/admin/views/AdminHelpInformation.vue";
 
 export default [
   {
@@ -98,7 +99,17 @@ export default [
           role: "admin",
           requireAuth:true
         },
-      }
+      },
+      {
+        path: "/admin/help",
+        name: "help",
+        component: AdminHelp,
+        meta: {
+          title: "Ayuda e Información",
+          role: "admin",
+          requireAuth:true
+        },
+      },
     ],
   },
 ];
