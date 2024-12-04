@@ -50,13 +50,18 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid transparent;
+  border: 2px solid rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.color-circle:hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .color-circle.selected {
   border-color: #252525;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 }
 
 @media (max-width: 768px) {

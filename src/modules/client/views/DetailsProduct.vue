@@ -13,11 +13,11 @@
                         :circular="true"
                     >
                         <template #item="slotProps">
-                            <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt || 'Placeholder image'" style="width: 100%; height: 500px; display: block; object-fit: cover;" />
+                            <img :src="slotProps.item.itemImageSrc" :alt="slotProps.item.alt" style="width: 100%; height: 500px; display: block; object-fit: cover;" />
                         </template>
                         <template #thumbnail="slotProps">
                             <div class="grid grid-nogutter justify-content-center">
-                                <img :src="slotProps.item.thumbnailImageSrc" :alt="slotProps.item.alt || 'Placeholder image'" style="width: 60px; height: 60px; display: block; object-fit: cover;" />
+                                <img :src="slotProps.item.thumbnailImageSrc" :alt="slotProps.item.alt" style="width: 60px; height: 60px; display: block; object-fit: cover;" />
                             </div>
                         </template>
                     </Galleria>
@@ -32,7 +32,7 @@
                     </div>
                     <h1>${{ productDetails?.productVariant?.price }}</h1>
                     <h3>Color</h3>
-                    <ButtonSelectColor :colors="productDetails.attributeHasValue" @color-selected="handleColorSelected" />
+                    <ButtonSelectColor :colors="availableColors" @color-selected="handleColorSelected" />
                     <h3>Cantidad</h3>
                     <div class="flex flex-row flex-wrap">
                         <div class="flex align-items-center justify-content-center mr-4 mb-4">
@@ -123,6 +123,7 @@ export default {
             ],
             comments: [],
             relatedProducts: [],
+            availableColors: [],
             thumbnailsPosition: 'left',
             paddingPosition: 'px-8',
             productDetails: null,
@@ -151,6 +152,11 @@ export default {
                 if (!variationResponse.error && variationResponse.data.length > 0) {
                     this.productDetails = variationResponse.data[0];
                     variantId = variationResponse.data[0].productVariant.idProductVariant;
+                    // Procesar los colores
+                    this.availableColors = variationResponse.data.map(variation => ({
+                        name: variation.attributeHasValue.name,
+                        value: `#${variation.attributeHasValue.value}`, // Convertir valor a hexadecimal
+                    }));
                 }
                 if (!commentsResponse.error) {
                     this.comments = commentsResponse.data.productReviews;
@@ -161,11 +167,11 @@ export default {
                 }
                 if (variantId) {
                     const imagesResponse = await ClientService.getProductVariantImages(variantId);
-                    if (!imagesResponse.error) {
-                        this.images = imagesResponse.data.map((img) => ({
-                            itemImageSrc: img.url,
-                            thumbnailImageSrc: img.url,
-                            alt: img.description || "Product Image",
+                    if (!imagesResponse.error && imagesResponse.data) {
+                        this.images = imagesResponse.data.map((url) => ({
+                            itemImageSrc: url,
+                            thumbnailImageSrc: url,
+                            alt: "Product Image",
                         }));
                         console.log(imagesResponse);
                     }

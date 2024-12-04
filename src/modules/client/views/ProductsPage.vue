@@ -7,7 +7,6 @@
                     <Fieldset legend="Categoría" class="mb-3">
                         <Dropdown v-model="selectedCategory" :options="categories" optionLabel="categoryName"
                             placeholder="Selecciona categoría" class="w-full" />
-
                     </Fieldset>
                     <Fieldset legend="Precio" class="mb-3">
                         <div class="mb-2">
