@@ -7,28 +7,26 @@
             <div class="col-12 lg:col-6 xl:col-4">
                 <Card>
                     <template #content>
-                        <div class="grid px-5">
-                            <div class="col-12 flex flex-column lg:flex-row justify-content-between align-items-start">
-                                <div class="flex align-items-center mb-3 lg:mb-0">
-                                    <i class="pi pi-key" style="font-size: 2rem; margin-right: 1rem;"></i>
-                                    <div>
-                                        <h3>Key Stripe</h3>
-                                        <h5>{{ stripeKey || 'Aún no se ha configurado la clave.' }}</h5>
-                                    </div>
-                                </div>
-
-                                <div class="flex justify-content-end">
-                                    <Button icon="pi pi-pencil" class="p-button-card p-button-raised p-button-outlined"
-                                        @click="openStripeModal" />
-                                </div>
+                        <div class="grid px-5 card-content">
+                            <div
+                                class="col-12 sm:col-6 md:col-6 lg:col-6 xl:col-6 flex flex-column justify-content-between">
+                                <h3>Key Stripe</h3>
+                                <h5>{{ stripeKey || 'Aún no se ha configurado la clave.' }}</h5>
                             </div>
 
+                            <div
+                                class="icon-container flex lg:justify-content-end xl:justify-content-end sm:justify-content-start">
+                                <i class="pi pi-key icon" style="font-size: 2rem"></i>
+                            </div>
+                            <div class="button-container flex sm:justify-content-start md:justify-content-end">
+                                <Button icon="pi pi-pencil" class="p-button-card p-button-raised p-button-outlined"
+                                    @click="openStripeModal" />
+                            </div>
                         </div>
                     </template>
                 </Card>
             </div>
         </div>
-
         <Dialog class="font-bold" header="Actualizar Stripe Key" :visible.sync="stripeModalVisible"
             :containerStyle="{ width: '30vw' }" modal closable>
             <div class="p-fluid">
@@ -154,12 +152,10 @@ export default {
             }
         },
         async getStripe() {
-            try {
-                const stripeResponse = await AdminServices.getLinkStripe();
-                this.stripeKey = Utils.formatDate(stripeResponse.data.updateAt) || null;
-            } catch (error) {
-                this.$toast.error('No se pudo obtener el link.');
-            }
+            const stripeResponse = await AdminServices.getLinkStripe();
+            this.stripeKey = stripeResponse?.data?.updateAt
+                ? Utils.formatDate(stripeResponse.data.updateAt)
+                : null;
         }
     },
     mounted() {
@@ -170,21 +166,51 @@ export default {
 </script>
 
 <style scoped>
+.card-content {
+    position: relative;
+    height: 100%;
+}
+
+.icon-container {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    bottom: auto;
+    left: auto;
+}
+
+@media screen and (max-width: 768px) {
+    .icon-container {
+        position: absolute;
+        bottom: 1rem;
+        left: 1rem;
+        top: auto;
+        right: auto;
+        transform: translateY(50%);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .card-content {
+        padding-bottom: 2rem;
+    }
+}
+
+.button-container {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    top: auto;
+    left: auto;
+}
+
 .p-button-card {
     border-radius: 100px !important;
-    background-color: #fff !important;
+    background-color: #ffff !important;
     border-color: #252525 !important;
     color: #252525 !important;
     height: 50px !important;
     width: 50px !important;
-    margin: 15px 0px !important;
-    /*Ajusta */
-}
-
-p {
-    margin: 0;
-    text-align: center;
-    color: #888;
 }
 
 .p-card {

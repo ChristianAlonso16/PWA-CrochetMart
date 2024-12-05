@@ -3,20 +3,21 @@
         <Card>
             <template #content>
                 <div class="grid px-5">
-                    <div class="col-12 flex justify-content-between align-items-start">
-                        <div class="flex align-items-center flex-grow-1">
-                            <i :class="iconClass" style="font-size: 2rem; margin-right: 1rem;"></i>
-                            <div>
-                                <h3>{{ title }}</h3>
-                                <h5>{{ subtitle }}</h5>
-                            </div>
+                    <div
+                        class="col-12 sm:col-6 md:col-6 lg:col-6 xl:col-6 flex flex-column justify-content-between flex-wrap">
+                        <h3>{{ title }}</h3>
+                        <h5>{{ subtitle }}</h5>
+                    </div>
+                    <div
+                        class="col-12 sm:col-6 md:col-6 lg:col-6 xl:col-6 flex flex-column justify-content-between flex-wrap">
+                        <div class="flex justify-content-end flex-wrap" style="gap: 10px;">
+                            <i :class="iconClass" style="font-size: 2rem"></i>
                         </div>
-                        <div class="ml-auto">
+                        <div class="flex justify-content-end flex-wrap" style="gap: 10px;">
                             <Button icon="pi pi-pencil" class="p-button-card p-button-raised p-button-outlined"
                                 @click="openModal" />
                         </div>
                     </div>
-
                 </div>
             </template>
         </Card>
@@ -158,8 +159,59 @@ export default {
 </script>
 
 <style scoped>
-.p-error {
-    color: red;
+.card-content {
+    position: relative;
+    height: 100%;
+}
+
+.card-header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.icon-container {
+    font-size: 2rem;
+}
+
+.button-container {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .card-content {
+        padding-bottom: 2rem;
+    }
+
+    .card-header-actions {
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
+
+    .icon-container {
+        margin-right: 1rem;
+        position: absolute;
+        bottom: 1rem;
+        left: 1rem;
+        top: auto;
+    }
+
+    .button-container {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+        top: auto;
+        margin: 10px;
+    }
 }
 
 .p-button-card {
@@ -169,8 +221,6 @@ export default {
     color: #252525 !important;
     height: 50px !important;
     width: 50px !important;
-    margin: 15px 0px !important;
-    /*Ajusta */
 }
 
 .p-card {
@@ -178,20 +228,5 @@ export default {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid #f0f0f0;
 }
-
-.flex {
-    display: flex;
-}
-
-.align-items-start {
-    align-items: flex-start;
-}
-
-.justify-content-between {
-    justify-content: space-between;
-}
-
-.justify-content-end {
-    justify-content: flex-end;
-}
 </style>
+
