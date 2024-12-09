@@ -45,7 +45,9 @@
                 <ButtonCounter />
             </div>
             <div class="flex align-items-center justify-content-center mb-4">
-                <Button label="Agregar al carrito" class="p-button" />
+                <router-link to="/descarga" class="p-button p-button-rounded p-button-text custom-button">
+                    Agregar al carrito
+                </router-link>
             </div>
         </div>
     </div>
@@ -95,7 +97,6 @@
 <script>
 import Galleria from 'primevue/galleria';
 import Rating from 'primevue/rating';
-import Button from 'primevue/button';
 import notFound from "@/assets/images/noImageFound.png";
 
 import ClientCardsReview from '../components/ClientCardsReview.vue';
@@ -109,7 +110,6 @@ export default {
     components: {
         Galleria,
         Rating,
-        Button,
         ButtonCounter,
         ButtonSelectColor,
         ClientCardsReview,
@@ -279,5 +279,29 @@ export default {
 .horizontal-scroll-container::-webkit-scrollbar-thumb {
     background-color: #252525;
     border-radius: 10px;
+}
+
+.custom-button {
+    background-color: #007ad9; /* Cambia el color según tus preferencias */
+    color: white;
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    display: inline-block;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.custom-button:hover {
+    background-color: #005bb5; /* Color al pasar el cursor */
+    transform: translateY(-2px);
+}
+
+.custom-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 </style>
