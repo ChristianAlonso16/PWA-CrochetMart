@@ -37,7 +37,8 @@
         </div>
         <h1>${{ productDetails?.productVariant?.price }}</h1>
         <h3>Color</h3>
-        <ButtonSelectColor :colors="availableColors" @color-selected="handleColorSelected" />
+        <ButtonSelectColor :colors="availableColors" @color-selected="handleColorSelected"   :is-loading="isLoadingImages"
+        />
         <h3>Cantidad</h3>
         <div class="flex flex-row flex-wrap">
             <div class="flex align-items-center justify-content-center mr-4 mb-4">
@@ -74,27 +75,17 @@
         </div>
     </div>
     <!-- Productos relacionados -->
-   <div class="grid align-items-center justify-content-between">
+    <div class="grid align-items-center justify-content-between">
         <h1 class="col-10">Productos relacionados</h1>
-        <router-link
-          to="/productos"
-          class="col-2 text-right"
-          style="text-decoration: none; color: #252525; font-weight: bold"
-        >
-          <h2>Ver más</h2>
+        <router-link to="/productos" class="col-2 text-right"
+            style="text-decoration: none; color: #252525; font-weight: bold">
+            <h2>Ver más</h2>
         </router-link>
     </div>
     <div class="grid pt-3 mb-5">
-        <div
-          class="col-12 md:col-6 lg:col-4 xl:col-3"
-          v-for="(product, index) in relatedProducts"
-          :key="index"
-        >
-          <CardsProducts
-            :product="product"
-            @click="redirectToProduct(product.numProduct)"
-            class="related-product-card"
-          />
+        <div class="col-12 md:col-6 lg:col-4 xl:col-3" v-for="(product, index) in relatedProducts" :key="index">
+            <CardsProducts :product="product" @click="redirectToProduct(product.numProduct)"
+                class="related-product-card" />
         </div>
     </div>
 </div>
@@ -149,11 +140,39 @@ export default {
             paddingPosition: 'px-8',
             productDetails: null,
             selectedColor: null,
+            variationData: [],
+            isLoadingImages: false,
         };
     },
     methods: {
         handleColorSelected(color) {
+            if (this.isLoadingImages) return;
             this.selectedColor = color;
+            const selectedVariant = this.variationData.find(
+                (variation) => variation.attributeHasValue.name === color.name
+            );
+
+            if (selectedVariant) {
+                this.productDetails = selectedVariant;
+                this.isLoadingImages = true;
+                this.fetchVariantImages(selectedVariant.productVariant.idProductVariant);
+                this.isLoadingImages = false; 
+
+            }
+        },
+        async fetchVariantImages(variantId) {
+            try {
+                const imagesResponse = await ClientService.getProductVariantImages(variantId);
+                if (!imagesResponse.error && imagesResponse.data) {
+                    this.images = imagesResponse.data.map((url) => ({
+                        itemImageSrc: url,
+                        thumbnailImageSrc: url,
+                        alt: "Product Image",
+                    }));
+                }
+            } catch (error) {
+                console.error("Error al cargar imágenes:", error);
+            }
         },
         updateThumbnailsPosition() {
             this.thumbnailsPosition = window.innerWidth <= 768 ? 'bottom' : 'left';
@@ -170,6 +189,7 @@ export default {
                 ]);
                 let variantId = null;
                 if (!variationResponse.error && variationResponse.data.length > 0) {
+                    this.variationData = variationResponse.data;
                     this.productDetails = variationResponse.data[0];
                     variantId = variationResponse.data[0].productVariant.idProductVariant;
                     // Procesar los colores
