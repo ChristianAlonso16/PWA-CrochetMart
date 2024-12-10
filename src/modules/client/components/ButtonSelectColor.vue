@@ -2,7 +2,8 @@
   <div class="color-picker">
     <div class="colors">
       <div v-for="(color, index) in colors" :key="index" :style="{ backgroundColor: color.value }" class="color-circle"
-        :class="{ selected: selectedColor?.value === color.value }" @click="selectColor(color)"></div>
+      :class="{ selected: selectedColor?.value === color.value, loading: isLoading }"
+      @click="selectColor(color)"></div>
     </div>
   </div>
 </template>
@@ -18,6 +19,10 @@ export default {
       type: [Object, String],
       default: null, // Objeto { name, value } inicial
     },
+    isLoading: {
+      type: Boolean,
+      default: false, 
+    },
   },
   data() {
     return {
@@ -26,6 +31,7 @@ export default {
   },
   methods: {
     selectColor(colorValue) {
+      if (this.isLoading) return;
       this.selectedColor = colorValue; // Actualizar el color seleccionado
       this.$emit("color-selected", colorValue); // Emitir el objeto { name, value } al componente padre
     },
@@ -63,7 +69,10 @@ export default {
   border-color: #252525;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 }
-
+.color-circle.loading {
+  pointer-events: none; 
+  opacity: 0.5; 
+}
 @media (max-width: 768px) {
   .color-circle {
     width: 30px;
