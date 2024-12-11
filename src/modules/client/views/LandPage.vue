@@ -4,69 +4,42 @@
     <div class="px-4">
       <div class="grid align-items-center justify-content-between">
         <h1 class="col-10">¡Nuevos productos!</h1>
-        <router-link
-          to="/productos"
-          class="col-2 text-right"
-          style="text-decoration: none; color: #252525; font-weight: bold"
-        >
-          <h2>Ver más</h2>
+        <router-link to="/productos" class="col-2 text-right"
+          style="text-decoration: none; color: #252525; font-weight: bold">
+          <h2>Da click para ver mas</h2>
         </router-link>
       </div>
       <div class="grid pt-3">
-        <div
-          class="col-12 md:col-6 lg:col-4 xl:col-3"
-          v-for="(product, index) in newProducts"
-          :key="index"
-        >
-          <CardsProducts
-            :product="product"
-            @click="redirectToProduct(product.numProduct)"
-            class="related-product-card"
-          />
+        <div class="col-12 md:col-6 lg:col-4 xl:col-3" v-for="(product, index) in newProducts" :key="index">
+          <CardsProducts :product="product" @click="redirectToProduct(product.numProduct)"
+            class="related-product-card" />
         </div>
       </div>
 
       <div class="grid align-items-center justify-content-between mt-5">
         <h1 class="col-10">Categorías</h1>
-        <router-link
-          to="/productos"
-          class="col-2 text-right"
-          style="text-decoration: none; color: #252525; font-weight: bold"
-        >
+        <router-link to="/productos" class="col-2 text-right"
+          style="text-decoration: none; color: #252525; font-weight: bold">
           <h2>Ver más</h2>
         </router-link>
       </div>
       <div class="grid">
-        <div
-          class="col-12 sm:col-6 md:col-2 lg:col-2"
-          v-for="(category, index) in categories"
-          :key="index"
-        >
+        <div class="col-12 sm:col-6 md:col-2 lg:col-2" v-for="(category, index) in categories" :key="index">
           <CategoryCard :category="category" class="p-4" />
         </div>
       </div>
 
       <div class="grid align-items-center justify-content-between">
         <h1 class="col-10">Mejor Valorados</h1>
-        <router-link
-          to="/productos"
-          class="col-2 text-right"
-          style="text-decoration: none; color: #252525; font-weight: bold"
-        >
+        <router-link to="/productos" class="col-2 text-right"
+          style="text-decoration: none; color: #252525; font-weight: bold">
           <h2>Ver más</h2>
         </router-link>
       </div>
       <div class="grid pt-3">
-        <div
-          class="col-12 md:col-6 lg:col-4 xl:col-3"
-          v-for="(product, index) in topRatedProducts"
-          :key="index"
-        >
-          <CardsProducts
-            :product="product"
-            @click="redirectToProduct(product.numProduct)"
-            class="related-product-card"
-          />
+        <div class="col-12 md:col-6 lg:col-4 xl:col-3" v-for="(product, index) in topRatedProducts" :key="index">
+          <CardsProducts :product="product" @click="redirectToProduct(product.numProduct)"
+            class="related-product-card" />
         </div>
       </div>
 
@@ -75,11 +48,7 @@
       </div>
       <div class="mb-4">
         <div class="grid">
-          <div
-            v-for="(review, index) in productReviews"
-            :key="index"
-            class="col-12 lg:col-6 xl:col-4"
-          >
+          <div v-for="(review, index) in productReviews" :key="index" class="col-12 lg:col-6 xl:col-4">
             <ClientCardsReview :data="review" />
           </div>
         </div>

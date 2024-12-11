@@ -1,7 +1,7 @@
 import axios from "axios";
 import router from "@/router";
 import store from "@/store/store";
-const SERVER_URL = "http://127.0.0.1:8080/api"
+const SERVER_URL = process.env.VUE_APP_API_URL;
 const client = axios.create({
     baseURL: SERVER_URL,
     timeout: 20000
