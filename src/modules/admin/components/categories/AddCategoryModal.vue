@@ -41,10 +41,10 @@
           </div>
         </div>
       </div>
-      <template #footer>
-        <Button label="Cancelar" @click="closeModal" class="p-button-text p-button-secondary" />
-        <Button label="Registrar" class="p-button" @click="submitForm" :loading="isLoading" :disabled="isLoading" />
-      </template>
+      <div class="test">
+        <Button style="width: 150px;" label="Cancelar" @click="closeModal" class="p-button-text p-button-secondary" />
+        <Button style="width: 150px;" label="Registrar" class="p-button" @click="submitForm" :loading="isLoading" :disabled="isLoading" />
+      </div>
     </Dialog>
   </div>
 </template>
@@ -168,5 +168,10 @@ export default {
 <style scoped>
 .p-error {
   color: red;
+}
+.test {
+  display: flex;
+  justify-content: end;
+  gap: 30px;
 }
 </style>
