@@ -1,24 +1,11 @@
 <template>
-  <Dialog
-    header="Editar Categoría"
-    :visible.sync="localVisible"
-    :containerStyle="{ width: '50vw' }"
-    class="font-bold"
-    @hide="closeModal"
-    modal
-    closable
-  >
+  <Dialog header="Editar Categoría" :visible.sync="localVisible" :containerStyle="{ width: '50vw' }" class="font-bold"
+    @hide="closeModal" modal closable>
     <div class="p-fluid">
       <div class="field">
         <label for="editCategoryName">Nombre de la Categoría</label>
-        <InputText
-          id="editCategoryName"
-          v-model="localCategoryName"
-          placeholder="Ingrese el nombre de la categoría"
-          :class="{ 'p-invalid': isCategoryNameInvalid }"
-          @blur="validateCategoryName"
-          disabled
-        />
+        <InputText id="editCategoryName" v-model="localCategoryName" placeholder="Ingrese el nombre de la categoría"
+          :class="{ 'p-invalid': isCategoryNameInvalid }" @blur="validateCategoryName" disabled />
         <small v-if="isCategoryNameInvalid" class="p-error">
           El nombre de la categoría es obligatorio y debe tener menos de 100
           caracteres.
@@ -26,62 +13,13 @@
       </div>
       <div class="field">
         <label for="editCategoryDescription">Descripción</label>
-        <Textarea
-          id="editCategoryDescription"
-          v-model="localCategoryDescription"
-          placeholder="Ingrese una descripción"
-          rows="4"
-        />
-      </div>
-      <div class="field">
-        <label for="editIcon">Ícono</label>
-        <AutoComplete
-          id="editIcon"
-          v-model="localIcon"
-          :suggestions="filteredIcons"
-          @complete="searchIcon"
-          :dropdown="true"
-          field="name"
-          appendTo="body"
-        >
-          <template #item="slotProps">
-            <div>
-              <svg
-                :width="24"
-                :height="24"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path :d="slotProps.item.path" />
-              </svg>
-              <span>{{ slotProps.item.name }}</span>
-            </div>
-          </template>
-        </AutoComplete>
-        <small v-if="isIconInvalid" class="p-error">
-          El ícono es obligatorio.
-        </small>
-        <div v-if="localIcon" class="mt-3 flex justify-content-between align-items-center">
-            <span>Seleccionado:</span>
-            <svg width="96" height="96" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path :d="localIcon.path" />
-            </svg>
-          </div>
+        <Textarea id="editCategoryDescription" v-model="localCategoryDescription" placeholder="Ingrese una descripción"
+          rows="4" />
       </div>
     </div>
     <template #footer>
-      <Button
-        label="Cancelar"
-        @click="closeModal"
-        class="p-button-text p-button-secondary"
-      />
-      <Button
-        label="Guardar"
-        class="p-button"
-        @click="submitEdit"
-        :loading="isLoading"
-        :disabled="isLoading"
-      />
+      <Button label="Cancelar" @click="closeModal" class="p-button-text p-button-secondary" />
+      <Button label="Guardar" class="p-button" @click="submitEdit" :loading="isLoading" :disabled="isLoading" />
     </template>
   </Dialog>
 </template>
@@ -89,9 +27,7 @@
 import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
-import AutoComplete from "primevue/autocomplete";
 import Button from "primevue/button";
-import * as mdiIcons from "@mdi/js";
 import AdminServices from "@/modules/admin/services/AdminServices";
 
 export default {
@@ -99,7 +35,6 @@ export default {
     Dialog,
     InputText,
     Textarea,
-    AutoComplete,
     Button,
   },
   props: {
@@ -117,18 +52,9 @@ export default {
       localVisible: this.visible,
       localCategoryName: "",
       localCategoryDescription: "",
-      localIcon: null,
       isCategoryNameInvalid: false,
-      isIconInvalid: false,
-      icons: Object.entries(mdiIcons).map(([key, path]) => ({
-        name: key
-          .replace("mdi", "")
-          .replace(/([A-Z])/g, " $1")
-          .trim(),
-        path,
-      })),
-      filteredIcons: [],
       isLoading: false,
+      pendingRequests: [],
     };
   },
   methods: {
@@ -140,22 +66,9 @@ export default {
       this.isCategoryNameInvalid =
         !this.localCategoryName || this.localCategoryName.length > 100;
     },
-    validateIcon() {
-      this.isIconInvalid = !this.localIcon;
-    },
-    searchIcon(event) {
-      const query = event.query.toLowerCase();
-      this.filteredIcons = this.icons.filter((icon) =>
-        icon.name.toLowerCase().includes(query)
-      );
-    },
-    async update(name, description, icon) {
+    async updateCategory(name, description) {
       try {
-        const response = await AdminServices.updateCategory(
-          name,
-          description,
-          icon
-        );
+        const response = await AdminServices.updateCategory(name, description);
         const { statusCode, message } = response;
         if (statusCode === 201) {
           this.closeModal();
@@ -167,33 +80,58 @@ export default {
         this.$toast.error("Error al actualizar la categoría");
       }
     },
-    findIconByName(iconName) {
-      const formattedName = iconName
-        .replace(/([a-z])([A-Z])/g, "$1 $2")
-        .replace(/^./, (str) => str.toUpperCase());
-      return this.icons.find((icon) => icon.name === formattedName);
-    },
     async submitEdit() {
       this.isLoading = true;
       this.validateCategoryName();
-      this.validateIcon();
-      if (this.isCategoryNameInvalid || this.isIconInvalid) {
+
+      if (this.isCategoryNameInvalid) {
+        this.isLoading = false;
         return;
       }
 
-      await this.update(
-        this.localCategoryName,
-        this.localCategoryDescription,
-        this.localIcon.name
-      );
-      this.$emit("update-category");
-      this.isLoading = false;
+      if (!navigator.onLine) {
+        // Sin conexión: cerrar modal y agregar a solicitudes pendientes
+        this.pendingRequests.push({
+          categoryName: this.localCategoryName,
+          categoryDescription: this.localCategoryDescription,
+        });
+        this.$toast.info(
+          "Sin conexión. La categoría se actualizará automáticamente cuando vuelva la conexión."
+        );
+        this.closeModal();
+        this.isLoading = false;
+      } else {
+        // Con conexión: intentar actualizar
+        await this.updateCategory(
+          this.localCategoryName,
+          this.localCategoryDescription
+        );
+        this.$emit("update-category");
+        this.isLoading = false;
+      }
+    },
+    async processPendingRequests() {
+      for (const request of this.pendingRequests) {
+        try {
+          await AdminServices.updateCategory(
+            request.categoryName,
+            request.categoryDescription
+          );
+          this.$toast.success(
+            `Categoría "${request.categoryName}" actualizada exitosamente.`
+          );
+        } catch (error) {
+          this.$toast.error(
+            `Error al actualizar la categoría "${request.categoryName}".`
+          );
+        }
+      }
+      this.pendingRequests = [];
     },
     syncCategoryData() {
       if (this.category) {
         this.localCategoryName = this.category.categoryName || "";
         this.localCategoryDescription = this.category.categoryDescription || "";
-        this.localIcon = this.findIconByName(this.category.icono || "");
       }
     },
   },
@@ -213,9 +151,14 @@ export default {
   },
   mounted() {
     this.syncCategoryData();
+    window.addEventListener("online", this.processPendingRequests);
+  },
+  beforeDestroy() {
+    window.removeEventListener("online", this.processPendingRequests);
   },
 };
 </script>
+
 
 <style scoped>
 .p-error {

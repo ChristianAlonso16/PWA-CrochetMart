@@ -1,22 +1,10 @@
 <template>
   <div class="category-card">
-    <div class="icon-container">
-      <svg
-        width="48"
-        height="48"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="white"
-      >
-        <path :d="iconPath" />
-      </svg>
-    </div>
     <p class="category-name font-bold">{{ category.categoryName }}</p>
   </div>
 </template>
 
 <script>
-import * as mdiIcons from "@mdi/js";
 
 export default {
   props: {
@@ -26,12 +14,7 @@ export default {
     },
   },
   computed: {
-    iconPath() {
-      const iconKey = `mdi${this.category.icono
-        .charAt(0)
-        .toUpperCase()}${this.category.icono.slice(1)}`;
-      return mdiIcons[iconKey] || mdiIcons.mdiHelpCircle;
-    },
+
   },
 };
 </script>

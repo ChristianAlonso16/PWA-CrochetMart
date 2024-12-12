@@ -12,93 +12,40 @@
 
     <div class="col-12">
       <div>
-        <DataTable
-          :value="categories"
-          :paginator="true"
-          :rows="5"
-          dataKey="categoryName"
-          :filters.sync="filters"
-          filterDisplay="menu"
-          responsiveLayout="scroll"
-          :globalFilterFields="['categoryName', 'categoryDescription']"
-        >
+        <DataTable :value="categories" :paginator="true" :rows="5" dataKey="categoryName" :filters.sync="filters"
+          filterDisplay="menu" responsiveLayout="scroll" :globalFilterFields="['categoryName', 'categoryDescription']">
           <template #header>
             <div class="flex justify-content-end">
               <span class="p-input-icon-left">
                 <i class="pi pi-search" />
-                <InputText
-                  v-model="filters['global'].value"
-                  placeholder="Buscar categoría"
-                />
+                <InputText v-model="filters['global'].value" placeholder="Buscar categoría" />
               </span>
             </div>
           </template>
-          <Column field="icono" header="Ícono">
-            <template #body="{ data }">
-              <div v-if="data.icono">
-                <svg
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path :d="findIconPath(data.icono)" />
-                </svg>
-              </div>
-            </template>
-          </Column>
+
 
           <Column field="categoryName" header="Nombre" :sortable="true" />
-          <Column
-            field="categoryDescription"
-            header="Descripción"
-            :sortable="true"
-          >
+          <Column field="categoryDescription" header="Descripción" :sortable="true">
             <template>
-              <InputText
-                placeholder="Buscar por descripción"
-                class="p-column-filter"
-              />
+              <InputText placeholder="Buscar por descripción" class="p-column-filter" />
             </template>
           </Column>
 
           <Column header="Acciones">
             <template #body="{ data }">
-              <Button
-                icon="pi pi-pencil"
-                class="p-button-rounded p-button-success mr-2"
-                @click="openEditModal(data)"
-              />
-              <Button
-                :icon="
-                  data.status.statusName === 'enable'
-                    ? 'pi pi-check'
-                    : 'pi pi-times'
-                "
-                class="p-button-rounded"
-                :class="
-                  data.status.statusName === 'enable'
-                    ? 'p-button-success'
-                    : 'p-button-danger'
-                "
-                @click="toggleStatus(data)"
-              />
+              <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="openEditModal(data)" />
+              <Button icon='pi pi-times' class="p-button-rounded p-button-danger" @click="toggleStatus(data)" />
             </template>
           </Column>
         </DataTable>
       </div>
     </div>
-    <EditCategoryModal
-      :category="selectedCategory"
-      v-if="selectedCategory"
-      :visible.sync="isEditModalVisible"
-      @update-category="updateCategory"
-      @close="selectedCategory = null"
-    />
+    <EditCategoryModal :category="selectedCategory" v-if="selectedCategory" :visible.sync="isEditModalVisible"
+      @update-category="updateCategory" @close="selectedCategory = null" />
   </div>
 </template>
-  
-  <script>
+
+<script>
 import AddCategoryModal from "../components/categories/AddCategoryModal.vue";
 import EditCategoryModal from "../components/categories/EditCategoryModal.vue";
 import AdminServices from "@/modules/admin/services/AdminServices";
@@ -106,7 +53,6 @@ import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
-import * as mdiIcons from "@mdi/js";
 
 export default {
   components: {
@@ -126,6 +72,7 @@ export default {
       selectedCategory: null,
       isEditModalVisible: false,
       modalVisible: false,
+      pendingRequests: [],
     };
   },
   methods: {
@@ -139,19 +86,6 @@ export default {
       } catch (error) {
         this.$toast.error("Error al obtener las categorías");
       }
-    },
-    findIconPath(iconName) {
-      const formattedName = iconName
-        .replace(/([a-z])([A-Z])/g, "$1 $2")
-        .replace(/^./, (str) => str.toUpperCase());
-      const icon = Object.entries(mdiIcons).find(
-        ([key]) =>
-          key
-            .replace("mdi", "")
-            .replace(/([A-Z])/g, " $1")
-            .trim() === formattedName
-      );
-      return icon ? icon[1] : "";
     },
     openEditModal(category) {
       this.selectedCategory = { ...category };
@@ -167,12 +101,24 @@ export default {
       }
     },
     async toggleStatus(category) {
+      if (!navigator.onLine) {
+        // Sin conexión: almacenar la solicitud pendiente
+        this.pendingRequests.push({
+          action: "toggleStatus",
+          data: category,
+        });
+        this.$toast.info(
+          `Sin conexión. El estado de la categoría "${category.categoryName}" se actualizará automáticamente al restablecer la conexión.`
+        );
+        return;
+      }
+      // Con conexión: realizar la operación
+      await this.executeToggleStatus(category);
+    },
+    async executeToggleStatus(category) {
       try {
-        const newStatus =
-          category.status.statusName === "enable" ? "disabled" : "enable";
         const response = await AdminServices.deleteCategory(
-          category.categoryName,
-          newStatus
+          category.categoryName
         );
         const { statusCode, message } = response;
         if (statusCode === 200) {
@@ -185,12 +131,36 @@ export default {
         this.$toast.error("Error al actualizar la categoría");
       }
     },
+    async processPendingRequests() {
+      for (const request of this.pendingRequests) {
+        if (request.action === "toggleStatus") {
+          await this.executeToggleStatus(request.data);
+        }
+      }
+      this.pendingRequests = [];
+    },
     async deleteCategory(name, status) {
+      if (!navigator.onLine) {
+        // Sin conexión: almacenar la solicitud pendiente
+        this.pendingRequests.push({
+          action: "deleteCategory",
+          data: { name, status },
+        });
+        this.$toast.info(
+          `Sin conexión. La eliminación de la categoría "${name}" se realizará automáticamente al restablecer la conexión.`
+        );
+        return;
+      }
+      // Con conexión: realizar la operación
+      await this.executeDeleteCategory(name, status);
+    },
+    async executeDeleteCategory(name, status) {
       try {
         await AdminServices.deleteCategory(name, status);
         this.getCategories();
+        this.$toast.success("Categoría eliminada correctamente.");
       } catch (error) {
-        console.log(error);
+        this.$toast.error("Error al eliminar la categoría");
       }
     },
     openModal() {
@@ -199,6 +169,10 @@ export default {
   },
   mounted() {
     this.getCategories();
+    window.addEventListener("online", this.processPendingRequests);
+  },
+  beforeDestroy() {
+    window.removeEventListener("online", this.processPendingRequests);
   },
 };
 </script>

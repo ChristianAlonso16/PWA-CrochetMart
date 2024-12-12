@@ -64,25 +64,21 @@ const getAllCategories = async () => {
     return error;
   }
 };
-const deleteCategory = async (name, status) => {
+const deleteCategory = async (name) => {
   try {
-    const category = {
-      categoryName: name,
-      status: status,
-    };
-    const response = await axiosPrivate.put(`/category/updateStatus`, category);
+
+    const response = await axiosPrivate.delete(`/category/delete/${name}`)
 
     return response.data;
   } catch (error) {
     return error;
   }
 };
-const updateCategory = async (name, description, icon) => {
+const updateCategory = async (name, description) => {
   try {
     const category = {
       categoryName: name,
       categoryDescription: description,
-      icono: icon,
     };
     const response = await axiosPrivate.put("/category/update", category);
     return response.data;
@@ -244,12 +240,11 @@ const updateVariant = async (data) => {
     return error;
   }
 };
-const addCategory = async (name, description, icon) => {
+const addCategory = async (name, description) => {
   try {
     const category = {
       categoryName: name,
       categoryDescription: description,
-      icono: icon,
     };
 
     const response = await axiosPrivate.post("/category/register", category);
