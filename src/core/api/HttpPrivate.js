@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Configuración del cliente Axios
-const SERVER_URL = "http://localhost:8080/api";
+const SERVER_URL = process.env.VUE_APP_API_URL;
 const client = axios.create({
   baseURL: SERVER_URL,
   timeout: 3000,
