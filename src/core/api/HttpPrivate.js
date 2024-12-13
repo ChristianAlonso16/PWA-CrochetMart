@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Configuración del cliente Axios
-const SERVER_URL = "http://localhost:8080/api";
+const SERVER_URL = "http://52.206.58.127:8080/api";
 const client = axios.create({
   baseURL: SERVER_URL,
   timeout: 3000,
@@ -24,7 +24,7 @@ client.interceptors.request.use(
 );
 
 client.interceptors.response.use(
-  (response) => response, // Deja pasar las respuestas válidas
+  (response) => Promise.resolve(response),
   (error) => {
     if (!error.response) return Promise.reject(error);
 
@@ -43,11 +43,11 @@ client.interceptors.response.use(
 );
 
 // Función para manejar conflictos en PouchDB
-const handleConflict = async (db, docId, newDoc) => {
+const handleConflict = async ( docId, newDoc) => {
   try {
     const existingDoc = await dbPeticiones.get(docId);
     const mergedDoc = { ...existingDoc, ...newDoc }; // Fusión de datos
-    await db.put(mergedDoc);
+    await dbPeticiones.put(mergedDoc);
     console.log("Conflicto resuelto y documento actualizado:", docId);
   } catch (error) {
     console.error("Error al resolver conflicto:", error);
@@ -130,7 +130,7 @@ const handleGetRequest = async (endPoint, config) => {
       await dbFetchesGet.put(fetch);
     } catch (error) {
       if (error.status === 409) {
-        await handleConflict(dbFetchesGet, fetch._id, fetch);
+        await handleConflict( fetch._id, fetch);
       } else {
         console.error("Error al guardar la respuesta en caché:", error);
       }
@@ -141,12 +141,6 @@ const handleGetRequest = async (endPoint, config) => {
       try {
         const fetch = await dbFetchesGet.get(endPoint);
         console.log("Respuesta obtenida de la caché:", fetch.response);
-
-        // Verifica si los datos en caché son válidos (opcional)
-        if (!fetch.response) {
-          console.warn("Los datos en caché están vacíos o corruptos.");
-          throw new Error("Datos en caché inválidos.");
-        }
 
         return { data: fetch.response };
       } catch (fetchError) {

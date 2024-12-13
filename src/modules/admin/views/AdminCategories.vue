@@ -178,7 +178,6 @@ export default {
       if (newStatus) {
         setTimeout(() => {
           this.getCategories();
-          this.$toast.success("Conexión restaurada. Categorías actualizadas.");
         }, 2000);
       } else {
         this.$toast.info("Conexión perdida. Modo offline.");
@@ -187,10 +186,12 @@ export default {
   },
   mounted() {
     this.getCategories();
+    window.addEventListener("online", this.processPendingRequests);
     window.addEventListener("online", this.updateOnlineStatus);
     window.addEventListener("offline", this.updateOnlineStatus);
   },
   beforeDestroy() {
+    window.addEventListener("online", this.processPendingRequests);
     window.removeEventListener("online", this.updateOnlineStatus);
     window.removeEventListener("offline", this.updateOnlineStatus);
   },
