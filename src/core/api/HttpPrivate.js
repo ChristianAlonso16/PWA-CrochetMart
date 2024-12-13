@@ -24,7 +24,7 @@ client.interceptors.request.use(
 );
 
 client.interceptors.response.use(
-  (response) => Promise.resolve(response),
+  (response) => response, // Deja pasar las respuestas válidas
   (error) => {
     if (!error.response) return Promise.reject(error);
 
@@ -43,11 +43,11 @@ client.interceptors.response.use(
 );
 
 // Función para manejar conflictos en PouchDB
-const handleConflict = async (docId, newDoc) => {
+const handleConflict = async (db, docId, newDoc) => {
   try {
     const existingDoc = await dbPeticiones.get(docId);
     const mergedDoc = { ...existingDoc, ...newDoc }; // Fusión de datos
-    await dbPeticiones.put(mergedDoc); // Actualiza el documento
+    await db.put(mergedDoc);
     console.log("Conflicto resuelto y documento actualizado:", docId);
   } catch (error) {
     console.error("Error al resolver conflicto:", error);
@@ -87,7 +87,7 @@ export const sendPendingRequests = async () => {
     for (const request of pendingRequests) {
       try {
         const { method, endPoint, data, config } = request;
-
+        console.log(method)
         console.log(`Procesando petición: ${method.toUpperCase()} ${endPoint}`);
         let response;
         if (method === "get" || method === "delete") {
@@ -123,15 +123,31 @@ const handleGetRequest = async (endPoint, config) => {
     const fetch = {
       _id: endPoint,
       response: response.data,
+      timestamp: new Date().toISOString(), // Agregar un timestamp
     };
-    await dbFetchesGet.put(fetch);
 
+    try {
+      await dbFetchesGet.put(fetch);
+    } catch (error) {
+      if (error.status === 409) {
+        await handleConflict(dbFetchesGet, fetch._id, fetch);
+      } else {
+        console.error("Error al guardar la respuesta en caché:", error);
+      }
+    }
     return response;
   } catch (error) {
     if (!navigator.onLine) {
       try {
         const fetch = await dbFetchesGet.get(endPoint);
         console.log("Respuesta obtenida de la caché:", fetch.response);
+
+        // Verifica si los datos en caché son válidos (opcional)
+        if (!fetch.response) {
+          console.warn("Los datos en caché están vacíos o corruptos.");
+          throw new Error("Datos en caché inválidos.");
+        }
+
         return { data: fetch.response };
       } catch (fetchError) {
         if (fetchError.status === 404) {
@@ -158,12 +174,14 @@ export default {
       return await client.post(endPoint, object, config || {});
     } catch (error) {
       if (!navigator.onLine) {
+
         await cacheRequest("post", endPoint, object, config);
         console.log("Petición POST almacenada para reintentar más tarde.");
         return Promise.resolve({ data: null });
       }
       return Promise.reject(error);
     }
+
   },
   put: async function (endPoint, object, config) {
     try {
