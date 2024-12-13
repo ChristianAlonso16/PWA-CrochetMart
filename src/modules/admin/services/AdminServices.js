@@ -6,7 +6,7 @@ const loginAdmin = async (email, password) => {
       username: email,
       password: password,
     };
-    const response = await axiosPrivate.post("/auth/login", data);
+    const response = await axiosPrivate.post("/api/auth/login", data);
 
     return response.data;
   } catch (error) {
