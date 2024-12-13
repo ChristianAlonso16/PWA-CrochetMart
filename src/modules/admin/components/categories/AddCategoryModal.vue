@@ -17,34 +17,12 @@
           <Textarea id="categoryDescription" v-model="categoryDescription" placeholder="Ingrese una descripción"
             rows="4" />
         </div>
-        <div class="field">
-          <label for="icono">Ícono</label>
-          <AutoComplete id="icono" v-model="icono" :suggestions="filteredIcons" @complete="searchIcon" :dropdown="true"
-            field="name" appendTo="body">
-            <template #item="slotProps">
-              <div>
-                <svg :width="24" :height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path :d="slotProps.item.path" />
-                </svg>
-                <span>{{ slotProps.item.name }}</span>
-              </div>
-            </template>
-          </AutoComplete>
-          <small v-if="isIconInvalid" class="p-error">
-            El ícono es obligatorio.
-          </small>
-          <div v-if="icono" class="mt-3 flex justify-content-between align-items-center">
-            <span>Seleccionado:</span>
-            <svg width="96" height="96" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path :d="icono.path" />
-            </svg>
-          </div>
-        </div>
       </div>
-      <template #footer>
-        <Button label="Cancelar" @click="closeModal" class="p-button-text p-button-secondary" />
-        <Button label="Registrar" class="p-button" @click="submitForm" :loading="isLoading" :disabled="isLoading" />
-      </template>
+      <div class="test">
+        <Button style="width: 150px;" label="Cancelar" @click="closeModal" class="p-button-text p-button-secondary" />
+        <Button style="width: 150px;" label="Registrar" class="p-button" @click="submitForm" :loading="isLoading"
+          :disabled="isLoading" />
+      </div>
     </Dialog>
   </div>
 </template>
@@ -54,9 +32,7 @@ import Dialog from "primevue/dialog";
 import InputText from "primevue/inputtext";
 import Textarea from "primevue/textarea";
 import Button from "primevue/button";
-import AutoComplete from "primevue/autocomplete";
 import AdminServices from "@/modules/admin/services/AdminServices";
-import * as mdiIcons from "@mdi/js";
 
 export default {
   components: {
@@ -64,7 +40,6 @@ export default {
     InputText,
     Textarea,
     Button,
-    AutoComplete,
   },
   props: {
     visible: {
@@ -77,18 +52,9 @@ export default {
       localVisible: this.visible,
       categoryName: "",
       categoryDescription: "",
-      icono: null,
       isCategoryNameInvalid: false,
-      isIconInvalid: false,
-      icons: Object.entries(mdiIcons).map(([key, path]) => ({
-        name: key
-          .replace("mdi", "")
-          .replace(/([A-Z])/g, " $1")
-          .trim(),
-        path,
-      })),
-      filteredIcons: [],
       isLoading: false,
+      pendingRequests: [],
     };
   },
   methods: {
@@ -100,46 +66,42 @@ export default {
     resetForm() {
       this.categoryName = "";
       this.categoryDescription = "";
-      this.icono = null;
       this.isCategoryNameInvalid = false;
-      this.isIconInvalid = false;
     },
     validateCategoryName() {
       this.isCategoryNameInvalid =
         !this.categoryName || this.categoryName.length > 100;
     },
-    validateIcon() {
-      this.isIconInvalid = !this.icono;
-    },
-    searchIcon(event) {
-      const query = event.query.toLowerCase();
-      this.filteredIcons = this.icons.filter((icon) =>
-        icon.name.toLowerCase().includes(query)
-      );
-    },
     async submitForm() {
       this.isLoading = true;
       this.validateCategoryName();
-      this.validateIcon();
-      if (this.isCategoryNameInvalid || this.isIconInvalid) {
+
+      if (this.isCategoryNameInvalid) {
+        this.isLoading = false;
         return;
       }
-      const camelCaseIcon = this.icono.name
-        .toLowerCase()
-        .split(" ")
-        .map((word, index) =>
-          index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
-        )
-        .join("");
 
-      this.addCategory(camelCaseIcon);
+      if (!navigator.onLine) {
+        // Sin conexión: cerrar modal y agregar a solicitudes pendientes
+        this.pendingRequests.push({
+          categoryName: this.categoryName,
+          categoryDescription: this.categoryDescription,
+        });
+        this.$toast.info(
+          "Sin conexión. La categoría se registrará automáticamente cuando vuelva la conexión."
+        );
+        this.closeModal();
+        this.isLoading = false;
+      } else {
+        // Con conexión: intentar enviar la solicitud
+        this.addCategory();
+      }
     },
-    async addCategory(icon) {
+    async addCategory() {
       try {
         const response = await AdminServices.addCategory(
           this.categoryName,
-          this.categoryDescription,
-          icon
+          this.categoryDescription
         );
         const { statusCode, message } = response;
         if (statusCode === 201) {
@@ -156,17 +118,48 @@ export default {
         this.isLoading = false;
       }
     },
+    async processPendingRequests() {
+      for (const request of this.pendingRequests) {
+        try {
+          await AdminServices.addCategory(
+            request.categoryName,
+            request.categoryDescription
+          );
+          this.$toast.success(
+            `Categoría "${request.categoryName}" registrada exitosamente.`
+          );
+        } catch (error) {
+          this.$toast.error(
+            `Error al registrar la categoría "${request.categoryName}".`
+          );
+        }
+      }
+      this.pendingRequests = [];
+    },
   },
   watch: {
     visible(newVal) {
       this.localVisible = newVal;
     },
   },
+  created() {
+    window.addEventListener("online", this.processPendingRequests);
+  },
+  beforeDestroy() {
+    window.removeEventListener("online", this.processPendingRequests);
+  },
 };
 </script>
+
 
 <style scoped>
 .p-error {
   color: red;
+}
+
+.test {
+  display: flex;
+  justify-content: end;
+  gap: 30px;
 }
 </style>

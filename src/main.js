@@ -18,9 +18,26 @@ Vue.use(store);
 Vue.use(ToastService);
 Vue.use(ConfirmationService);
 Vue.use(ToastPlugin);
-
+import { registerSW } from 'virtual:pwa-register'
 new Vue({
   router,
   store,
   render: h => h(App),
 }).$mount('#app')
+
+// Registra el Service Worker con  virtual:pwa-register
+registerSW({
+  immediate: true,
+  onOfflineReady() {
+    if (navigator.serviceWorker) {
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission();
+      }
+    }
+    // Muestra una notificación o realiza alguna acción cuando la PWA esté lista para funcionar offline.
+    console.log('App is offline-ready');
+  },
+  onRegistered(r) {
+    r && setInterval(() => { r.update(); }, 1800000); //Opcional, para verificar actualizaciones cada 30min
+  }
+});

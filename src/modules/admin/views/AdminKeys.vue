@@ -129,7 +129,7 @@ export default {
                     keyPrivate: this.newKeyPrivate,
                 }
                 const response = await AdminServices.updateKeysStripe(payload);
-                if (response.statusCode === 200) {
+                if (response.statusCode === 201) {
                     this.getStripe()
                     this.$toast.success('Clave de Stripe actualizada correctamente.');
                 } else {

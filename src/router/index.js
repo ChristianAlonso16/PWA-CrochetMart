@@ -68,6 +68,7 @@ router.beforeEach((to, from, next) => {
     return next();
   }
   const role = utils.getRole();
+  console.log(role);
   if (to.meta && to.meta.role && to.meta.role.toLowerCase() !== role.toLowerCase()) {
     return next("/unautorized");
   }

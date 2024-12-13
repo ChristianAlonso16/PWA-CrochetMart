@@ -2,6 +2,7 @@ import jwt_decode from "jwt-decode";
 
 const getRole = () => {
   const { roles } = jwt_decode(localStorage.getItem("token"));
+  console.log(roles);
   const roleName = roles[0].authority;
   return roleName;
 };
